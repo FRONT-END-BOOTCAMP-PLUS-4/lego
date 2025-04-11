@@ -100,6 +100,7 @@
   --font-medium: 500;
   --font-bold: 700;
   --line-height: 150%;
+  --radius-md: 16px;
 }
 
 .dark {
