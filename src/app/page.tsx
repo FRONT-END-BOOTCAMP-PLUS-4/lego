@@ -55,7 +55,8 @@ export default function Home() {
         <TabsContent value="menu1">menu1 contents.</TabsContent>
         <TabsContent value="menu2">menu2 contents.</TabsContent>
       </Tabs>
-      <Card className="p-4">TEST</Card>
+      <Card>TEST</Card>
+      <Card variant="tight">TEST</Card>
     </>
   );
 }

@@ -1,18 +1,24 @@
 "use client";
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 
-function Card({
-  className,
-  children,
-  padding = "p-9", // 기본값
-  ...props
-}: React.ComponentProps<"div"> & { padding?: string }) {
+type Variant = "default" | "tight" | "none";
+
+const variantMap: Record<Variant, string> = {
+  default: "p-9",
+  tight: "px-9 py-[12px]",
+  none: "p-0",
+};
+
+interface CardProps extends React.ComponentProps<"div"> {
+  variant?: Variant;
+}
+
+function Card({ className, children, variant = "default", ...props }: CardProps) {
   return (
     <div
       className={cn(
-        padding,
+        variantMap[variant],
         "bg-[var(--blue-04)] border border-[var(--gray-01)] rounded-[var(--radius-md)]",
         className
       )}
