@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body className="container mx-auto px-32">{children}</body>
     </html>
   );
 }
