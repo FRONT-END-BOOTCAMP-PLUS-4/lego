@@ -7,9 +7,9 @@ import logo from "@/assets/images/logo.png";
 export default function Header() {
   return (
     <header className="flex justify-between items-center px-10 py-4 bg-[var(--blue-04)] text-white mb-10">
-      <h1 className="text-xl text-black">
+      <Link className="text-xl text-black" href="/">
         <Image src={logo} width={50} height={50} alt="logo" />
-      </h1>
+      </Link>
       <nav className="flex gap-4">
         <Link href="/login" className="text-white no-underline text-base">
           <Button variant="ghost">로그인/회원가입</Button>
