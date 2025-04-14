@@ -17,24 +17,12 @@ export class SbAdminRepository implements AdminRepository {
       return null;
     }
 
-    if (data) {
-      // 데이터베이스에 저장된 비밀번호를 SHA-512로 해시화
-      const encoder = new TextEncoder();
-      const encodedPassword = encoder.encode(data.password);
-      const hashBuffer = await crypto.subtle.digest("SHA-512", encodedPassword);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const dbPasswordHash = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
-
-      // 클라이언트에서 받은 비밀번호 해시와 비교
-      if (dbPasswordHash === clientPasswordHash) {
-        // 비밀번호가 일치하면 Admin 객체 반환
-        return new Admin(data.id, data.password);
-      } else {
-        console.error("비밀번호가 일치하지 않습니다.");
-        return null;
-      }
+    if (data && data.password === clientPasswordHash) {
+      // 비밀번호가 일치하면 Admin 객체 반환
+      return new Admin(data.id, data.password);
     }
 
-    return null; // 검색 결과가 없을 경우 null 반환
+    console.error("비밀번호가 일치하지 않거나 사용자를 찾을 수 없습니다.");
+    return null;
   }
 }
