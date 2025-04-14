@@ -1,11 +1,10 @@
-import { createClient } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/server";
 import { AdminRepository } from "@/domain/repositories/AdminRepository";
 import { Admin } from "@/domain/enities/Admin";
 
 export class SbAdminRepository implements AdminRepository {
   // 이름과 비밀번호로 관리자 찾기
   async findByCredentials(name: string, password: string): Promise<Admin | null> {
-    const supabase = await createClient();
 
     // Supabase에서 이름과 비밀번호로 관리자 검색
     const { data, error } = await supabase
