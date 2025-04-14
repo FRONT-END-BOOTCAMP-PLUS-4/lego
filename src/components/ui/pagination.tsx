@@ -2,13 +2,14 @@
 import * as React from "react";
 interface PaginationProps extends React.ComponentProps<"div"> {
   totalPage?: number;
+  pageNumber?: number;
 }
 interface HandlePage {
   (pageNumber: number, direction?: "prev" | "next"): void;
 }
 
-export function Pagination({ totalPage = 5, ...props }: PaginationProps) {
-  const [currentPage, setCurrentPage] = React.useState(1);
+export function Pagination({ totalPage = 5, pageNumber = 1, ...props }: PaginationProps) {
+  const [currentPage, setCurrentPage] = React.useState(pageNumber);
   const handleMovePage: HandlePage = (pageNumber, direction) => {
     if (direction) {
       setCurrentPage((prev) => {
