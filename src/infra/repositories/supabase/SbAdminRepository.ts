@@ -22,7 +22,7 @@ export class SbAdminRepository implements AdminRepository {
 
     if (data) {
       // Admin 객체 생성 후 반환
-      return new Admin(data.name, data.password);
+      return new Admin(data.id, data.password);
     }
 
     return null; // 검색 결과가 없을 경우 null 반환
