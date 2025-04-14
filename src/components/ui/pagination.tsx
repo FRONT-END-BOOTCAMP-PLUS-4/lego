@@ -1,10 +1,8 @@
 "use client";
 import * as React from "react";
 interface PaginationProps extends React.ComponentProps<"div"> {
-  currentPage?: number;
   totalPage?: number;
 }
-
 interface HandlePage {
   (pageNumber: number, direction?: "prev" | "next"): void;
 }
