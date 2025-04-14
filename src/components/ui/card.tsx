@@ -19,7 +19,7 @@ function Card({ className, children, variant = "default", ...props }: CardProps)
     <div
       className={cn(
         variantMap[variant],
-        "bg-[var(--blue-04)] border border-[var(--gray-01)] rounded-[var(--radius-md)]",
+        "bg-[var(--blue-04)] border border-[var(--gray-01)] rounded-[var(--radius-md)] cursor-pointer",
         className
       )}
       {...props}
