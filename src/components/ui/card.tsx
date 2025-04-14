@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 type Variant = "default" | "tight" | "none";
 
 const variantMap: Record<Variant, string> = {
-  default: "p-9",
+  default: "px-9 py-[24px]",
   tight: "px-9 py-[12px]",
   none: "p-0",
 };
