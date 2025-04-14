@@ -41,36 +41,29 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
-      <h1>관리자 로그인</h1>
+    <div className="max-w-md mx-auto mt-12 p-6 bg-card text-card-foreground rounded-lg shadow-lg">
+      <h1 className="text-2xl font-bold mb-6 text-center">관리자 로그인</h1>
       {!isLoggedIn ? (
         // 로그인 폼 표시
-        <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <input
             type="text"
             placeholder="이름"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            style={{ padding: "10px", fontSize: "16px" }}
+            className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <input
             type="password"
             placeholder="비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: "10px", fontSize: "16px" }}
+            className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           />
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="text-destructive text-sm">{error}</p>}
           <button
             type="submit"
-            style={{
-              padding: "10px",
-              fontSize: "16px",
-              backgroundColor: "#0070f3",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
+            className="p-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition"
           >
             로그인
           </button>
@@ -79,14 +72,7 @@ export default function AdminLoginPage() {
         // 로그인 성공 시 버튼 표시
         <Link
           href="/admin/questions"
-          style={{
-            padding: "10px",
-            fontSize: "16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            textDecoration: "none",
-            display: "inline-block",
-          }}
+          className="block p-3 bg-primary text-primary-foreground rounded-md text-center hover:bg-primary/90 transition"
         >
           질문 페이지로 이동
         </Link>
