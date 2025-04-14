@@ -47,11 +47,11 @@ export default function AnswerFormPage() {
           <Button size="lg">저장</Button>
         </div>
       </div>
-      <div>
+      <div className="pt-[150px] pb-[150px]">
         <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
-        <div>
+        <div className="grid grid-cols-2 grid-rows-3 gap-x-16 gap-y-24">
           <Card>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-center mb-6">
               <p className="line-clamp-2">
                 s not simply random text. It has roots in a piece of classical Latin literature from
                 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
@@ -60,12 +60,12 @@ export default function AnswerFormPage() {
               </p>
               <span className="w-[32px] h-[32px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
             </div>
-            <div>
+            <div className="flex justify-between">
               <span>
-                <span className="txt-sm">2020.20.20</span>
-                <span>작성자 이름</span>
+                <span className="txt-sm !text-[var(--gray-02)] mr-2">2020.20.20</span>
+                <span className="txt-sm !text-[var(--gray-02)]">작성자 이름</span>
               </span>
-              <span>좋아요 100</span>
+              <span className="txt-sm !text-[var(--gray-02)]">좋아요 100</span>
             </div>
           </Card>
         </div>

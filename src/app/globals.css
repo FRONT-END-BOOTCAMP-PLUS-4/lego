@@ -143,21 +143,25 @@
   font-size: var(--text-18);
   line-height: var(--line-hei);
   color: var(--black);
+  font-weight: var(--font-regular);
 }
 .txt-base {
   font-size: var(--text-16);
   line-height: var(--line-hei);
   color: var(--black);
+  font-weight: var(--font-regular);
 }
 .txt-sm {
   font-size: var(--text-14);
   line-height: var(--line-hei);
   color: var(--black);
+  font-weight: var(--font-regular);
 }
 .txt-xs {
   font-size: var(--text-12);
   line-height: var(--line-hei);
   color: var(--black);
+  font-weight: var(--font-regular);
 }
 .radius {
   border-radius: var(--radius-md);
