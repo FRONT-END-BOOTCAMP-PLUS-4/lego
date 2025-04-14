@@ -10,6 +10,18 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter(); // useRouter 초기화
+  
+  //비밀번호 암호화 후 전송
+  const encryptPassword = async (password: string) => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+
+    //SHA-512 해시 생성
+    const hashBuffer = await crypto.subtle.digest("SHA-512", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    return hashHex;
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +33,9 @@ export default function AdminLoginPage() {
     }
 
     try {
+      const encryptedPassword = await encryptPassword(password);
+      console.log("암호화된 비밀번호:", encryptedPassword); // 암호화된 비밀번호 출력
+
       const response = await fetch("/api/admin/login", {
         method: "POST",
         headers: {
