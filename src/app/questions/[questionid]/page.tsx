@@ -5,7 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+import { useState } from "react";
+
 export default function AnswerFormPage() {
+  const [tab, setTab] = useState("menu1");
   return (
     <div className="w-[1270px] container mx-auto pt-[40px]">
       <header className="flex justify-between items-center pb-[18px]">
@@ -23,7 +26,7 @@ export default function AnswerFormPage() {
       </header>
 
       <div>
-        <Tabs defaultValue="menu1 pb-[18px]">
+        <Tabs defaultValue="menu1 pb-[18px]" value={tab} onValueChange={setTab}>
           <TabsList className="mr-0 ml-auto">
             <TabsTrigger value="menu1">나의 답변 작성하기</TabsTrigger>
             <TabsTrigger value="menu2">모범 답안 확인하기</TabsTrigger>
@@ -38,9 +41,8 @@ export default function AnswerFormPage() {
             <textarea
               className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
               readOnly
-            >
-              답안내용
-            </textarea>
+              value={"답안내용"}
+            ></textarea>
           </TabsContent>
         </Tabs>
         <div className="flex justify-center mt-[24px]">
