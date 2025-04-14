@@ -149,6 +149,9 @@
   font-size: var(--text-12);
   line-height: var(--line-hei);
 }
+.radius {
+  border-radius: var(--radius-md);
+}
 
 .dark {
   --background: oklch(0.129 0.042 264.695);
