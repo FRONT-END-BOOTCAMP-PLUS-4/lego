@@ -17,7 +17,7 @@ export default function AnswerFormPage() {
   return (
     <div className="w-[1270px] container mx-auto pt-[40px]">
       <header className="flex justify-between items-center pb-[18px]">
-        <div className="flex items-center">
+        <div className="flex items-center pb-[18px]">
           <Badge className="mr-[16px]">Javascript</Badge>
           <h3 className="txt-3xl-b">HTTP 메소드에 대한 설명</h3>
         </div>
@@ -36,7 +36,7 @@ export default function AnswerFormPage() {
       </header>
 
       <div>
-        <Tabs defaultValue="tab1" value={tab} onValueChange={setTab} className=" pb-[18px]">
+        <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
           <TabsList className="mr-0 ml-auto">
             <TabsTrigger value="tab1">나의 답변 작성하기</TabsTrigger>
             <TabsTrigger value="tab2">모범 답안 확인하기</TabsTrigger>
