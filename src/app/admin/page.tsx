@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, password }),
+        body: JSON.stringify({ name, password: encryptedPassword }),
       });
 
       if (!response.ok) {
