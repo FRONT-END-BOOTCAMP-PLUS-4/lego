@@ -11,7 +11,7 @@ export default function AdminQuestionListPage() {
 
     // 클라이언트에서 쿠키 삭제 (추가 안전장치)
     document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-
+    alert("로그아웃 되었습니다.");
     // 로그아웃 후 로그인 페이지로 이동
     router.push("/admin");
   };
