@@ -1,5 +1,7 @@
 "use client";
 import * as React from "react";
+//supabase에서 data, total count 받음
+
 interface PaginationProps extends React.ComponentProps<"div"> {
   totalCount: number;
   itemsPerPage: number;
@@ -7,7 +9,7 @@ interface PaginationProps extends React.ComponentProps<"div"> {
   pageNumber: number;
   currentPageBlock: number;
   handleMovePageBlock: (newBlock: number) => void;
-  handleMovePage: (page: numebr) => void;
+  handleMovePage: (page: number) => void;
 }
 interface MovePageBlock {
   (btnType: string): void;
@@ -15,12 +17,11 @@ interface MovePageBlock {
 interface HandlePage {
   (currentPage: number): void;
 }
-//supabase에서 data, total count 받음
 
 export function Pagination({
-  pageNumber = 1,
-  totalCount = 100, //전체 데이터 개수
-  currentPageBlock = 1, //현재 페이지 번호
+  pageNumber = 1, //현재 페이지 번호
+  totalCount = 0, //전체 데이터 개수
+  currentPageBlock = 1, //현재 블록 순서
   itemsPerPage = 6, //한 페이지당 보여줄 데이터 수
   handleMovePageBlock = () => {},
   handleMovePage = () => {},
@@ -32,6 +33,11 @@ export function Pagination({
     (page) => page <= endPage
   );
 
+  // 다음페이지가 없으면 비활성화
+  const hasNextPage = startNumber + (visiblePageCount - 1) < endPage; // 다음 페이지 존재 여부
+
+  const hasPreviousPage = pageNumber > visiblePageCount; // 이전 페이지 존재 여부
+  console.log("hasPreviousPage", hasPreviousPage);
   const handlePage: HandlePage = (currentPage) => {
     handleMovePage(currentPage);
   };
@@ -47,15 +53,18 @@ export function Pagination({
       handlePage(newBlock);
     }
   };
-
+  if (!totalCount) {
+    return;
+  }
   return (
     <>
       <div className="flex justify-center items-center pt-[150px] pb-[100px]">
-        <span
-          className="w-6 cursor-pointer h-6 bg-no-repeat bg-center bg-contain bg-[url('/assets/icons/left.svg')] opacity-30 hover:opacity-60"
+        <button
+          className="w-6 cursor-pointer h-6 bg-no-repeat bg-center bg-contain bg-[url('/assets/icons/left.svg')] opacity-30 hover:opacity-60 disabled:opacity-10"
           onClick={() => handleMoveBlock("prev")}
-        ></span>
-        <ul className="flex mx-4 min-w-50">
+          disabled={!hasPreviousPage}
+        ></button>
+        <ul className="flex mx-4">
           {pages.map((page) => {
             return (
               <li
@@ -68,10 +77,11 @@ export function Pagination({
             );
           })}
         </ul>
-        <span
-          className="w-6 cursor-pointer h-6 bg-no-repeat bg-center bg-contain bg-[url('/assets/icons/right.svg')] opacity-30 hover:opacity-60"
+        <button
+          className={`w-6 cursor-pointer h-6 bg-no-repeat bg-center bg-contain bg-[url('/assets/icons/right.svg')] opacity-30 hover:opacity-60 disabled:opacity-10 `}
           onClick={() => handleMoveBlock("next")}
-        ></span>
+          disabled={!hasNextPage}
+        ></button>
       </div>
     </>
   );
