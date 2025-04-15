@@ -35,12 +35,8 @@ export function Pagination({
 
   // 다음페이지가 없으면 비활성화
   const hasNextPage = startNumber + (visiblePageCount - 1) < endPage; // 다음 페이지 존재 여부
-
   const hasPreviousPage = pageNumber > visiblePageCount; // 이전 페이지 존재 여부
-  console.log("hasPreviousPage", hasPreviousPage);
-  const handlePage: HandlePage = (currentPage) => {
-    handleMovePage(currentPage);
-  };
+  const handlePage: HandlePage = (currentPage) => handleMovePage(currentPage);
   const handleMoveBlock: MovePageBlock = (btnType) => {
     if (btnType === "prev" && currentPageBlock > 1) {
       const newBlock = currentPageBlock - visiblePageCount;
@@ -53,6 +49,7 @@ export function Pagination({
       handlePage(newBlock);
     }
   };
+  //데이터가 없으면 안보이게
   if (!totalCount) {
     return;
   }
