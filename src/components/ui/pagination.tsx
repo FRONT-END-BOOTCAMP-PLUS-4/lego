@@ -48,13 +48,13 @@ export function Pagination({
           className="w-6 cursor-pointer h-6 bg-no-repeat bg-center bg-contain bg-[url('/assets/icons/left.svg')] opacity-30 hover:opacity-60"
           onClick={() => handleMoveBlock("prev")}
         ></span>
-        <ul className="flex mx-4 ">
+        <ul className="flex mx-4 min-w-50">
           {pages.map((page) => {
             return (
               <li
                 key={page}
                 onClick={() => handleMovePage(page)}
-                className={`px-3 cursor-pointer txt-sm py-1 border rounded-sm text-[var(--gray-02)] hover:text-[var(--black)] ${page === pageNumber ? "border-[var(--gray-01)] txt-sm-b !text-[var(--black)] " : "border-transparent"}`}
+                className={`w-[40px] flex justify-center cursor-pointer txt-sm py-1 border rounded-sm text-[var(--gray-02)] hover:text-[var(--black)] ${page === pageNumber ? "border-[var(--gray-01)] txt-sm-b !text-[var(--black)] " : "border-transparent"}`}
               >
                 {page}
               </li>
