@@ -24,7 +24,10 @@ export async function POST(req: NextRequest) {
 
     // 응답 생성
     const res = NextResponse.json({ message: "로그인 성공", admin_id: result.admin_id });
-    res.cookies.set("admin_token", result.token, { httpOnly: true });
+    res.cookies.set("admin_token", result.token, { 
+      httpOnly: true,
+      secure: true,
+    });
     console.log("응답 생성 완료, 쿠키 설정 완료");
 
     return res;
