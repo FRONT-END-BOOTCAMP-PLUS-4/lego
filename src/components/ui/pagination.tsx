@@ -20,7 +20,7 @@ interface HandlePage {
 
 export function Pagination({
   pageNumber = 1, //현재 페이지 번호
-  totalCount = 0, //전체 데이터 개수
+  totalCount = 100, //전체 데이터 개수
   currentPageBlock = 1, //현재 블록 순서
   itemsPerPage = 6, //한 페이지당 보여줄 데이터 수
   handleMovePageBlock = () => {},
@@ -33,7 +33,6 @@ export function Pagination({
     (page) => page <= endPage
   );
 
-  // 다음페이지가 없으면 비활성화
   const hasNextPage = startNumber + (visiblePageCount - 1) < endPage; // 다음 페이지 존재 여부
   const hasPreviousPage = pageNumber > visiblePageCount; // 이전 페이지 존재 여부
   const handlePage: HandlePage = (currentPage) => handleMovePage(currentPage);
