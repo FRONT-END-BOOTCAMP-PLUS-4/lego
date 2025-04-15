@@ -5,11 +5,14 @@ import { useState } from "react";
 
 export default function Home() {
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
+  const [pageNumber, setPage] = useState(1);
   return (
     <>
       <Pagination
         currentPageBlock={currentPageBlock}
-        handleMovePageBlock={(page) => setCurrentPageBlock(page)}
+        pageNumber={pageNumber}
+        handleMovePageBlock={(block) => setCurrentPageBlock(block)}
+        handleMovePage={(page) => setPage(page)}
       />
     </>
   );
