@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className="bg-[var(--blue-04)] flex justify-between items-center px-10 py-4 mb-[var(--space-40)]">
       <Link href="/">
-        <Image src="/logo.svg" alt="Logo" width={200} height={100} />
+        <Image src="/logo.svg" alt="Logo" width={100} height={100} className="md:w-[200px]" />
       </Link>
       <Link href="/login">
         <Button variant={"ghost"}>로그인/회원가입</Button>
