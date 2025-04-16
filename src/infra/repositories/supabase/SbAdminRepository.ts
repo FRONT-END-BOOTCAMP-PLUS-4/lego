@@ -22,7 +22,6 @@ export class SbAdminRepository implements AdminRepository {
       return new Admin(data.id, data.password);
     }
 
-    console.error("비밀번호가 일치하지 않거나 사용자를 찾을 수 없습니다.");
     return null;
   }
 }
