@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-function Header() {
+export default function Header() {
   return (
-    <header className="bg-[var(--blue-04)] flex justify-between items-center px-6 py-4">
+    <header className="bg-[var(--blue-04)] flex justify-between items-center px-10 py-4 mb-[var(--space-40)]">
       <Link href="/">
         <Image src="/logo.svg" alt="Logo" width={200} height={100} />
       </Link>
@@ -14,5 +14,3 @@ function Header() {
     </header>
   );
 }
-
-export default Header;
