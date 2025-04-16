@@ -43,14 +43,17 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ name, password: encryptedPassword }),
       });
 
+      console.log("Response:", response); // 응답 로그 추가
+
       if (!response.ok) {
+        /*
         if (response.status === 500) {
           // 500 Internal Server Error 처리
           throw new Error("서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
         }
+          */
 
-        const errorData = await response.json();
-        throw new Error(errorData.error || "로그인에 실패했습니다.");
+        throw new Error("로그인에 실패했습니다.");
       }
 
       const data = await response.json();
