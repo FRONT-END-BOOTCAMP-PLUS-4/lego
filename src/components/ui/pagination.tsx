@@ -5,7 +5,6 @@ import * as React from "react";
 interface PaginationProps extends React.ComponentProps<"div"> {
   totalCount: number;
   itemsPerPage: number;
-  pages: number;
   pageNumber: number;
   currentPageBlock: number;
   handleMovePageBlock: (newBlock: number) => void;
