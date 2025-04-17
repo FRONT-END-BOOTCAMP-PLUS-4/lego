@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
+import { Card } from "@/components/ui/card";
 
 export default function AnswerDetailPage() {
   // Mock data for comments
@@ -42,7 +43,7 @@ export default function AnswerDetailPage() {
       <div className="pb-[var(--space-24)] txt-2xl-b">답변 상세보기</div>
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-4">
-          <Badge className="mr-[16px]">Javascript</Badge>
+          <Badge>Javascript</Badge>
           <p className="txt-3xl-b text-[var(--gray-02)]">
             HTTP 메소드에 대한 설명
           </p>
@@ -63,7 +64,7 @@ export default function AnswerDetailPage() {
 
       {/* 작성자 정보 */}
       <div className="flex items-center gap-4 mt-6">
-        <span className="w-[32px] h-[32px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
+        <span className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
 
         {/* 작성자 정보 */}
         <div>
@@ -86,22 +87,30 @@ Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지�
         </div>
 
       {/* 본문과 텍스트 사이의 패딩 */}
-      <div className="py-[var(--space-40)]"></div>
+      <div className="py-[150px]"></div>
 
       {/* 댓글 입력 영역 */}
-      <div className="mt-[40px]">
-        <label className="block text-sm mb-2 bold-sm" htmlFor="comment">
-          댓글 수 {comments.length}
+      <div className="mt-[40px] mb-[24px]">
+        <label className="txt-sm-b" htmlFor="comment" >
+          <span className="text-[var(--gray-02)]">댓글 수 </span>
+          <span className="text-black">{comments.length}</span>
         </label>
+        <div className="mb-[10px]" />
         <div className="flex gap-2">
           <div className="flex flex-col w-full gap-2">
-            <div className="text-sm font-bold">사용자 아이디</div>
             <div className="flex gap-2">
-              <Input
-                placeholder="Type your message here"
-                id="comment"
-                className="h-[120px]"
-              />
+                <Card className="w-full h-[120px] bg-white">
+                  <div className="text-sm">
+                    <label className="txt-sm-b" htmlFor="comment" >
+                      아이디
+                    </label>
+                  <Input
+                    placeholder="Type your message here"
+                    id="comment"
+                    className="h-[40px] bg-white placeholder-gray-400 placeholder:font-normal border-none"
+                  />
+                  </div>
+                </Card>
               <Button
                 className="w-[80px] h-[120px]"
                 variant="outline"
@@ -118,7 +127,7 @@ Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지�
         {currentComments.map((comment) => (
           <div key={comment.id} className="border-b pb-4 flex gap-4">
             {/* 프로필 이미지 */}
-            <span className="w-[32px] h-[32px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
+            <span className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
 
             {/* 댓글 내용 */}
             <div className="flex-1">
