@@ -22,7 +22,13 @@ export class GitHubAuthRepository implements AuthRepository {
 
     const userData = await userRes.json();
 
-    const user = new User(userData.id.toString(), userData.login);
+    const user = new User(
+      userData.id.toString(),
+      userData.login,
+      userData.name,
+      userData.email,
+      userData.avatar_url
+    );
     createJWT(user);
     return user;
   }

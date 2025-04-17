@@ -2,10 +2,12 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function OAuthCallback() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const login = useAuthStore((state) => state.login);
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -13,7 +15,7 @@ export default function OAuthCallback() {
 
     if (!code || !provider) return;
 
-    const login = async () => {
+    const loginProcess = async () => {
       try {
         const res = await fetch(`/api/auth/${provider}`, {
           method: "POST",
@@ -24,7 +26,8 @@ export default function OAuthCallback() {
         const { token } = await res.json();
 
         if (token) {
-          localStorage.setItem("token", token);
+          login(token);
+          router.replace("/");
         } else {
           console.error("토큰이 없습니다.");
         }
@@ -33,8 +36,8 @@ export default function OAuthCallback() {
       }
     };
 
-    login();
-  }, [searchParams, router]);
+    loginProcess();
+  }, [searchParams, router, login]);
 
   return <div className="text-center py-20 text-lg">로그인 처리 중입니다...</div>;
 }
