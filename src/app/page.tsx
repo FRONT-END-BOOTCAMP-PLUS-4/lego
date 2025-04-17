@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark } from "lucide-react";
+import { Bookmark, ChevronDown } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -72,6 +72,9 @@ export default function Home() {
               시작하기
             </Button>
           </Link>
+        </div>
+        <div className="absolute bottom-[var(--space-4)] left-1/2 -translate-x-1/2 animate-bounce text-[var(--gray-03)]">
+          <ChevronDown className="w-8 h-8" />
         </div>
       </section>
 
