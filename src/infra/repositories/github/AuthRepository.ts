@@ -24,11 +24,12 @@ export class GitHubAuthRepository implements AuthRepository {
 
     const user = new User(
       userData.id.toString(),
-      userData.login,
       userData.name,
       userData.email,
+      userData.nickname,
       userData.avatar_url
     );
+
     createJWT(user);
     return user;
   }

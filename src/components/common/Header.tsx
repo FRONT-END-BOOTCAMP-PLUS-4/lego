@@ -31,6 +31,8 @@ export default function Header() {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
+  console.log(user);
+
   return (
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-10 py-4 shadow-md">
       <Link href="/">

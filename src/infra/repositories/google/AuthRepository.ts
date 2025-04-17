@@ -17,20 +17,18 @@ export class GoogleAuthRepository implements AuthRepository {
     });
 
     const { access_token } = await tokenRes.json();
-    console.log(access_token);
 
     const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
     const userData = await userRes.json();
-    console.log(userData);
 
     const user = new User(
       userData.id.toString(),
-      userData.name || userData.email,
       userData.name,
       userData.email,
+      userData.given_name || userData.name,
       userData.picture
     );
 
