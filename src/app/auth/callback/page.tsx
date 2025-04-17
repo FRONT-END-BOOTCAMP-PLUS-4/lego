@@ -23,11 +23,14 @@ export default function OAuthCallback() {
           body: JSON.stringify({ code }),
         });
 
+        console.log(provider);
+        console.log(res);
+
         const { token } = await res.json();
 
-        if (token) {
-          login(token);
-          router.replace("/");
+        if (token && window.opener) {
+          window.opener.postMessage({ token }, window.origin);
+          window.close();
         } else {
           console.error("토큰이 없습니다.");
         }
@@ -39,5 +42,10 @@ export default function OAuthCallback() {
     loginProcess();
   }, [searchParams, router, login]);
 
-  return <div className="text-center py-20 text-lg">로그인 처리 중입니다...</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500" />
+      <span className="ml-4 text-blue-500 text-lg">Loading...</span>
+    </div>
+  );
 }

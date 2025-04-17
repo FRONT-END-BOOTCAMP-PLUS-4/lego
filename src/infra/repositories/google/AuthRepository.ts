@@ -2,21 +2,23 @@ import { AuthRepository } from "@/domain/repositories/AuthRepository";
 import { User } from "@/domain/entities/User";
 import { createJWT } from "@/utils/jwt";
 
-export class GitHubAuthRepository implements AuthRepository {
+export class GoogleAuthRepository implements AuthRepository {
   async loginWithOAuth(code: string): Promise<User> {
-    const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
+    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
-      headers: { Accept: "application/json" },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID!,
-        client_secret: process.env.GITHUB_CLIENT_SECRET!,
         code,
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?provider=google`,
+        grant_type: "authorization_code",
       }),
     });
 
     const { access_token } = await tokenRes.json();
 
-    const userRes = await fetch("https://api.github.com/user", {
+    const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
@@ -26,8 +28,8 @@ export class GitHubAuthRepository implements AuthRepository {
       userData.id.toString(),
       userData.name,
       userData.email,
-      userData.nickname,
-      userData.avatar_url
+      userData.given_name || userData.name,
+      userData.picture
     );
 
     createJWT(user);

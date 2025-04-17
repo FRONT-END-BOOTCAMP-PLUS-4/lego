@@ -1,8 +1,22 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+
+  if (isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <p className="text-xl text-gray-700">이미 로그인 중입니다.</p>
+      </div>
+    );
+  }
+
   const handleSocialLogin = (provider: "github" | "google") => {
     const clientId =
       provider === "github"
@@ -20,7 +34,7 @@ export default function LoginPage() {
       url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
     }
 
-    window.location.href = url;
+    window.open(url, "_blank", "width=500px,height=600px");
   };
 
   return (
@@ -50,7 +64,7 @@ export default function LoginPage() {
                 <span className="txt-lg">Continue with GitHub</span>
               </button>
               <button
-                // onClick={() => handleSocialLogin("google")}
+                onClick={() => handleSocialLogin("google")}
                 className="flex items-center justify-center w-[345px] h-[54px] border-2 border-solid mb-[8px] py-[15px] cursor-pointer rounded-md"
               >
                 <Image
