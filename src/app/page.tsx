@@ -30,7 +30,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="flex justify-center gap-[var(--space-24)] md:gap-[var(--space-36)] mb-[150px]">
+      <section className="flex justify-center gap-[var(--space-24)] md:gap-[var(--space-36)] mt-[var(--space-40)] mb-[150px]">
         {category.map((item, index) => (
           <Link key={index} href={item.href} className="flex flex-col items-center gap-2">
             <Image

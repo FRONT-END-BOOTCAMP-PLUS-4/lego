@@ -13,7 +13,7 @@ export default function RootLayout({
       <CSRHead />
       <body>
         <Header />
-        <main className="container mx-auto px-32">{children}</main>
+        <main className="mx-auto px-32">{children}</main>
         <Footer />
       </body>
     </html>
