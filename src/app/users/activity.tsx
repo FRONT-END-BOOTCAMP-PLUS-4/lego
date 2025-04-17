@@ -44,7 +44,7 @@ export default function Activity() {
                         <p className="txt-4xl-b">0</p>
                     </div>
                     <div className="mt-[50px]">
-                        <img src="/image/Bar.svg" className="h-[58px]" />
+                        <img src="/assets/image/Bar.svg" className="h-[58px]" />
                     </div>
                     <div className="w-[124px] h-[70px]  my-[32px] flex flex-col items-center">
                         <span>나의 활동 일</span>
