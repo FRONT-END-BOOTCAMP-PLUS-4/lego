@@ -99,9 +99,56 @@
   --text-48: 48px;
   --font-regular: 400;
   --font-medium: 500;
-  --font-bold: 700;
-  --line-height: 150%;
+  --font-bold: 600;
+  --line-hei: 150%;
+  --line-hei-s: 130%;
   --radius-md: 16px;
+}
+.txt-5xl-b {
+  font-size: var(--text-48);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+}
+.txt-4xl-b {
+  font-size: var(--text-36);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+}
+.txt-3xl-b {
+  font-size: var(--text-30);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+}
+.txt-2xl-b {
+  font-size: var(--text-24);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+}
+.txt-lg-b {
+  font-size: var(--text-18);
+  font-weight: var(--font-bold);
+  line-height: var(--line-hei);
+}
+.txt-sm-b {
+  font-size: var(--text-14);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+}
+.txt-lg {
+  font-size: var(--text-18);
+  line-height: var(--line-hei);
+}
+.txt-base {
+  font-size: var(--text-16);
+  line-height: var(--line-hei);
+}
+.txt-sm {
+  font-size: var(--text-14);
+  line-height: var(--line-hei);
+}
+.txt-xs {
+  font-size: var(--text-12);
+  line-height: var(--line-hei);
 }
 
 .dark {

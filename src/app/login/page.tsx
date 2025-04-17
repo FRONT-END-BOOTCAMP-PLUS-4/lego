@@ -1,31 +1,35 @@
+import Link from "next/link";
 import React from "react";
 
 
 export default function LoginPage() {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-white px-4">
-        <div className="max-w-md w-full text-center space-y-6">
-            
-          {/* 헤더 텍스트 */}
-          <div className="flex flex-col items-center justify-center">
-            <img src="/image/Logo.svg" className="w-[80px] h-[80px]" />
-            <h1 className="text-4xl font-bold" style={{color: 'var(--blue-01)'}}>소셜 로그인</h1>
-            <p className="">기존에 사용하는 계정으로<br/>간단하게 로그인 하세요</p>
+      <main className="flex flex-col items-center justify-center">
+        <div className="w-[448px] h-[660px] flex flex-col justify-center">
+          <div className="h-[380px]">
+            <div className="h-[200px] flex flex-col justify-center items-center">
+              <img src="/image/Logo.svg" className="w-[82px] h-[82px]"/>
+              <h1 className="txt-4xl-b mb-[8px]" style={{color: 'var(--blue-01)'}}>소셜 로그인</h1>
+              <p className="text-center">기존에 사용하는 계정으로<br/>간단하게 로그인 하세요</p>
+            </div>
+            <div className="h-[180px] mt-[24px] flex flex-col items-center justify-center">
+              <div className="  mb-[24px]">
+                <button className="flex items-center justify-center w-[345px] h-[54px] border-1 border-solid mb-[8px] py-[15px] cursor-pointer rounded-md border-black">
+                  <img className="w-[24px] h-[24px] mr-[8px]" src="/image/Github.svg"/>
+                  <span className="txt-lg">Continue with Github</span>
+                </button>
+                <button className="flex items-center justify-center w-[345px] h-[54px] border-2 border-solid py-[15px] cursor-pointer rounded-md">
+                  <img className="w-[24px] h-[24px] mr-[8px]" src="/image/Google.svg"/>
+                  <span className="txt-lg">Continue with Google</span>
+                </button>
+              </div>
+              
+              <Link href="/admin" className="txt-sm w-[78px]" style={{textDecoration: 'underline', color: 'var(--gray-02)'}}>
+                관리자 로그인
+              </Link>
+              
+            </div>
           </div>
-  
-          {/* 로그인 버튼들 */}
-          <div className="space-y-4">
-            <button className="w-full flex items-center justify-center border border-gray-300 rounded-full py-2 text-sm font-medium hover:bg-gray-50 transition">
-              <img src="/image/Github.svg" className="w-[24px] h-[24px]"/>
-
-              Continue with Github
-            </button>
-            <button className="w-full flex items-center justify-center border border-gray-300 rounded-full py-2 text-sm font-medium hover:bg-gray-100 transition">
-              <img src="/image/Google.svg" className="w-[24px] h-[24px]"/>
-              Continue with Google
-            </button>
-          </div>
-  
         </div>
       </main>
     );
