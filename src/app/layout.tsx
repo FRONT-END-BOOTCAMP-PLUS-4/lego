@@ -1,3 +1,6 @@
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
+import CSRHead from "@/components/common/Head";
 import "./globals.css";
 
 export default function RootLayout({
@@ -7,7 +10,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <CSRHead />
+      <body>
+        <Header />
+        <main className="mx-auto px-32">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
