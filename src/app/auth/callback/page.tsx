@@ -25,9 +25,11 @@ export default function OAuthCallback() {
 
         const { token } = await res.json();
 
-        if (token) {
-          login(token);
-          router.replace("/");
+        if (token && window.opener) {
+          // login(token);
+          // router.replace("/");
+          window.opener.postMessage({ token }, window.origin);
+          window.close();
         } else {
           console.error("토큰이 없습니다.");
         }
