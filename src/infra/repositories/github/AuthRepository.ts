@@ -1,5 +1,5 @@
 import { AuthRepository } from "@/domain/repositories/AuthRepository";
-import { User } from "@/domain/enities/User";
+import { User } from "@/domain/entities/User";
 import { createJWT } from "@/utils/jwt";
 
 export class GitHubAuthRepository implements AuthRepository {

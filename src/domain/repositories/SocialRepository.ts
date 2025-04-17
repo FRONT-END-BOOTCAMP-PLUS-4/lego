@@ -1,6 +1,6 @@
-import { Social } from "../enities/Social";
+import { Social } from "../entities/Social";
 
 export interface SocialRepository {
-    findById(id: number): Promise<Social>;
-    findAll(social: Social): Promise<Social[]>;
+  findById(id: number): Promise<Social>;
+  findAll(social: Social): Promise<Social[]>;
 }

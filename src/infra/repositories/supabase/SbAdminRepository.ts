@@ -1,6 +1,6 @@
 import { supabase } from "@/utils/supabase/server";
 import { AdminRepository } from "@/domain/repositories/AdminRepository";
-import { Admin } from "@/domain/enities/Admin";
+import { Admin } from "@/domain/entities/Admin";
 
 export class SbAdminRepository implements AdminRepository {
   // 이름과 비밀번호로 관리자 찾기
