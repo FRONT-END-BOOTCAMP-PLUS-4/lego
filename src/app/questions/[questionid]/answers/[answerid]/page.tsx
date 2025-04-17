@@ -87,7 +87,7 @@ Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지�
         </div>
 
       {/* 본문과 텍스트 사이의 패딩 */}
-      <div className="py-[150px]"></div>
+      <div className="mb-[150px]"></div>
 
       {/* 댓글 입력 영역 */}
       <div className="mt-[40px] mb-[24px]">
