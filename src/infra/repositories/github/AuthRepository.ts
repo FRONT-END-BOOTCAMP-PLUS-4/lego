@@ -1,5 +1,5 @@
 import { AuthRepository } from "@/domain/repositories/AuthRepository";
-import { User } from "@/domain/enities/User";
+import { User } from "@/domain/entities/User";
 import { createJWT } from "@/utils/jwt";
 
 export class GitHubAuthRepository implements AuthRepository {
@@ -8,7 +8,7 @@ export class GitHubAuthRepository implements AuthRepository {
       method: "POST",
       headers: { Accept: "application/json" },
       body: new URLSearchParams({
-        client_id: process.env.GITHUB_CLIENT_ID!,
+        client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID!,
         client_secret: process.env.GITHUB_CLIENT_SECRET!,
         code,
       }),
@@ -22,8 +22,14 @@ export class GitHubAuthRepository implements AuthRepository {
 
     const userData = await userRes.json();
 
-    const user = new User(userData.id.toString(), userData.login);
-    createJWT(user); // JWT 발급은 controller에서 처리 가능
+    const user = new User(
+      userData.id.toString(),
+      userData.login,
+      userData.name,
+      userData.email,
+      userData.avatar_url
+    );
+    createJWT(user);
     return user;
   }
 }

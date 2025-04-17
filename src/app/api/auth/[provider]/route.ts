@@ -4,17 +4,18 @@ import { GitHubAuthRepository } from "@/infra/repositories/github/AuthRepository
 import { LoginWithGitHubUsecase } from "@/application/usecase/user/LoginWithGithub";
 // import { LoginWithGoogleUsecase } from "@/application/usecase/loginWithGoogle";
 
-export async function POST(req: NextRequest, { params }: { params: { provider: string } }) {
+export async function POST(req: NextRequest, context: { params: { provider: string } }) {
   const { code } = await req.json();
+  const { provider } = await context.params;
 
-  if (!code || !params.provider) {
+  if (!code || !provider) {
     return NextResponse.json({ error: "Missing code or provider" }, { status: 400 });
   }
 
   let token = "";
 
   try {
-    switch (params.provider) {
+    switch (provider) {
       case "github": {
         const repo = new GitHubAuthRepository();
         const usecase = new LoginWithGitHubUsecase(repo);

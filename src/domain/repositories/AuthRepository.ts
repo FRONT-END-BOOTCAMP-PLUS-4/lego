@@ -1,4 +1,4 @@
-import { User } from "@/domain/enities/User";
+import { User } from "@/domain/entities/User";
 
 export interface AuthRepository {
   loginWithOAuth(code: string): Promise<User>;
