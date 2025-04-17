@@ -23,6 +23,9 @@ export default function OAuthCallback() {
           body: JSON.stringify({ code }),
         });
 
+        console.log(provider);
+        console.log(res);
+
         const { token } = await res.json();
 
         if (token && window.opener) {

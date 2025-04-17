@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GitHubAuthRepository } from "@/infra/repositories/github/AuthRepository";
-// import { GoogleAuthRepository } from "@/infra/repositories/google/AuthRepository";
+import { GoogleAuthRepository } from "@/infra/repositories/google/AuthRepository";
 import { LoginWithGitHubUsecase } from "@/application/usecase/user/LoginWithGithub";
-// import { LoginWithGoogleUsecase } from "@/application/usecase/loginWithGoogle";
+import { LoginWithGoogleUsecase } from "@/application/usecase/user/LoginWithGoogle";
 
 export async function POST(req: NextRequest, context: { params: { provider: string } }) {
   const { code } = await req.json();
@@ -22,12 +22,12 @@ export async function POST(req: NextRequest, context: { params: { provider: stri
         token = await usecase.execute(code);
         break;
       }
-      //   case "google": {
-      //     const repo = new GoogleAuthRepository();
-      //     const usecase = new LoginWithGoogleUsecase(repo);
-      //     token = await usecase.execute(code);
-      //     break;
-      //   }
+      case "google": {
+        const repo = new GoogleAuthRepository();
+        const usecase = new LoginWithGoogleUsecase(repo);
+        token = await usecase.execute(code);
+        break;
+      }
       default:
         return NextResponse.json({ error: "Unsupported provider" }, { status: 400 });
     }
