@@ -6,6 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { User, LogOut } from "lucide-react";
 
 export default function Header() {
   const router = useRouter();
@@ -29,7 +36,7 @@ export default function Header() {
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []);
+  }, [router]);
 
   console.log(user);
 
@@ -40,21 +47,30 @@ export default function Header() {
       </Link>
 
       {isLoggedIn ? (
-        <div className="flex items-center">
-          <div className="flex items-center gap-2">
-            <Image
-              src={user?.avatarUrl || "/default-avatar.png"}
-              width={30}
-              height={30}
-              alt="profile image"
-              className="rounded-xl"
-            />
-            <p>{user?.name}님 환영해요!</p>
-          </div>
-          <Button variant="ghost" onClick={handleLogout}>
-            로그아웃
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-2 cursor-pointer">
+              <Image
+                src={user?.avatarUrl || ""}
+                width={30}
+                height={30}
+                alt="profile image"
+                className="rounded-xl"
+              />
+              <p>{user?.name}님</p>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => router.push("/users")}>
+              <User />
+              마이 페이지
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut />
+              로그아웃
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <Link href="/login">
           <Button variant="ghost">로그인/회원가입</Button>
