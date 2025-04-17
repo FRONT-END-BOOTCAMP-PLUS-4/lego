@@ -26,8 +26,6 @@ export default function OAuthCallback() {
         const { token } = await res.json();
 
         if (token && window.opener) {
-          // login(token);
-          // router.replace("/");
           window.opener.postMessage({ token }, window.origin);
           window.close();
         } else {
@@ -41,5 +39,10 @@ export default function OAuthCallback() {
     loginProcess();
   }, [searchParams, router, login]);
 
-  return <div className="text-center py-20 text-lg">로그인 처리 중입니다...</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500" />
+      <span className="ml-4 text-blue-500 text-lg">Loading...</span>
+    </div>
+  );
 }

@@ -1,8 +1,22 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+
+  if (isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <p className="text-xl text-gray-700">이미 로그인 중입니다.</p>
+      </div>
+    );
+  }
+
   const handleSocialLogin = (provider: "github" | "google") => {
     const clientId =
       provider === "github"
