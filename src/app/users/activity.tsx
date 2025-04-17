@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import GitHubCalendar from "react-github-calendar";
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs'
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {
     Select,
     SelectContent,
@@ -9,37 +9,57 @@ import {
     SelectValue,
   } from "@/components/ui/select";
   import MyAnswer from "./myAnswer";
+  import Bookmark from "./bookmark";
+  import Comment from "./comment";
+  import LikeAnswer from "./likeAnswer";
 
 
 export default function Activity() {
-    const [selectedTab, setSelectedTab] = useState();
+    const [selectedTab, setSelectedTab] = useState<string | undefined>(undefined);
     const [selectedYear, setSelectedYear] = useState<'lastYear' | 'current'>('current');
     const currentYear = new Date().getFullYear();
     const selectYear = selectedYear === 'current' ? currentYear : currentYear - 1;
     return(
         <>
-            <div className="flex items-center mt-[24px] justify-between w-[948px]">
-                <Tabs className="">
-                    <TabsList>
+            <div className="flex items-center mt-[24px] justify-between w-[948px] relative">
+                <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+                    <TabsList className="mb-[56px]">
                         <TabsTrigger className="txt-lg" value="myAnswer">내답변</TabsTrigger>
                         <TabsTrigger className="txt-lg" value="bookmark">북마크</TabsTrigger>
-                        <TabsTrigger className="txt-lg" value="likeOfAnswer">좋아요 한 답변</TabsTrigger>
+                        <TabsTrigger className="txt-lg" value="likeAnswer">좋아요 한 답변</TabsTrigger>
                         <TabsTrigger className="txt-lg" value="comment">댓글</TabsTrigger>
                     </TabsList>
+                    <TabsContent value="myAnswer">
+                        <MyAnswer></MyAnswer>
+                        <MyAnswer></MyAnswer>
+                        <MyAnswer></MyAnswer>
+                    </TabsContent>
+                    <TabsContent value='bookmark'>
+                        <Bookmark></Bookmark>
+                    </TabsContent>
+                    <TabsContent value="likeAnswer">
+                        <LikeAnswer></LikeAnswer>
+                    </TabsContent>
+                    <TabsContent value="comment">
+                        <Comment></Comment>
+                    </TabsContent>
                 </Tabs>
-                <Select onValueChange={(value: 'lastYear' | 'current') => setSelectedYear(value)}>
-                    <SelectTrigger>
-                    <SelectValue placeholder={selectYear} />
-                    </SelectTrigger>
-                    <SelectContent>
-                    <SelectItem value="lastYear">{currentYear - 1}</SelectItem>
-                    <SelectItem value="current">{currentYear}</SelectItem>
-                    </SelectContent>
-                </Select>
+                {!selectedTab &&(<div className="absolute top-0 right-0">
+                    <Select onValueChange={(value: 'lastYear' | 'current') => setSelectedYear(value)}>
+                        <SelectTrigger>
+                        <SelectValue placeholder={selectYear} />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="current">{currentYear}</SelectItem>
+                        <SelectItem value="lastYear">{currentYear - 1}</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>)}
             </div>
-            <div className="mt-[50px] w-[948px] h-[136px] rounded-lg" style={{background: 'var(--blue-04)'}}>
+            {!selectedTab && (<>
+                <div className="w-[948px] h-[136px] rounded-lg" style={{background: 'var(--blue-04)'}}>
                 <div className="flex ">
-                    <div className="w-[124px] h-[70px] mx-[24px] my-[32px] flex flex-col items-center">
+                    <div className="w-[124px] h-[70px] mr-[24px] ml-[12px] my-[32px] flex flex-col items-center">
                         <span>내가 답변한 문제 수</span>
                         <p className="txt-4xl-b">0</p>
                     </div>
@@ -58,7 +78,8 @@ export default function Activity() {
                     <GitHubCalendar username="who" year={selectYear}/>
                 </div>
             </div>
-            {/* <MyAnswer></MyAnswer> */}
+            </>)}
+            
         </>
     )
 }
