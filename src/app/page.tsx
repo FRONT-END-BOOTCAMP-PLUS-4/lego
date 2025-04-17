@@ -1,21 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { UnderlineTab } from "@/components/ui/underLinetab";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React from "react";
-import { Card } from "@/components/ui/card";
-
 export default function Home() {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
