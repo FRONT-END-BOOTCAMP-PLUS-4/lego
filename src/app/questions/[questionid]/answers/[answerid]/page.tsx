@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
-import { Card } from "@/components/ui/card";
+import { TextArea } from "@/components/ui/textArea"
+
 
 export default function AnswerDetailPage() {
   // Mock data for comments
@@ -90,37 +90,27 @@ Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지�
       <div className="mb-[150px]"></div>
 
       {/* 댓글 입력 영역 */}
-      <div className="mt-[40px] mb-[24px]">
+      <div className="mt-[40px] mb-[16px]">
         <label className="txt-sm-b" htmlFor="comment" >
           <span className="text-[var(--gray-02)]">댓글 수 </span>
           <span className="text-black">{comments.length}</span>
         </label>
         <div className="mb-[10px]" />
+
         <div className="flex gap-2">
-          <div className="flex flex-col w-full gap-2">
-            <div className="flex gap-2">
-                <Card className="w-full h-[120px] bg-white">
-                  <div className="text-sm">
-                    <label className="txt-sm-b" htmlFor="comment" >
-                      아이디
-                    </label>
-                  <Input
-                    placeholder="Type your message here"
-                    id="comment"
-                    className="h-[40px] bg-white placeholder-gray-400 placeholder:font-normal border-none"
-                  />
-                  </div>
-                </Card>
-              <Button
-                className="w-[80px] h-[120px]"
-                variant="outline"
-              >
-                등록
-              </Button>
-            </div>
-          </div>
+          {/* 좌측 박스: 작성자 + 입력창 */}
+          <TextArea placeholder="Type your message here" />
+          <Button
+            className="w-[80px] h-[120px]"
+            variant="outline"
+          >
+            등록
+          </Button>
         </div>
       </div>
+
+      {/* 본문과 텍스트 사이의 패딩 */}
+      <div className="mb-[58px]"></div>
 
       {/* 댓글 리스트 */}
       <div className="mt-[30px] space-y-8">
