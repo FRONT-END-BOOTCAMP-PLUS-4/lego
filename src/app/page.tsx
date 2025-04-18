@@ -68,7 +68,11 @@ export default function Home() {
             하지만, 저희와 함께라면 걱정하지 마세요!
           </p>
           <Link href="/questions">
-            <Button variant="round" size="lg" className="w-fit">
+            <Button
+              variant="round"
+              size="lg"
+              className="hover:-translate-y-2 transition-transform duration-300"
+            >
               시작하기
             </Button>
           </Link>
