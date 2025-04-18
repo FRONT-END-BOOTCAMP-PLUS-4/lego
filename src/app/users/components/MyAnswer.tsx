@@ -6,7 +6,7 @@ export default function MyAnswer() {
   return (
     <>
       <div
-        className="w-[948px] h-[230px] px-[36px] py-[24px] border-1 border-gray rounded-xl"
+        className="px-[36px] py-[24px] border-1 border-gray rounded-xl"
         style={{ background: "var(--blue-04)" }}
       >
         <div className="flex items-center mb-[4px]">

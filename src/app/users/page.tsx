@@ -17,7 +17,7 @@ export default function Mypage() {
   };
 
   return (
-    <section className="w-[980px] h-[660px]  m-auto">
+    <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0">
       <h2 className="txt-2xl-b mt-[var(--space-40)] mb-[50px]">마이 페이지</h2>
       <UnderlineTab
         item={["나의 활동", "계정 관리"]}

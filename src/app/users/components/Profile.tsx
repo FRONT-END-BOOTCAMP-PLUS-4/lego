@@ -1,22 +1,42 @@
 "use client";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MyAnswer from "./MyAnswer";
+import Bookmark from "./Bookmark";
+import Comment from "./Comment";
+import LikeAnswer from "./LikeAnswer";
+
 export default function Profile() {
   return (
-    <div className="w-[948px] h-[456px] flex justify-center items-center">
-      <div>
-        <button
-          className="w-[120px] h-[120px] rounded-full relative"
-          style={{ background: "var(--gray-01)" }}
-        >
-          <label
-            className="cursor-pointer w-[32px] h-[32px] rounded-full flex justify-center items-center absolute left-[86px] top-[81px]"
-            style={{ background: "var(--gray-02)" }}
-          >
-            <input type="file" className="hidden" accept="image/*"></input>
-          </label>
-        </button>
-        <div></div>
-      </div>
-    </div>
+    <>
+      <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+        <TabsList className="mb-[56px]">
+          <TabsTrigger className="txt-lg" value="myAnswer">
+            내답변
+          </TabsTrigger>
+          <TabsTrigger className="txt-lg" value="bookmark">
+            북마크
+          </TabsTrigger>
+          <TabsTrigger className="txt-lg" value="likeAnswer">
+            좋아요 한 답변
+          </TabsTrigger>
+          <TabsTrigger className="txt-lg" value="comment">
+            댓글
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="myAnswer">
+          <MyAnswer />
+        </TabsContent>
+        <TabsContent value="bookmark">
+          <Bookmark></Bookmark>
+        </TabsContent>
+        <TabsContent value="likeAnswer">
+          <LikeAnswer></LikeAnswer>
+        </TabsContent>
+        <TabsContent value="comment">
+          <Comment></Comment>
+        </TabsContent>
+      </Tabs>
+    </>
   );
 }

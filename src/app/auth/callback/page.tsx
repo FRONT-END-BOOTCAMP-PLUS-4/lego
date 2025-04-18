@@ -28,7 +28,7 @@ export default function OAuthCallback() {
 
         if (token && window.opener) {
           window.opener.postMessage({ token }, window.origin);
-          // window.close();
+          window.close();
         } else {
           console.error("토큰이 없습니다.");
         }
