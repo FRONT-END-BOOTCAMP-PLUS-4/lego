@@ -1,15 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GitHubCalendar from "react-github-calendar";
 import { useProfileStore } from "@/store/useProfileStore";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 
 export default function Activity() {
-  const { selectedYear } = useProfileStore();
-
+  const { selectedYear, setShowModal } = useProfileStore();
   const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const fetchSubscriptionStatus = async () => {
+      const isSubscribed = true; // subscribe 테이블에서 가져온 구독 여부
+      setEnabled(isSubscribed);
+    };
+    fetchSubscriptionStatus();
+  }, []);
+
+  const handleToggle = (checked: boolean) => {
+    setEnabled(checked);
+
+    if (checked) {
+      setShowModal(true);
+    } else {
+      // 구독 해제 로직
+    }
+  };
 
   return (
     <>
@@ -31,7 +48,7 @@ export default function Activity() {
           </div>
         </div>
         <div className="flex gap-3 items-center">
-          <Switch checked={enabled} onCheckedChange={setEnabled} />
+          <Switch checked={enabled} onCheckedChange={handleToggle} />
           <p>카카오톡 알림 받기</p>
         </div>
       </Card>

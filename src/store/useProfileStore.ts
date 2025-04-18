@@ -14,6 +14,12 @@ interface ProfileStoreState {
 
   selectedYear: MypageYearType;
   setSelectedYear: (year: MypageYearType) => void;
+
+  kakaoAutoToggle: boolean;
+  setKakaoAutoToggle: (value: boolean) => void;
+
+  showModal: boolean;
+  setShowModal: (value: boolean) => void;
 }
 
 export const useProfileStore = create<ProfileStoreState>()(
@@ -27,6 +33,12 @@ export const useProfileStore = create<ProfileStoreState>()(
 
       selectedYear: 2025,
       setSelectedYear: (year) => set({ selectedYear: year }),
+
+      kakaoAutoToggle: false,
+      setKakaoAutoToggle: (value) => set({ kakaoAutoToggle: value }),
+
+      showModal: false,
+      setShowModal: (value) => set({ showModal: value }),
     }),
     {
       name: "profile-store",

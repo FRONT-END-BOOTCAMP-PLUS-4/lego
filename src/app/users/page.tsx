@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProfileStore, MypageTabType, MypageYearType } from "@/store/useProfileStore";
 import { UnderlineTab } from "@/components/ui/underLinetab";
 import {
@@ -12,10 +12,27 @@ import {
 } from "@/components/ui/select";
 import Profile from "./components/History";
 import Activity from "./components/Activity";
+import KakaoModal from "./components/KakaoModal";
 
 export default function Mypage() {
-  const { activeIndex, setActiveIndex, selectedYear, setSelectedYear } = useProfileStore();
+  const {
+    activeIndex,
+    setActiveIndex,
+    selectedYear,
+    setSelectedYear,
+    kakaoAutoToggle,
+    setKakaoAutoToggle,
+    showModal,
+    setShowModal,
+  } = useProfileStore();
   const [activityKey, setActivityKey] = useState(0);
+
+  useEffect(() => {
+    if (kakaoAutoToggle) {
+      setShowModal(true);
+      setKakaoAutoToggle(false);
+    }
+  }, [kakaoAutoToggle, setKakaoAutoToggle, setShowModal]);
 
   const redirectHandler = (value: number) => {
     setActiveIndex(value as MypageTabType);
@@ -26,6 +43,13 @@ export default function Mypage() {
 
   return (
     <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
+      <KakaoModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          setShowModal(false);
+        }}
+      />
       <h2 className="txt-2xl-b mb-[var(--space-50)]">마이 페이지</h2>
 
       <div className="flex justify-between items-end">
