@@ -5,10 +5,10 @@ import MyAnswer from "./MyAnswer";
 import Bookmark from "./Bookmark";
 import Comment from "./Comment";
 import LikeAnswer from "./LikeAnswer";
-import { useProfileTabStore, ProfileTabType } from "@/store/useProfileStore";
+import { useProfileStore, ProfileTabType } from "@/store/useProfileStore";
 
 export default function Profile() {
-  const { selectedTab, setSelectedTab } = useProfileTabStore();
+  const { selectedTab, setSelectedTab } = useProfileStore();
 
   const handleTabs = (value: string) => {
     setSelectedTab(value as ProfileTabType);
@@ -16,7 +16,7 @@ export default function Profile() {
 
   return (
     <Tabs value={selectedTab} onValueChange={handleTabs}>
-      <TabsList className="mb-[56px]">
+      <TabsList className="">
         <TabsTrigger className="txt-lg" value="myAnswer">
           내답변
         </TabsTrigger>
