@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 export type ProfileTabType = "myAnswer" | "bookmark" | "likeAnswer" | "comment";
 export type MypageTabType = 0 | 1;
-export type MypageYearType = 2025 | 2024;
+export type MypageYearType = 2025 | 2024 | 2023;
 
 interface ProfileStoreState {
   activeIndex: MypageTabType;

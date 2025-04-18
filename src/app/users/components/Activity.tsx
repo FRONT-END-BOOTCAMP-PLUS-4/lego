@@ -13,7 +13,10 @@ export default function Activity() {
 
   return (
     <>
-      <Card variant="default" className="flex justify-between mb-[38px] cursor-default">
+      <Card
+        variant="default"
+        className="flex justify-between mb-[38px] mt-[var(--space-50)] cursor-default"
+      >
         <div className="flex">
           <div className="flex flex-col">
             <p className="txt-sm">내가 답변한 문제수</p>

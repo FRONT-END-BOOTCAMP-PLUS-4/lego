@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useProfileStore, MypageTabType } from "@/store/useProfileStore";
+import { useProfileStore, MypageTabType, MypageYearType } from "@/store/useProfileStore";
 import { UnderlineTab } from "@/components/ui/underLinetab";
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Profile from "./components/Profile";
+import Profile from "./components/History";
 import Activity from "./components/Activity";
 
 export default function Mypage() {
@@ -22,23 +22,30 @@ export default function Mypage() {
     if (value === 0) setActivityKey((prev) => prev + 1);
   };
 
-  const tabList = ["나의 활동", "계정 관리"];
+  const tabList = ["나의 활동", "히스토리"];
 
   return (
     <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
       <h2 className="txt-2xl-b mb-[var(--space-50)]">마이 페이지</h2>
 
-      <div className="flex justify-between items-end mb-[var(--space-50)]">
+      <div className="flex justify-between items-end">
         <UnderlineTab item={tabList} activeIndex={activeIndex} setActiveIndex={redirectHandler} />
-        <Select value={selectedYear.toString()} onValueChange={(v) => setSelectedYear(Number(v))}>
-          <SelectTrigger>
-            <SelectValue placeholder="연도를 선택하세요" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="2025">2025</SelectItem>
-            <SelectItem value="2024">2024</SelectItem>
-          </SelectContent>
-        </Select>
+
+        {activeIndex === 0 && (
+          <Select
+            value={selectedYear.toString()}
+            onValueChange={(v) => setSelectedYear(v as unknown as MypageYearType)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="연도를 선택하세요" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2025">2025</SelectItem>
+              <SelectItem value="2024">2024</SelectItem>
+              <SelectItem value="2023">2023</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {activeIndex === 0 && <Activity key={activityKey} />}
