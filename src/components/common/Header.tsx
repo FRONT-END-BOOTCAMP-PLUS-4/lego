@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { User, LogOut } from "lucide-react";
+import KakaoAlertButton from "./KakaoAlert";
 
 export default function Header() {
   const router = useRouter();
@@ -41,14 +42,14 @@ export default function Header() {
   console.log(user);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-10 py-4 shadow-md">
+    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-20 py-4 shadow-md">
       <Link href="/">
         <Image src="/logo.svg" alt="Logo" width={100} height={100} />
       </Link>
 
       {isLoggedIn ? (
-        <div className="flex items-center gap-6">
-          <p>카톡카톡</p>
+        <nav className="flex items-center gap-6">
+          <KakaoAlertButton />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
@@ -73,7 +74,7 @@ export default function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+        </nav>
       ) : (
         <Link href="/login">
           <Button variant="ghost">로그인/회원가입</Button>
