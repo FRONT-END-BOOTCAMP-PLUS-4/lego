@@ -47,30 +47,33 @@ export default function Header() {
       </Link>
 
       {isLoggedIn ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex items-center gap-2 cursor-pointer">
-              <Image
-                src={user?.avatarUrl || ""}
-                width={30}
-                height={30}
-                alt="profile image"
-                className="rounded-xl"
-              />
-              <p>{user?.name}님</p>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => router.push("/users")}>
-              <User />
-              마이 페이지
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut />
-              로그아웃
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-6">
+          <p>카톡카톡</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <Image
+                  src={user?.avatarUrl || "/assets/image/default-avatar.svg"}
+                  width={30}
+                  height={30}
+                  alt="profile image"
+                  className="rounded-xl"
+                />
+                <p>{user?.nickname}님</p>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => router.push("/users")}>
+                <User />
+                마이 페이지
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut />
+                로그아웃
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       ) : (
         <Link href="/login">
           <Button variant="ghost">로그인/회원가입</Button>
