@@ -1,3 +1,7 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import CSRHead from "@/components/common/Head";
@@ -8,13 +12,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isAuthCallback = pathname.startsWith("/auth/callback");
+
   return (
     <html lang="ko">
       <CSRHead />
       <body>
-        <Header />
+        {!isAuthCallback && <Header />}
         <main className="mx-auto px-32">{children}</main>
-        <Footer />
+        {!isAuthCallback && <Footer />}
       </body>
     </html>
   );

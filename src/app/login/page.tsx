@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 
 export default function LoginPage() {
-  const router = useRouter();
   const { isLoggedIn } = useAuthStore();
 
   if (isLoggedIn) {

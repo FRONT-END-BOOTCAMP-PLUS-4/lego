@@ -6,6 +6,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { User, LogOut } from "lucide-react";
+import KakaoAlertButton from "./KakaoAlert";
 
 export default function Header() {
   const router = useRouter();
@@ -29,32 +37,44 @@ export default function Header() {
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []);
+  }, [router]);
 
   console.log(user);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-10 py-4 shadow-md">
+    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-20 py-4 shadow-md">
       <Link href="/">
         <Image src="/logo.svg" alt="Logo" width={100} height={100} />
       </Link>
 
       {isLoggedIn ? (
-        <div className="flex items-center">
-          <div className="flex items-center gap-2">
-            <Image
-              src={user?.avatarUrl || "/default-avatar.png"}
-              width={30}
-              height={30}
-              alt="profile image"
-              className="rounded-xl"
-            />
-            <p>{user?.name}님 환영해요!</p>
-          </div>
-          <Button variant="ghost" onClick={handleLogout}>
-            로그아웃
-          </Button>
-        </div>
+        <nav className="flex items-center gap-6">
+          <KakaoAlertButton />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <Image
+                  src={user?.avatarUrl || "/assets/image/default-avatar.svg"}
+                  width={30}
+                  height={30}
+                  alt="profile image"
+                  className="rounded-xl"
+                />
+                <p>{user?.nickname}님</p>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => router.push("/users")}>
+                <User />
+                마이 페이지
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut />
+                로그아웃
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
       ) : (
         <Link href="/login">
           <Button variant="ghost">로그인/회원가입</Button>

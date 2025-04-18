@@ -1,4 +1,5 @@
 import lineClamp from "@tailwindcss/line-clamp";
+import animate from "tailwind-animate";
 
 /** @type {import('tailwindcss').Config} */
 
@@ -15,6 +16,7 @@ module.exports = {
         xl: "1272px",
       },
     },
+    extend: {},
   },
-  plugins: [lineClamp],
+  plugins: [lineClamp, animate],
 };

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GitHubAuthRepository } from "@/infra/repositories/github/AuthRepository";
-import { GoogleAuthRepository } from "@/infra/repositories/google/AuthRepository";
+import { GitHubAuthRepository } from "@/infra/repositories/auth/GitHubAuthRepository";
+import { GoogleAuthRepository } from "@/infra/repositories/auth/GoogleAuthRepository";
 import { LoginWithGitHubUsecase } from "@/application/usecase/user/LoginWithGithub";
 import { LoginWithGoogleUsecase } from "@/application/usecase/user/LoginWithGoogle";
 
