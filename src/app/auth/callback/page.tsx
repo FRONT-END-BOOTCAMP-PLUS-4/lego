@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Loader } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function OAuthCallback() {
@@ -23,14 +24,11 @@ export default function OAuthCallback() {
           body: JSON.stringify({ code }),
         });
 
-        console.log(provider);
-        console.log(res);
-
         const { token } = await res.json();
 
         if (token && window.opener) {
           window.opener.postMessage({ token }, window.origin);
-          window.close();
+          // window.close();
         } else {
           console.error("토큰이 없습니다.");
         }
@@ -43,9 +41,9 @@ export default function OAuthCallback() {
   }, [searchParams, router, login]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500" />
-      <span className="ml-4 text-blue-500 text-lg">Loading...</span>
+    <div className="min-h-screen flex flex-col items-center justify-center gap-6">
+      <Loader className="w-[20vw] h-[20vh] animate-bounce" />
+      <p className="txt-2xl-b ">Loading...</p>
     </div>
   );
 }
