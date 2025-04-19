@@ -4,6 +4,6 @@ export class Answer {
     public questionId: number,
     public content: string,
     public createdAt?: Date,
-    public updaredAt?: Date
+    public updatedAt?: Date
   ) {}
 }
