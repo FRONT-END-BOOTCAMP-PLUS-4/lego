@@ -36,7 +36,7 @@ export default function AnswerFormPage({ params }: Props) {
     }
     const formData = {
       userId: userEmail,
-      questionId: 4,
+      questionId,
       content,
     };
     try {
