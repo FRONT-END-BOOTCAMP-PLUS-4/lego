@@ -4,8 +4,9 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+
 import { useAuthStore } from "@/store/useAuthStore";
+import AnswerPreviewCard from "@/app/api/answers/componsts/AnswerPreviewCard";
 
 interface Props {
   params: {
@@ -20,6 +21,7 @@ export default function AnswerFormPage({ params }: Props) {
   const [tab, setTab] = useState<string>("tab1");
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const userEmail = user?.email;
@@ -116,6 +118,7 @@ export default function AnswerFormPage({ params }: Props) {
               className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
               placeholder="내용을 입력하세요..."
               ref={answerRef}
+              disabled={!isEditing}
             ></textarea>
           </TabsContent>
           <TabsContent value="tab2">
@@ -126,51 +129,41 @@ export default function AnswerFormPage({ params }: Props) {
             ></textarea>
           </TabsContent>
         </Tabs>
-        <div className="flex justify-center mt-[24px]">
-          {/* 이미 기존에 작성한 답변이 있으면 */}
-          {isSubmit && (
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="lg"
-                type="button"
-                onClick={() => handleSaveAnswer("update")}
-              >
-                수정
+        {tab === "tab1" && (
+          <div className="flex justify-center mt-[24px]">
+            {/* 이미 기존에 작성한 답변이 있으면 수정 삭제 먼저 */}
+            {isSubmit && (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  type="button"
+                  onClick={() => {
+                    if (isEditing) {
+                      handleSaveAnswer("update");
+                    }
+                    setIsEditing((prev) => !prev);
+                  }}
+                >
+                  {isEditing ? "저장" : "수정"}
+                </Button>
+                <Button variant="gray" size="lg" type="button" onClick={handleDeleteAnswer}>
+                  삭제
+                </Button>
+              </div>
+            )}
+            {!isSubmit && (
+              <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
+                저장
               </Button>
-              <Button variant="gray" size="lg" type="button" onClick={handleDeleteAnswer}>
-                삭제
-              </Button>
-            </div>
-          )}
-          {!isSubmit && (
-            <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
-              저장
-            </Button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </form>
       <div className="pt-[150px] pb-[150px]">
         <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
         <div className="grid grid-cols-2 grid-rows-auto gap-x-16 gap-y-24">
-          <Card>
-            <div className="flex gap-4 items-center mb-6">
-              <p className="line-clamp-2">
-                s not simply random text. It has roots in a piece of classical Latin literature from
-                45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
-                Hampden-Sydney College in Virginiaer 2000 years old. Richard McClintock, a Latin
-                professor at Hampden-Sydney College in Virginia
-              </p>
-              <span className="w-[32px] h-[32px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
-            </div>
-            <div className="flex justify-between">
-              <span>
-                <span className="txt-sm !text-[var(--gray-02)] mr-2">2020.20.20</span>
-                <span className="txt-sm !text-[var(--gray-02)]">작성자 이름</span>
-              </span>
-              <span className="txt-sm !text-[var(--gray-02)]">좋아요 100</span>
-            </div>
-          </Card>
+          <AnswerPreviewCard />
         </div>
       </div>
     </div>

@@ -23,7 +23,6 @@ export class SbAnswerRepository implements AnswerRepository {
       .select()
       .single();
 
-    console.error("Supabase 에러:", error);
     if (error) {
       console.error("답변 저장 실패:", error);
       throw new Error("답변 저장 실패.");
