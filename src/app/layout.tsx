@@ -18,9 +18,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <CSRHead />
-      <body>
+      <body className="min-h-screen w-full flex flex-col">
         {!isAuthCallback && <Header />}
-        <main className="mx-auto px-32">{children}</main>
+        <main className="w-full max-w-[1272px] mx-auto px-32 flex-1">{children}</main>
         {!isAuthCallback && <Footer />}
       </body>
     </html>
