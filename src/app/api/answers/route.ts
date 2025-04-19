@@ -1,7 +1,7 @@
-import { CreateAnswerUsecase } from "@/application/usecase/answer/CreateAnswerUsecase";
-import { DeleteAnswerUsecase } from "@/application/usecase/answer/DeleteAnswerUsecase";
-import { CreateAnswerDto } from "@/application/usecase/answer/dto/CreateAnswerDto";
-import { CreatedAnswerDto } from "@/application/usecase/answer/dto/CreatedAnswerDto";
+import { CreateAnswerUsecase } from "@/application/answer/CreateAnswerUsecase";
+import { DeleteAnswerUsecase } from "@/application/answer/DeleteAnswerUsecase";
+import { CreateAnswerDto } from "@/application/answer/dto/CreateAnswerDto";
+import { CreatedAnswerDto } from "@/application/answer/dto/CreatedAnswerDto";
 import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerRepository";
 import { NextResponse } from "next/server";
 
