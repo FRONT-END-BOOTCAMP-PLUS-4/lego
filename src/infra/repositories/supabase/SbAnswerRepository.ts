@@ -43,7 +43,7 @@ export class SbAnswerRepository implements AnswerRepository {
     const { data, error } = await supabase
       .from("answer")
       .update({ content: answer.content, updated_at: new Date().toISOString() })
-      .eq("user_id", answer.userId)
+      .eq("email", answer.userId)
       .eq("question_id", answer.questionId)
       .select()
       .single();
@@ -52,7 +52,7 @@ export class SbAnswerRepository implements AnswerRepository {
       throw new Error("답변 수정 실패.");
     }
     return {
-      userId: data.user_id,
+      userId: data.email,
       questionId: data.question_id,
       content: data.content,
       createdAt: new Date(data.created_at),

@@ -5,12 +5,6 @@ import { CreatedAnswerDto } from "@/application/answer/dto/CreatedAnswerDto";
 import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerRepository";
 import { NextResponse } from "next/server";
 
-interface RequestParams {
-  params: {
-    id: number; //questionId
-  };
-}
-
 //답변 저장
 export async function POST(request: Request) {
   try {
@@ -48,8 +42,8 @@ export async function DELETE(request: Request) {
   }
 }
 
-//답변 조회
-export async function GET(request: Request) {}
-
 //답변 수정
 export async function PUT(request: Request) {}
+
+//답변 조회
+export async function GET(request: Request) {}

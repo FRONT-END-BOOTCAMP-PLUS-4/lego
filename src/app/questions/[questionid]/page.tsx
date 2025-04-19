@@ -13,25 +13,23 @@ interface Props {
     questionid: string;
   };
 }
+type AnswerAction = "create" | "update";
+
 export default function AnswerFormPage({ params }: Props) {
-  // const questionId = Number(params?.questionid);
-  const searchParams = useSearchParams();
-  console.log("searchParams", searchParams);
+  const questionId = Number(params?.questionid);
+  const answerRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<string>("tab1");
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
-  const answerRef = useRef<HTMLTextAreaElement>(null);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
-  const handleToggleBookmark = () => setIsBookmarked((prev) => !prev);
-
-  console.log("user", user);
-  //이전에 작성한 답변 불러오기
   const userEmail = user?.email;
-  //답변 저장
-  const handleSaveAnswer = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleToggleBookmark = () => setIsBookmarked((prev) => !prev);
+  //이전에 작성한 답변 불러오기
+
+  //답변 저장, 수정
+  const handleSaveAnswer = async (action: AnswerAction) => {
+    const method = action === "create" ? "POST" : "PUT";
     const content = answerRef.current?.value || "";
     if (!content.trim()) {
       alert("내용을 입력해주세요.");
@@ -39,28 +37,25 @@ export default function AnswerFormPage({ params }: Props) {
     }
     const formData = {
       userId: userEmail,
-      questionId: 3,
+      questionId: 4,
       content,
     };
-    console.log(formData);
     try {
       const response = await fetch(`/api/answers`, {
-        method: "POST",
+        method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
-      console.log("ss", response);
       if (!response.ok) {
-        throw new Error("답변 저장 실패");
+        throw new Error(action === "create" ? "답변 저장 실패." : "답변 변경 실패.");
       }
-      alert("답변이 저장되었습니다.");
+      alert(action === "create" ? "답변이 저장되었습니다." : "답변이 변경되었습니다.");
       setIsSubmit(true);
     } catch (error) {
-      console.error("저장 중 오류 발생:", error);
-      alert("답변 저장 실패: " + (error as Error).message);
+      alert(`${action === "create" ? "답변 저장" : "답변 변경"} 실패: ${(error as Error).message}`);
     }
   };
 
@@ -75,7 +70,7 @@ export default function AnswerFormPage({ params }: Props) {
         },
         body: JSON.stringify({
           userId: userEmail,
-          questionId: 3,
+          questionId,
         }),
       });
       if (!response.ok) {
@@ -86,38 +81,7 @@ export default function AnswerFormPage({ params }: Props) {
         answerRef.current.value = "";
       }
     } catch (error) {
-      console.error("저장 중 오류 발생:", error);
       alert("답변 저장 실패: " + (error as Error).message);
-    }
-  };
-
-  //답변 수정
-  const handleEditContent = async () => {
-    const content = answerRef.current;
-    if (isEditing) {
-      const formData = {
-        userId: userEmail,
-        questionId: 1,
-        content,
-      };
-      try {
-        const response = await fetch(`/api/answers`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        });
-        if (!response.ok) {
-          throw new Error("답변 변경 실패");
-        }
-        alert("답변이 변경되었습니다.");
-        setIsSubmit(true);
-      } catch (error) {
-        console.error("변경 저장 중 오류 발생:", error);
-        alert("답변 변경 실패: " + (error as Error).message);
-      }
     }
   };
 
@@ -142,7 +106,7 @@ export default function AnswerFormPage({ params }: Props) {
         </div>
       </header>
 
-      <form onSubmit={handleSaveAnswer}>
+      <form>
         <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
           <TabsList className="mr-0 ml-auto">
             <TabsTrigger value="tab1">나의 답변 작성하기</TabsTrigger>
@@ -164,10 +128,16 @@ export default function AnswerFormPage({ params }: Props) {
           </TabsContent>
         </Tabs>
         <div className="flex justify-center mt-[24px]">
+          {/* 이미 기존에 작성한 답변이 있으면 */}
           {isSubmit && (
             <div className="flex gap-2">
-              <Button variant="outline" size="lg" type="button" onClick={handleEditContent}>
-                {isEditing ? "수정" : "저장"}
+              <Button
+                variant="outline"
+                size="lg"
+                type="button"
+                onClick={() => handleSaveAnswer("update")}
+              >
+                수정
               </Button>
               <Button variant="gray" size="lg" type="button" onClick={handleDeleteAnswer}>
                 삭제
@@ -175,7 +145,7 @@ export default function AnswerFormPage({ params }: Props) {
             </div>
           )}
           {!isSubmit && (
-            <Button size="lg" type="submit">
+            <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
               저장
             </Button>
           )}
