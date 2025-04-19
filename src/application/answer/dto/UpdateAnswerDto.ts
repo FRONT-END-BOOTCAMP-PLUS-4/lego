@@ -1,4 +1,4 @@
-export class Answer {
+export class UpdateAnswerDto {
   constructor(
     public userId: string,
     public questionId: number,
