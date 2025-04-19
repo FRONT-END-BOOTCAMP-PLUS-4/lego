@@ -92,7 +92,7 @@ export default function Home() {
                 <div className="flex justify-between">
                   <Badge variant="outline">JavaScript</Badge>
                   <div className="flex gap-[8px]">
-                    <Bookmark className="fill-amber-200 stroke-none" />
+                    <Bookmark className="fill-amber-300 stroke-none" />
                     <p>1000</p>
                   </div>
                 </div>
