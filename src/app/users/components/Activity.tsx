@@ -5,6 +5,7 @@ import GitHubCalendar from "react-github-calendar";
 import { useProfileStore } from "@/store/useProfileStore";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { formatNumber } from "@/utils/format";
 
 export default function Activity() {
   const { selectedYear, setShowModal } = useProfileStore();
@@ -37,14 +38,14 @@ export default function Activity() {
         <div className="flex">
           <div className="flex flex-col">
             <p className="txt-sm">내가 답변한 문제수</p>
-            <p className="txt-4xl-b">10</p>
+            <p className="txt-4xl-b">{formatNumber(10)}</p>
           </div>
 
           <div className="w-px h-full bg-[var(--gray-01)] mx-[var(--space-36)]" />
 
           <div className="flex flex-col">
             <p className="txt-sm">나의 활동 일</p>
-            <p className="txt-4xl-b">18</p>
+            <p className="txt-4xl-b">{formatNumber(10)}</p>
           </div>
         </div>
         <div className="flex gap-3 items-center">

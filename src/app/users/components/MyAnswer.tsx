@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { formatNumber } from "@/utils/format";
 import { Heart } from "lucide-react";
 
 // 실제 데이터로 매핑 필요
@@ -42,7 +43,7 @@ export default function MyAnswerPage() {
               <p className="txt-sm !text-[var(--gray-02)]">{answer.date}</p>
               <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
                 <Heart className="w-4 h-4 fill-red-500 stroke-none" />
-                <p>{answer.likeCount}</p>
+                <p>{formatNumber(answer.likeCount)}</p>
               </div>
             </div>
           </div>
