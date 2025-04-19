@@ -1,18 +1,43 @@
 "use client";
 
-export default function Bookmark() {
+import Image from "next/image";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { Bookmark } from "lucide-react";
+
+// api로 불러온 실제 데이터와 매핑 필요
+const bookmarks = [
+  {
+    id: 1,
+    category: "JavaScript",
+    title:
+      "HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명",
+    icon: "/assets/image/jsicon.svg", // category 테이블 - image_url
+    link: "/questions/1",
+  },
+  {
+    id: 2,
+    category: "JavaScript",
+    title: "Event Loop란 무엇인가요? 그러게 뭘까??ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
+    icon: "/assets/image/jsicon.svg",
+    link: "/questions/2",
+  },
+];
+
+export default function BookmarkPage() {
   return (
-    <>
-      <div
-        className="w-[948px] h-[74px] border-1 border-gray rounded-xl px-[36px] py-[12px]"
-        style={{ background: "var(--blue-04)" }}
-      >
-        <div className="flex items-center h-[50px] relative">
-          <img src="/assets/image/jsicon.svg" className="w-[32px] h-[32px] mr-[24px]" />
-          <h2 className="txt-2xl-b">HTTP 메소드에 대해 설명</h2> {/*문제 제목 가져오기*/}
-          <img className="absolute right-0" src="/assets/image/bookmark.svg" />
-        </div>
-      </div>
-    </>
+    <div className="flex flex-col gap-4 mb-[150px]">
+      {bookmarks.map((item) => (
+        <Link href={item.link} key={item.id}>
+          <Card variant="tight" className="flex items-center justify-between">
+            <div className="txt-2xl-b flex items-center gap-6 cursor-pointer w-[90%]">
+              <Image src={item.icon} width={32} height={32} alt={`${item.category} 아이콘`} />
+              <p className="line-clamp-1 w-4/5">{item.title}</p>
+            </div>
+            <Bookmark className="fill-amber-300 stroke-none" />
+          </Card>
+        </Link>
+      ))}
+    </div>
   );
 }

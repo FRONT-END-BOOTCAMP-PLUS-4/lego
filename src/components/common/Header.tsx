@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 import { User, LogOut } from "lucide-react";
 import KakaoAlertButton from "./KakaoAlert";
 
@@ -23,6 +24,8 @@ export default function Header() {
     logout();
     router.push("/login");
   };
+
+  const emailCheck = useRef(false);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -39,10 +42,32 @@ export default function Header() {
     return () => window.removeEventListener("message", handleMessage);
   }, [router]);
 
-  console.log(user);
+  useEffect(() => {
+    if (isLoggedIn && user && user.email && !emailCheck.current) {
+      emailCheck.current = true;
+
+      toast(<p className="txt-lg-b">이메일을 공개해주세요!</p>, {
+        description: (
+          <div className="">
+            클릭 시 GitHub Email 설정으로 이동합니다.
+            <br />
+            <br />
+            ⚠️ 변경 사항이 적용되기까지 시간이 조금 걸릴 수 있어요.
+          </div>
+        ),
+        action: {
+          label: "이동하기",
+          onClick: () => {
+            window.open("https://github.com/settings/emails", "_blank");
+          },
+        },
+        duration: Infinity,
+      });
+    }
+  }, [isLoggedIn, user]);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-20 py-4 shadow-md">
+    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[10vh] px-20 py-4 shadow-md">
       <Link href="/">
         <Image src="/logo.svg" alt="Logo" width={100} height={100} />
       </Link>

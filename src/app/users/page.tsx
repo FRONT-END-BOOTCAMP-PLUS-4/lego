@@ -1,32 +1,89 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useProfileStore, MypageTabType, MypageYearType } from "@/store/useProfileStore";
 import { UnderlineTab } from "@/components/ui/underLinetab";
-import Profile from "./components/Profile";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useHasHydrated } from "@/hooks/useHasHydrated";
+import Profile from "./components/History";
 import Activity from "./components/Activity";
+import KakaoModal from "./components/KakaoModal";
 
 export default function Mypage() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [activityKey, setActivityKey] = useState(0);
-  const redirectHandler = (value: number) => {
-    setActiveIndex(value);
+  const hasHydrated = useHasHydrated();
 
-    if (value === 0) {
-      setActivityKey((prev) => prev + 1);
+  const {
+    activeIndex,
+    setActiveIndex,
+    selectedYear,
+    setSelectedYear,
+    kakaoAutoToggle,
+    setKakaoAutoToggle,
+    showModal,
+    setShowModal,
+  } = useProfileStore();
+  const [activityKey, setActivityKey] = useState(0);
+
+  useEffect(() => {
+    if (kakaoAutoToggle) {
+      setShowModal(true);
+      setKakaoAutoToggle(false);
     }
+  }, [kakaoAutoToggle, setKakaoAutoToggle, setShowModal]);
+
+  const redirectHandler = (value: number) => {
+    setActiveIndex(value as MypageTabType);
+    if (value === 0) setActivityKey((prev) => prev + 1);
   };
 
+  const tabList = ["나의 활동", "히스토리"];
+
+  if (!hasHydrated) {
+    return (
+      <section className="w-full h-screen flex justify-center items-center">
+        <div className="text-xl text-gray-500">불러오는 중...</div>
+      </section>
+    );
+  }
   return (
-    <section className="w-[980px] h-[660px]  m-auto">
-      <h2 className="txt-2xl-b mt-[var(--space-40)] mb-[50px]">마이 페이지</h2>
-      <UnderlineTab
-        item={["나의 활동", "계정 관리"]}
-        activeIndex={activeIndex}
-        setActiveIndex={redirectHandler}
-      >
-        {activeIndex === 0 && <Activity key={activityKey} />}
-        {activeIndex === 1 && <Profile />}
-      </UnderlineTab>
+    <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
+      <KakaoModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          setShowModal(false);
+        }}
+      />
+      <h2 className="txt-2xl-b mb-[var(--space-50)]">마이 페이지</h2>
+
+      <div className="flex justify-between items-end">
+        <UnderlineTab item={tabList} activeIndex={activeIndex} setActiveIndex={redirectHandler} />
+
+        {activeIndex === 0 && (
+          <Select
+            value={selectedYear.toString()}
+            onValueChange={(v) => setSelectedYear(v as unknown as MypageYearType)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="연도를 선택하세요" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2025">2025</SelectItem>
+              <SelectItem value="2024">2024</SelectItem>
+              <SelectItem value="2023">2023</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      </div>
+
+      {activeIndex === 0 && <Activity key={activityKey} />}
+      {activeIndex === 1 && <Profile />}
     </section>
   );
 }

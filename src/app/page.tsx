@@ -68,7 +68,11 @@ export default function Home() {
             하지만, 저희와 함께라면 걱정하지 마세요!
           </p>
           <Link href="/questions">
-            <Button variant="round" size="lg" className="w-fit">
+            <Button
+              variant="round"
+              size="lg"
+              className="hover:-translate-y-2 transition-transform duration-300"
+            >
               시작하기
             </Button>
           </Link>
@@ -88,7 +92,7 @@ export default function Home() {
                 <div className="flex justify-between">
                   <Badge variant="outline">JavaScript</Badge>
                   <div className="flex gap-[8px]">
-                    <Bookmark className="fill-amber-200 stroke-none" />
+                    <Bookmark className="fill-amber-300 stroke-none" />
                     <p>1000</p>
                   </div>
                 </div>

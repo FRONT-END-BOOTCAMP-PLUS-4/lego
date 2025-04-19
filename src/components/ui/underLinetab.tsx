@@ -12,10 +12,11 @@ function UnderlineTab({
   activeIndex,
   setActiveIndex,
   children,
+  className,
 }: TabProps & React.ComponentProps<"div">) {
   return (
     <>
-      <div role="tablist">
+      <div role="tablist" className={className}>
         {item.map((item, index) => (
           <button
             className={`px-[36px] py-[12px] border-b-2 text-base cursor-pointer font-bold
