@@ -26,7 +26,7 @@ const myAnswers = [
   },
 ];
 
-export default function MyAnswer() {
+export default function MyAnswerPage() {
   return (
     <div className="flex flex-col gap-[var(--space-24)] mb-[100px]">
       {myAnswers.map((answer) => (

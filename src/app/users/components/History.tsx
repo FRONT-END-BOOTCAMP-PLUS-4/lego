@@ -1,18 +1,18 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MyAnswer from "./MyAnswer";
-import Bookmark from "./Bookmark";
-import Comment from "./Comment";
-import LikeAnswer from "./LikeAnswer";
+import MyAnswerPage from "./MyAnswer";
+import BookmarkPage from "./Bookmark";
+import CommentPage from "./Comment";
+import LikeAnswerPage from "./LikeAnswer";
 import { useProfileStore, ProfileTabType } from "@/store/useProfileStore";
 import { JSX } from "react";
 
 const tabs: { label: string; value: ProfileTabType; component: JSX.Element }[] = [
-  { label: "내답변", value: "myAnswer", component: <MyAnswer /> },
-  { label: "북마크", value: "bookmark", component: <Bookmark /> },
-  { label: "좋아요 한 답변", value: "likeAnswer", component: <LikeAnswer /> },
-  { label: "댓글", value: "comment", component: <Comment /> },
+  { label: "내답변", value: "myAnswer", component: <MyAnswerPage /> },
+  { label: "북마크", value: "bookmark", component: <BookmarkPage /> },
+  { label: "좋아요 한 답변", value: "likeAnswer", component: <LikeAnswerPage /> },
+  { label: "댓글", value: "comment", component: <CommentPage /> },
 ];
 
 export default function History() {
@@ -24,10 +24,10 @@ export default function History() {
 
   return (
     <div className="mt-[var(--space-24)]">
-      <Tabs value={selectedTab} onValueChange={handleTabs}>
+      <Tabs defaultValue={selectedTab} onValueChange={handleTabs}>
         <TabsList className="mb-[var(--space-50)]">
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value} className="txt-lg">
+            <TabsTrigger key={tab.value} value={tab.value}>
               {tab.label}
             </TabsTrigger>
           ))}

@@ -1,6 +1,6 @@
 "use client";
 
-export default function Comment() {
+export default function CommentPage() {
   return (
     <>
       <div
