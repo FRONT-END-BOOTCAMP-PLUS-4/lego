@@ -21,7 +21,7 @@ export default function AnswerFormPage({ params }: Props) {
   const [tab, setTab] = useState<string>("tab1");
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const userEmail = user?.email;
@@ -38,7 +38,7 @@ export default function AnswerFormPage({ params }: Props) {
     }
     const formData = {
       userId: userEmail,
-      questionId,
+      questionId: 6,
       content,
     };
     try {
@@ -55,6 +55,7 @@ export default function AnswerFormPage({ params }: Props) {
       }
       alert(action === "create" ? "답변이 저장되었습니다." : "답변이 변경되었습니다.");
       setIsSubmit(true);
+      setIsEditing(false);
     } catch (error) {
       alert(`${action === "create" ? "답변 저장" : "답변 변경"} 실패: ${(error as Error).message}`);
     }
