@@ -35,15 +35,9 @@ export async function POST(request: Request) {
 }
 
 //답변 삭제
-export async function DELETE(request: Request, { params }: RequestParams) {
-  const { id: questionId } = params;
-
-  if (!questionId) {
-    return NextResponse.json({ error: "문제 ID가 필요합니다" }, { status: 400 });
-  }
+export async function DELETE(request: Request) {
   const body = await request.json();
-  const { userId } = body;
-
+  const { userId, questionId } = body;
   try {
     const usecase = new DeleteAnswerUsecase(new SbAnswerRepository());
     await usecase.execute({ userId, questionId });

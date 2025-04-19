@@ -65,7 +65,7 @@ export class SbAnswerRepository implements AnswerRepository {
     const { error } = await supabase
       .from("answer")
       .delete()
-      .eq("user_id", userId)
+      .eq("email", userId)
       .eq("question_id", questionId);
 
     if (error) {

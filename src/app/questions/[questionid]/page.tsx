@@ -19,32 +19,27 @@ export default function AnswerFormPage({ params }: Props) {
   console.log("searchParams", searchParams);
   const [tab, setTab] = useState<string>("tab1");
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
-  const contentRef = useRef<string>("");
+  const answerRef = useRef<HTMLTextAreaElement>(null);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const handleToggleBookmark = () => setIsBookmarked((prev) => !prev);
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    contentRef.current = e.target.value;
-  };
 
+  console.log("user", user);
   //이전에 작성한 답변 불러오기
-
+  const userEmail = user?.email;
   //답변 저장
   const handleSaveAnswer = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const content = contentRef.current;
+    const content = answerRef.current?.value || "";
     if (!content.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
-
-    // const { user } = useAuthStore();
-    console.log(content);
     const formData = {
-      userId: "leekjoo1008@gmail.com",
-      questionId: 1,
+      userId: userEmail,
+      questionId: 3,
       content,
     };
     console.log(formData);
@@ -71,8 +66,6 @@ export default function AnswerFormPage({ params }: Props) {
 
   //답변 삭제
   const handleDeleteAnswer = async () => {
-    console.log("ss");
-    //답변 삭제여부 확인 추가하기
     try {
       const response = await fetch(`/api/answers`, {
         method: "DELETE",
@@ -81,14 +74,17 @@ export default function AnswerFormPage({ params }: Props) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          userId: user?.id,
+          userId: userEmail,
+          questionId: 3,
         }),
       });
       if (!response.ok) {
         throw new Error("답변 삭제 실패");
       }
       alert("답변이 삭제되었습니다.");
-      contentRef.current = "";
+      if (answerRef.current) {
+        answerRef.current.value = "";
+      }
     } catch (error) {
       console.error("저장 중 오류 발생:", error);
       alert("답변 저장 실패: " + (error as Error).message);
@@ -97,10 +93,10 @@ export default function AnswerFormPage({ params }: Props) {
 
   //답변 수정
   const handleEditContent = async () => {
-    const content = contentRef.current;
+    const content = answerRef.current;
     if (isEditing) {
       const formData = {
-        userId: user?.email,
+        userId: userEmail,
         questionId: 1,
         content,
       };
@@ -156,7 +152,7 @@ export default function AnswerFormPage({ params }: Props) {
             <textarea
               className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
               placeholder="내용을 입력하세요..."
-              onChange={handleInputChange}
+              ref={answerRef}
             ></textarea>
           </TabsContent>
           <TabsContent value="tab2">
