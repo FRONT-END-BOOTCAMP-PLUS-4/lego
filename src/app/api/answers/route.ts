@@ -57,4 +57,5 @@ export async function PUT(request: Request) {
 }
 
 //답변 조회
+//이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
 export async function GET(request: Request) {}
