@@ -7,12 +7,8 @@ export class UpdateAnswerUsecase {
   constructor(private readonly answerRepo: AnswerRepository) {}
 
   async execute(updateDto: UpdateAnswerDto): Promise<Answer> {
-    const answer = new Answer(
-      updateDto.userId,
-      updateDto.questionId,
-      updateDto.content,
-      new Date()
-    );
+    const { userId, questionId, content } = updateDto;
+    const answer = new Answer(userId, questionId, content);
 
     return await this.answerRepo.updateAnswer(answer);
   }

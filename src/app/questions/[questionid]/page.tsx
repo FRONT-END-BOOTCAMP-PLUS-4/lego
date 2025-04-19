@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useSearchParams } from "next/navigation";
 
 interface Props {
   params: {

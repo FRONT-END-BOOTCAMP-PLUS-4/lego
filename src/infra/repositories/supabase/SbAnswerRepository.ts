@@ -55,7 +55,6 @@ export class SbAnswerRepository implements AnswerRepository {
       userId: data.email,
       questionId: data.question_id,
       content: data.content,
-      createdAt: new Date(data.created_at),
     };
   }
 
