@@ -1,17 +1,90 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
-export default function AnswerFormPage() {
+import { useAuthStore } from "@/store/useAuthStore";
+import AnswerPreviewCard from "@/app/api/answers/componsts/AnswerPreviewCard";
+
+interface Props {
+  params: {
+    questionid: string;
+  };
+}
+type AnswerAction = "create" | "update";
+
+export default function AnswerFormPage({ params }: Props) {
+  const questionId = Number(params?.questionid);
+  const answerRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<string>("tab1");
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
+  const token = useAuthStore((state) => state.token);
+  const user = useAuthStore((state) => state.user);
+  const userEmail = user?.email;
+  const handleToggleBookmark = () => setIsBookmarked((prev) => !prev);
+  //이전에 작성한 답변 불러오기
 
-  const handleToggleBookmark = () => {
-    setIsBookmarked((prev) => !prev);
+  //답변 저장, 수정
+  const handleSaveAnswer = async (action: AnswerAction) => {
+    const method = action === "create" ? "POST" : "PUT";
+    const content = answerRef.current?.value || "";
+    if (!content.trim()) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+    const formData = {
+      userId: userEmail,
+      questionId: 6,
+      content,
+    };
+    try {
+      const response = await fetch(`/api/answers`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error(action === "create" ? "답변 저장 실패." : "답변 변경 실패.");
+      }
+      alert(action === "create" ? "답변이 저장되었습니다." : "답변이 변경되었습니다.");
+      setIsSubmit(true);
+      setIsEditing(false);
+    } catch (error) {
+      alert(`${action === "create" ? "답변 저장" : "답변 변경"} 실패: ${(error as Error).message}`);
+    }
+  };
+
+  //답변 삭제
+  const handleDeleteAnswer = async () => {
+    try {
+      const response = await fetch(`/api/answers`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: userEmail,
+          questionId,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("답변 삭제 실패");
+      }
+      alert("답변이 삭제되었습니다.");
+      if (answerRef.current) {
+        answerRef.current.value = "";
+      }
+    } catch (error) {
+      alert("답변 저장 실패: " + (error as Error).message);
+    }
   };
 
   return (
@@ -35,7 +108,7 @@ export default function AnswerFormPage() {
         </div>
       </header>
 
-      <div>
+      <form>
         <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
           <TabsList className="mr-0 ml-auto">
             <TabsTrigger value="tab1">나의 답변 작성하기</TabsTrigger>
@@ -45,6 +118,8 @@ export default function AnswerFormPage() {
             <textarea
               className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
               placeholder="내용을 입력하세요..."
+              ref={answerRef}
+              disabled={!isEditing}
             ></textarea>
           </TabsContent>
           <TabsContent value="tab2">
@@ -55,31 +130,41 @@ export default function AnswerFormPage() {
             ></textarea>
           </TabsContent>
         </Tabs>
-        <div className="flex justify-center mt-[24px]">
-          <Button size="lg">저장</Button>
-        </div>
-      </div>
+        {tab === "tab1" && (
+          <div className="flex justify-center mt-[24px]">
+            {/* 이미 기존에 작성한 답변이 있으면 수정 삭제 먼저 */}
+            {isSubmit && (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  type="button"
+                  onClick={() => {
+                    if (isEditing) {
+                      handleSaveAnswer("update");
+                    }
+                    setIsEditing((prev) => !prev);
+                  }}
+                >
+                  {isEditing ? "저장" : "수정"}
+                </Button>
+                <Button variant="gray" size="lg" type="button" onClick={handleDeleteAnswer}>
+                  삭제
+                </Button>
+              </div>
+            )}
+            {!isSubmit && (
+              <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
+                저장
+              </Button>
+            )}
+          </div>
+        )}
+      </form>
       <div className="pt-[150px] pb-[150px]">
         <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
         <div className="grid grid-cols-2 grid-rows-auto gap-x-16 gap-y-24">
-          <Card>
-            <div className="flex gap-4 items-center mb-6">
-              <p className="line-clamp-2">
-                s not simply random text. It has roots in a piece of classical Latin literature from
-                45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
-                Hampden-Sydney College in Virginiaer 2000 years old. Richard McClintock, a Latin
-                professor at Hampden-Sydney College in Virginia
-              </p>
-              <span className="w-[32px] h-[32px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
-            </div>
-            <div className="flex justify-between">
-              <span>
-                <span className="txt-sm !text-[var(--gray-02)] mr-2">2020.20.20</span>
-                <span className="txt-sm !text-[var(--gray-02)]">작성자 이름</span>
-              </span>
-              <span className="txt-sm !text-[var(--gray-02)]">좋아요 100</span>
-            </div>
-          </Card>
+          <AnswerPreviewCard />
         </div>
       </div>
     </div>
