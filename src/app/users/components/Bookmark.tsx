@@ -10,14 +10,15 @@ const bookmarks = [
   {
     id: 1,
     category: "JavaScript",
-    title: "HTTP 메소드에 대한 설명",
+    title:
+      "HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명",
     icon: "/assets/image/jsicon.svg", // category 테이블 - image_url
     link: "/questions/1",
   },
   {
     id: 2,
     category: "JavaScript",
-    title: "Event Loop란 무엇인가요?",
+    title: "Event Loop란 무엇인가요? 그러게 뭘까??ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
     icon: "/assets/image/jsicon.svg",
     link: "/questions/2",
   },
@@ -29,9 +30,9 @@ export default function BookmarkPage() {
       {bookmarks.map((item) => (
         <Link href={item.link} key={item.id}>
           <Card variant="tight" className="flex items-center justify-between">
-            <div className="txt-2xl-b flex items-center gap-6 cursor-pointer">
+            <div className="txt-2xl-b flex items-center gap-6 cursor-pointer w-[90%]">
               <Image src={item.icon} width={32} height={32} alt={`${item.category} 아이콘`} />
-              <p>{item.title}</p>
+              <p className="line-clamp-1 w-4/5">{item.title}</p>
             </div>
             <Bookmark className="fill-amber-300 stroke-none" />
           </Card>

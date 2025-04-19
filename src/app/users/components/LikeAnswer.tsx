@@ -5,28 +5,50 @@ import { Card } from "@/components/ui/card";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function LikeAnswerPage() {
-  // 임시로 내 아바타 url 입력 -> 추후 답변 사용자 아바타로 대체
   const { user } = useAuthStore();
 
+  const likedAnswers = [
+    {
+      id: 1,
+      content:
+        "Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다.",
+      user: {
+        name: "아무개",
+        avatarUrl: user?.avatarUrl,
+      },
+      createdAt: "2025.01.01",
+    },
+    {
+      id: 2,
+      content:
+        "React의 useEffect는 컴포넌트가 마운트되거나 업데이트될 때 실행되는 훅입니다. React의 useEffect는 컴포넌트가 마운트되거나 업데이트될 때 실행되는 훅입니다. React의 useEffect는 컴포넌트가 마운트되거나 업데이트될 때 실행되는 훅입니다.",
+      user: {
+        name: "홍길동",
+        avatarUrl: user?.avatarUrl,
+      },
+      createdAt: "2025.01.02",
+    },
+  ];
+
   return (
-    <Card variant="default">
-      <div className="flex flex-col gap-4">
-        <div className="flex gap-4">
-          <Avatar>
-            <AvatarImage src={user?.avatarUrl} alt="프로필 이미지" />
-            <AvatarFallback>DK</AvatarFallback>
-          </Avatar>
-          <p className="line-clamp-2">
-            Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. 시간이
-            흐르면서 많은 분이 이를 익숙하게 활용하고 있지만, 저처럼 개념 고 있지만, 저처럼 개념고
-            있지만, 저처럼 개념고 있지만, 내용을 늘려볼까 ㅋㅋㅋ
-          </p>
-        </div>
-        <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
-          <p>작성자 이름</p>
-          <p>2025.01.01</p>
-        </div>
-      </div>
-    </Card>
+    <div className="flex flex-col gap-6 mb-[100px]">
+      {likedAnswers.map((item) => (
+        <Card key={item.id} variant="default">
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-4">
+              <Avatar>
+                <AvatarImage src={item.user.avatarUrl} alt="프로필 이미지" />
+                <AvatarFallback>{item.user.name[0] ?? "?"}</AvatarFallback>
+              </Avatar>
+              <p className="line-clamp-2">{item.content}</p>
+            </div>
+            <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
+              <p>{item.user.name}</p>
+              <p>{item.createdAt}</p>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
   );
 }

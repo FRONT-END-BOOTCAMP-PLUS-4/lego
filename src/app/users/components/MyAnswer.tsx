@@ -9,7 +9,8 @@ const myAnswers = [
   {
     id: 1,
     category: "JavaScript",
-    title: "HTTP 메소드에 대한 설명",
+    title:
+      "HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명",
     content:
       "Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. 시간이 흐르면서 많은 분이 이를 익숙하게 활용하고 있지만, 저처럼 개념 어쩌구저쩌구 늘려볼까",
     date: "1995.12.14",
@@ -33,7 +34,7 @@ export default function MyAnswerPage() {
         <Card key={answer.id} variant="default">
           <div className="flex items-center gap-4 mb-4">
             <Badge variant="default">{answer.category}</Badge>
-            <p className="txt-3xl-b">{answer.title}</p>
+            <p className="txt-3xl-b line-clamp-1">{answer.title}</p>
           </div>
           <div className="flex flex-col gap-[var(--space-40)]">
             <p className="line-clamp-2">{answer.content}</p>
