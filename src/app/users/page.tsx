@@ -10,11 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useHasHydrated } from "@/hooks/useHasHydrated";
 import Profile from "./components/History";
 import Activity from "./components/Activity";
 import KakaoModal from "./components/KakaoModal";
 
 export default function Mypage() {
+  const hasHydrated = useHasHydrated();
+
   const {
     activeIndex,
     setActiveIndex,
@@ -41,6 +44,13 @@ export default function Mypage() {
 
   const tabList = ["나의 활동", "히스토리"];
 
+  if (!hasHydrated) {
+    return (
+      <section className="w-full h-screen flex justify-center items-center">
+        <div className="text-xl text-gray-500">불러오는 중...</div>
+      </section>
+    );
+  }
   return (
     <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
       <KakaoModal

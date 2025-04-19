@@ -35,7 +35,7 @@ export default function MyAnswerPage() {
         <Card key={answer.id} variant="default">
           <div className="flex items-center gap-4 mb-4">
             <Badge variant="default">{answer.category}</Badge>
-            <p className="txt-3xl-b line-clamp-1">{answer.title}</p>
+            <p className="txt-2xl-b line-clamp-1">{answer.title}</p>
           </div>
           <div className="flex flex-col gap-[var(--space-40)]">
             <p className="line-clamp-2">{answer.content}</p>

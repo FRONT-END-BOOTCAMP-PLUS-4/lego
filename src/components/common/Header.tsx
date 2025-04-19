@@ -67,7 +67,7 @@ export default function Header() {
   }, [isLoggedIn, user]);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center px-20 py-4 shadow-md">
+    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[10vh] px-20 py-4 shadow-md">
       <Link href="/">
         <Image src="/logo.svg" alt="Logo" width={100} height={100} />
       </Link>
