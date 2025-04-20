@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -42,8 +43,14 @@ export default function OAuthCallback() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6">
-      <Loader className="w-[20vw] h-[20vh] animate-bounce" />
-      <p className="txt-2xl-b ">Loading...</p>
+      <Image
+        src="/assets/images/loading.png"
+        alt="로딩 아이콘"
+        width={200}
+        height={200}
+        className="animate-spin"
+      />
+      <p className="txt-2xl-b">Loading...</p>
     </div>
   );
 }
