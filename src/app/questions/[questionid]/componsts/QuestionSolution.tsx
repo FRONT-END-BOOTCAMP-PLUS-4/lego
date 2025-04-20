@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+
 interface QuestionSolutionProps {
   solution: string;
 }
@@ -25,5 +26,9 @@ export default function QuestionSolution({ solution }: QuestionSolutionProps) {
 
     fetchSolution();
   }, [solution]);
-  return <ReactMarkdown>{solutionText}</ReactMarkdown>;
+  return (
+    <div className="prose box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full overflow-y-auto whitespace-pre-wrap">
+      <ReactMarkdown>{solutionText}</ReactMarkdown>
+    </div>
+  );
 }

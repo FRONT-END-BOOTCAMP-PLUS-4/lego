@@ -1,6 +1,6 @@
 import lineClamp from "@tailwindcss/line-clamp";
 import animate from "tailwind-animate";
-
+import typography from "@tailwindcss/typography";
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
@@ -18,5 +18,5 @@ module.exports = {
     },
     extend: {},
   },
-  plugins: [lineClamp, animate],
+  plugins: [lineClamp, animate, typography],
 };
