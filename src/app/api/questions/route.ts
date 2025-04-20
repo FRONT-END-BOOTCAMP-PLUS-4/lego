@@ -1,4 +1,4 @@
-//답변 조회
+//문제, 답변 조회
 
 import { GetQuestionDto } from "@/application/question/dto/GetQuestionDto";
 import { GetQuestionUsecase } from "@/application/question/GetQuestionUsecase";

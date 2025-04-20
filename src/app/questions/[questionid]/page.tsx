@@ -25,8 +25,9 @@ interface Props {
 }
 export default function AnswerFormPage({ params }: Props) {
   const questionId = Number(params.questionid ?? 9);
-  const answerRef = useRef<HTMLTextAreaElement>(null);
+
   const [tab, setTab] = useState<string>("tab1");
+  const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
@@ -52,7 +53,7 @@ export default function AnswerFormPage({ params }: Props) {
       const data = await response.json();
       setQuestionData(data?.data);
     } catch (error) {
-      alert("답변 불러오기 실패: " + (error as Error).message);
+      alert("문제, 답변 불러오기 실패: " + (error as Error).message);
     }
   };
   useEffect(() => {
@@ -60,16 +61,17 @@ export default function AnswerFormPage({ params }: Props) {
   }, []);
 
   useEffect(() => {
-    if (questionData?.answer && answerRef.current) {
-      answerRef.current.value = questionData.answer;
+    if (!questionData) return;
+    if (questionData?.answer !== undefined) {
+      setUserAnswer(questionData.answer);
       setIsSubmitted(true);
-      setIsEditing(true);
+      setIsEditing(false);
     }
   }, [questionData]);
+
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     const method = action === "create" ? "POST" : "PUT";
-    const content = answerRef.current?.value || "";
     if (!content.trim()) {
       alert("내용을 입력해주세요.");
       return;
@@ -77,7 +79,7 @@ export default function AnswerFormPage({ params }: Props) {
     const formData = {
       userId: userEmail,
       questionId,
-      content,
+      content: userAnswer,
     };
     try {
       const response = await fetch(`/api/answers`, {
@@ -117,9 +119,7 @@ export default function AnswerFormPage({ params }: Props) {
         throw new Error("답변 삭제 실패");
       }
       alert("답변이 삭제되었습니다.");
-      if (answerRef.current) {
-        answerRef.current.value = "";
-      }
+      setUserAnswer("");
     } catch (error) {
       alert("답변 저장 실패: " + (error as Error).message);
     }
@@ -140,7 +140,8 @@ export default function AnswerFormPage({ params }: Props) {
             <textarea
               className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
               placeholder="내용을 입력하세요..."
-              ref={answerRef}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              value={userAnswer}
               disabled={!isEditing}
             ></textarea>
           </TabsContent>
