@@ -1,7 +1,6 @@
 //답변 조회
 
 import { GetQuestionDto } from "@/application/question/dto/GetQuestionDto";
-import { RespondQuestionDto } from "@/application/question/dto/RespondQuestionDto";
 import { GetQuestionUsecase } from "@/application/question/GetQuestionUsecase";
 import { SbQuestionRepository } from "@/infra/repositories/supabase/SbQuestionRepository";
 import { NextResponse } from "next/server";
@@ -15,12 +14,9 @@ export async function GET(request: Request) {
     const questionDto = new GetQuestionDto(questionId);
     const getQuestionRepo = new SbQuestionRepository();
     const getQuestionUsecase = new GetQuestionUsecase(getQuestionRepo);
-    const respondQuestionDto: RespondQuestionDto = await getQuestionUsecase.execute(questionDto);
+    const respond = await getQuestionUsecase.execute(questionDto);
 
-    return NextResponse.json(
-      { message: "문제 조회 완료", data: respondQuestionDto },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "문제 조회 완료", data: respond }, { status: 200 });
   } catch (error) {
     console.error("Error creating answer:", error);
     return NextResponse.json({ error: "문제 조회 실패" }, { status: 500 });

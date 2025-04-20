@@ -2,21 +2,19 @@ import { Question } from "@/domain/entities/Question";
 import { QuestionRepository } from "@/domain/repositories/QuestionRepository";
 import { supabase } from "@/utils/supabase/server";
 
-type QuestionParams = {
-  questionId: number;
-  userId: string | null;
-};
 type QuestionType = {
   id: number;
   content: string;
   solution: string;
   category_id: number;
-  answer: {
+  views: number;
+  created_at: string;
+  answer?: {
     email: string;
     content: string;
     created_at: string;
   }[];
-  bookmark: {
+  bookmark?: {
     email: string;
   }[];
   category: {
@@ -24,6 +22,7 @@ type QuestionType = {
     image_url: string;
   };
 };
+
 export class SbQuestionRepository implements QuestionRepository {
   //특정 유저의 특정 답변 조회
   //question 조회
@@ -53,7 +52,6 @@ export class SbQuestionRepository implements QuestionRepository {
     `
       )
       .eq("id", questionId);
-
     if (userId) {
       query = query.eq("answer.email", userId).eq("bookmark.email", userId);
     }
@@ -64,16 +62,18 @@ export class SbQuestionRepository implements QuestionRepository {
       console.error("조회 실패:", error);
       throw new Error("문제를 불러오는 데 실패했습니다.");
     }
+    const typedData = data as unknown as QuestionType;
+
     return new Question(
-      data.id,
-      data.category_id,
-      data.content,
-      data.solution,
-      data.answer?.[0]?.content ?? "",
-      data.views ?? 0,
-      new Date(data.created_at),
-      !!data.bookmark?.[0],
-      data.category?.[0]?.name
+      typedData.id,
+      typedData.category_id,
+      typedData.content,
+      typedData.solution,
+      typedData.answer?.[0]?.content ?? "",
+      typedData.views ?? 0,
+      new Date(typedData.created_at),
+      !!typedData.bookmark?.[0],
+      typedData.category?.name ?? ""
     );
   }
 }

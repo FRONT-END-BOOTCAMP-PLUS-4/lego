@@ -5,24 +5,29 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import AnswerPreviewCard from "@/app/api/answers/componsts/AnswerPreviewCard";
 import QusetionHeader from "@/app/api/answers/componsts/QusetionHeader";
+import { useParams } from "next/navigation";
 
-interface Props {
-  params: {
-    questionid: string;
-  };
-}
 type AnswerAction = "create" | "update";
-
-export default function AnswerFormPage({ params }: Props) {
-  const questionId = Number(params?.questionid);
+type QuestionResponse = {
+  message: string;
+  data: {
+    question: string;
+    category: string;
+    solution: string;
+    answer?: string;
+  };
+};
+export default function AnswerFormPage() {
+  const params = useParams();
+  const questionId = Number(params.questionid);
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<string>("tab1");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
+  const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const userEmail = user?.email;
-  console.log("token", token);
 
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
@@ -40,7 +45,7 @@ export default function AnswerFormPage({ params }: Props) {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
-      console.log("data", data);
+      setQuestionData(data.data);
     } catch (error) {
       alert("답변 불러오기 실패: " + (error as Error).message);
     }
@@ -48,7 +53,7 @@ export default function AnswerFormPage({ params }: Props) {
   useEffect(() => {
     handleGetQuestion();
   }, []);
-
+  console.log(questionData);
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     const method = action === "create" ? "POST" : "PUT";
