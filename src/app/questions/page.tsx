@@ -20,7 +20,6 @@ import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
 export default function QuestionListPage() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,12 +27,17 @@ export default function QuestionListPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
 
-  const itemsPerPage = 10;
+  const categoryIdFromURL = searchParams.get("categoryId");
+  const selectedCategoryId = categoryIdFromURL ? Number(categoryIdFromURL) : null;
+
+  const selectedCategoryName =
+    selectedCategoryId === null
+      ? "전체"
+      : categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체";
 
   const getImageUrlByCategory = (categoryId: number) =>
     `/assets/images/category/${categoryId}.svg`;
 
-  // 1. 카테고리 목록 불러오기
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -47,7 +51,6 @@ export default function QuestionListPage() {
     fetchCategories();
   }, []);
 
-  // 2. 문제 불러오기
   const fetchQuestions = async (categoryId?: number) => {
     const url = categoryId
       ? `/api/questions?categoryId=${categoryId}`
@@ -62,21 +65,14 @@ export default function QuestionListPage() {
     }
   };
 
-  // 3. URL에서 categoryId 추출해서 초기화
   useEffect(() => {
-    const categoryIdFromUrl = searchParams.get("categoryId");
-    if (categoryIdFromUrl) {
-      const id = Number(categoryIdFromUrl);
-      setSelectedCategoryId(id);
-      fetchQuestions(id);
-    } else {
-      fetchQuestions();
-    }
-  }, [searchParams]);
+    const categoryId = categoryIdFromURL ? Number(categoryIdFromURL) : undefined;
+    fetchQuestions(categoryId);
+  }, [categoryIdFromURL]);
 
-  // 4. 카테고리 변경 시 URL 쿼리 갱신
   const handleCategoryChange = (name: string) => {
     const category = categories.find((c) => c.name === name);
+    setPageNumber(1);
 
     if (category) {
       router.push(`/questions?categoryId=${category.id}`);
@@ -86,13 +82,12 @@ export default function QuestionListPage() {
   };
 
   const totalCount = questions.length;
-  const startIdx = (pageNumber - 1) * itemsPerPage;
-  const endIdx = startIdx + itemsPerPage;
+  const startIdx = (pageNumber - 1) * 10;
+  const endIdx = startIdx + 10;
   const pagedQuestions = questions.slice(startIdx, endIdx);
 
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
-      {/* 배너 */}
       <div className="relative w-[948px] h-[115px] mb-6">
         <Image
           src="/banner.png"
@@ -104,25 +99,26 @@ export default function QuestionListPage() {
 
       <div className="mb-[48px]" />
 
-      {/* 검색 */}
       <div className="flex items-center gap-4">
-        <Input placeholder="면접 문제 검색" className="w-[824px] h-[54px] px-4 text-sm flex-1" />
-        <Button variant="outline" size="default" className="w-[115px] h-[54px] px-6 text-lg">
+        <Input
+          placeholder="면접 문제 검색"
+          className="w-[824px] h-[54px] px-4 text-sm flex-1"
+        />
+        <Button
+          variant="outline"
+          size="default"
+          className="w-[115px] h-[54px] px-6 text-lg"
+        >
           문제 검색
         </Button>
       </div>
 
       <div className="mb-[12px]" />
 
-      {/* 카테고리 + 정렬 Select */}
       <div className="flex items-center gap-2 mb-6">
         <Select
           onValueChange={handleCategoryChange}
-          value={
-            selectedCategoryId
-              ? categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체"
-              : "전체"
-          }
+          value={selectedCategoryName}
         >
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
             <SelectValue placeholder="전체" />
@@ -191,7 +187,7 @@ export default function QuestionListPage() {
 
       <Pagination
         totalCount={totalCount}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage={10}
         pageNumber={pageNumber}
         currentPageBlock={currentPageBlock}
         handleMovePage={setPageNumber}
