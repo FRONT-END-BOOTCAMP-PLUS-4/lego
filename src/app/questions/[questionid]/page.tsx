@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import AnswerPreviewCard from "@/app/api/answers/componsts/AnswerPreviewCard";
 import QusetionHeader from "@/app/api/answers/componsts/QusetionHeader";
-import { useParams } from "next/navigation";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -19,10 +18,13 @@ interface QuestionResponse {
   views: number;
   createdAt: string;
 }
-
-export default function AnswerFormPage() {
-  const params = useParams();
-  const questionId = Number(params.questionid);
+interface Props {
+  params: {
+    questionid: string;
+  };
+}
+export default function AnswerFormPage({ params }: Props) {
+  const questionId = Number(params.questionid ?? 9);
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<string>("tab1");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -37,7 +39,7 @@ export default function AnswerFormPage() {
 
   const handleGetQuestion = async () => {
     try {
-      const response = await fetch(`/api/questions`, {
+      const response = await fetch(`/api/questions?questionId=${questionId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -58,10 +60,10 @@ export default function AnswerFormPage() {
   }, []);
 
   useEffect(() => {
-    if (questionData && answerRef.current) {
+    if (questionData?.answer && answerRef.current) {
       answerRef.current.value = questionData.answer;
       setIsSubmitted(true);
-      setIsEditing(false);
+      setIsEditing(true);
     }
   }, [questionData]);
   //답변 저장, 수정

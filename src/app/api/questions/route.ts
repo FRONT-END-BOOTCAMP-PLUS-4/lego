@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const questionId = Number(searchParams.get("questionId") ?? "1");
+    const questionId = Number(searchParams.get("questionId"));
 
     const questionDto = new GetQuestionDto(questionId);
     const getQuestionRepo = new SbQuestionRepository();
