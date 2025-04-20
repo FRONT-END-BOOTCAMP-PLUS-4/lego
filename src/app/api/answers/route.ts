@@ -61,26 +61,3 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "답변 수정 실패" }, { status: 500 });
   }
 }
-
-//답변 조회
-//이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId") ?? null;
-    const questionId = Number(searchParams.get("questionId"));
-
-    const answerDto = new GetAnswerDto(userId, questionId);
-    const answerRepository = new SbAnswerRepository();
-    const getAnswerUsecase = new GetAnswerUsecase(answerRepository);
-    const respondAnswerDto: RespondAnswerDto = await getAnswerUsecase.execute(answerDto);
-
-    return NextResponse.json(
-      { message: "답변 조회 완료", data: respondAnswerDto },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error creating answer:", error);
-    return NextResponse.json({ error: "답변 조회 실패" }, { status: 500 });
-  }
-}

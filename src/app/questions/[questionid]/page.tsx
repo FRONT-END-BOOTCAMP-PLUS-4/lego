@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -26,30 +26,28 @@ export default function AnswerFormPage({ params }: Props) {
 
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
-  const handleGetPreviousAnswer = async () => {
+
+  const handleGetQuestion = async () => {
     try {
-      const response = await fetch(
-        `/api/answers?questionId=${questionId}` + (userEmail ? `&userId=${userEmail}` : ""),
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/questions`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
-      console.log(data);
-      // if () {
-      //   answerRef.current.value = data.answer
-      // }
+      console.log("data", data);
     } catch (error) {
       alert("답변 불러오기 실패: " + (error as Error).message);
     }
   };
+  useEffect(() => {
+    handleGetQuestion();
+  }, []);
 
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
