@@ -73,6 +73,7 @@ export class SbAnswerRepository implements AnswerRepository {
   }
 
   //특정 유저의 특정 답변 조회
+  //answer, question 참조 필요
   async findUserAnswer(params: UserAnswerParams): Promise<AnswerView> {}
 
   //특정 문제의 답변 리스트 조회

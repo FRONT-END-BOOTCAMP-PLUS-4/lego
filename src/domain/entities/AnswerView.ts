@@ -1,19 +1,12 @@
-import { Answer } from "./Answer";
-
 //클라이언트에게 전달할 것
-export class AnswerView extends Answer {
+export class AnswerView {
   constructor(
-    userId: number,
-    questionId: number,
-    content: string, //사용자의 답변
-    createdAt: Date,
-    public nickName: string, //답변한 사용자
-    public avatar: string,
-    public isLike: boolean,
-    public likeCount: number = 0,
+    public questionId: number,
+    public content: string, //사용자의 답변
     public question: string, //문제
-    public category: string //카테고리
-  ) {
-    super(userId, questionId, content, createdAt);
-  }
+    public category: string, //카테고리
+    public isBookmarked: boolean,
+    public answer: string, //모범답안
+    public userId?: number
+  ) {}
 }

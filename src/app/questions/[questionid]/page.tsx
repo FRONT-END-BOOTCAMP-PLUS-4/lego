@@ -17,14 +17,39 @@ export default function AnswerFormPage({ params }: Props) {
   const questionId = Number(params?.questionid);
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<string>("tab1");
-
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const userEmail = user?.email;
+  console.log("token", token);
 
-  //이전에 작성한 답변 불러오기
+  // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
+  //userId 없을 수 있음, questionId 필수
+  const handleGetPreviousAnswer = async () => {
+    try {
+      const response = await fetch(
+        `/api/answers?questionId=${questionId}` + (userEmail ? `&userId=${userEmail}` : ""),
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("서버 응답 실패");
+      }
+      const data = await response.json();
+      console.log(data);
+      // if () {
+      //   answerRef.current.value = data.answer
+      // }
+    } catch (error) {
+      alert("답변 불러오기 실패: " + (error as Error).message);
+    }
+  };
 
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
@@ -52,7 +77,7 @@ export default function AnswerFormPage({ params }: Props) {
         throw new Error(action === "create" ? "답변 저장 실패." : "답변 변경 실패.");
       }
       alert(action === "create" ? "답변이 저장되었습니다." : "답변이 변경되었습니다.");
-      setIsSubmit(true);
+      setIsSubmitted(true);
       setIsEditing(false);
     } catch (error) {
       alert(`${action === "create" ? "답변 저장" : "답변 변경"} 실패: ${(error as Error).message}`);
@@ -113,7 +138,7 @@ export default function AnswerFormPage({ params }: Props) {
         {tab === "tab1" && (
           <div className="flex justify-center mt-[24px]">
             {/* 이미 기존에 작성한 답변이 있으면 수정 삭제 먼저 */}
-            {isSubmit && (
+            {isSubmitted && (
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -133,7 +158,7 @@ export default function AnswerFormPage({ params }: Props) {
                 </Button>
               </div>
             )}
-            {!isSubmit && (
+            {!isSubmitted && (
               <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
                 저장
               </Button>

@@ -1,11 +1,12 @@
 import { CreateAnswerUsecase } from "@/application/answer/CreateAnswerUsecase";
 import { DeleteAnswerUsecase } from "@/application/answer/DeleteAnswerUsecase";
 import { CreateAnswerDto } from "@/application/answer/dto/CreateAnswerDto";
-import { CreatedAnswerDto } from "@/application/answer/dto/CreatedAnswerDto";
+import { CreatedAnswerDto, GetAnswerDto } from "@/application/answer/dto/GetAnswerDto";
 import { UpdateAnswerDto } from "@/application/answer/dto/UpdateAnswerDto";
 import { UpdateAnswerUsecase } from "@/application/answer/UpdateAnswerUsecase";
 import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerRepository";
 import { NextResponse } from "next/server";
+import { URL } from "url";
 
 //답변 저장
 export async function POST(request: Request) {
@@ -58,4 +59,9 @@ export async function PUT(request: Request) {
 
 //답변 조회
 //이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
-export async function GET(request: Request) {}
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId") ?? null;
+  const questionId = Number(searchParams.get("questionId"));
+  const getDto = new GetAnswerDto(userId, questionId);
+}
