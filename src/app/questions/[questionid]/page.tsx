@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
-import AnswerPreviewCard from "@/app/api/answers/componsts/AnswerPreviewCard";
-import QusetionHeader from "@/app/api/answers/componsts/QusetionHeader";
+import AnswerPreviewCard from "./componsts/AnswerPreviewCard";
+import QusetionHeader from "./componsts/QusetionHeader";
+import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -62,7 +63,7 @@ export default function AnswerFormPage({ params }: Props) {
 
   useEffect(() => {
     if (!questionData) return;
-    if (questionData?.answer !== undefined) {
+    if (questionData?.answer !== "") {
       setUserAnswer(questionData.answer);
       setIsSubmitted(true);
       setIsEditing(false);
@@ -146,11 +147,7 @@ export default function AnswerFormPage({ params }: Props) {
             ></textarea>
           </TabsContent>
           <TabsContent value="tab2">
-            <textarea
-              className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
-              readOnly
-              value={"답안내용"}
-            ></textarea>
+            <QuestionSolution solution={solution} />
           </TabsContent>
         </Tabs>
         {tab === "tab1" && (
