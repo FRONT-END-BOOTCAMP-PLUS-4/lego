@@ -1,7 +1,9 @@
+import Image from "next/image";
+
 export default function NotFound() {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <p className="text-5xl">페이지를 찾을 수 없어요 😭</p>
+      <Image src="/assets/images/not-found.png" alt="not found" width={600} height={600} />
     </div>
   );
 }
