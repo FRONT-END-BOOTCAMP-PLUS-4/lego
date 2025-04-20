@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Bookmark } from "lucide-react";
+import { formatNumber } from "@/utils/handleFormat";
 
 export default function BookmarkList() {
   return (
@@ -16,7 +17,7 @@ export default function BookmarkList() {
                 <Badge variant="outline">JavaScript</Badge>
                 <div className="flex gap-[8px]">
                   <Bookmark className="fill-amber-300 stroke-none" />
-                  <p>1000</p>
+                  <p>{formatNumber(1000)}</p>
                 </div>
               </div>
             </Card>

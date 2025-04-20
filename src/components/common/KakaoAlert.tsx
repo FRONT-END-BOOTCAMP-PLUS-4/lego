@@ -1,18 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useProfileStore } from "@/store/useProfileStore";
+import { useHandleKakao } from "@/utils/handleKakao";
 
 export default function KakaoAlertButton() {
-  const { setActiveIndex, setKakaoAutoToggle } = useProfileStore();
-  const router = useRouter();
-
-  const handleKakao = () => {
-    setActiveIndex(0);
-    router.push("/users");
-    setKakaoAutoToggle(true);
-  };
+  const handleKakao = useHandleKakao();
 
   return (
     <button

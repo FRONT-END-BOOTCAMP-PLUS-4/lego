@@ -5,7 +5,7 @@ import GitHubCalendar from "react-github-calendar";
 import { useProfileStore } from "@/store/useProfileStore";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { formatNumber } from "@/utils/format";
+import { formatNumber } from "@/utils/handleFormat";
 
 export default function Activity() {
   const { selectedYear, setShowModal } = useProfileStore();

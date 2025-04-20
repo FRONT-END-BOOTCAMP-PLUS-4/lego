@@ -1,8 +1,13 @@
+"use client";
+
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { useHandleKakao } from "@/utils/handleKakao";
 
 export default function KakaoMessageBanner() {
+  const handleKakao = useHandleKakao();
+
   return (
     <section className="mb-[100px]" data-aos="fade-up">
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[var(--blue-03)] flex justify-center items-center px-4 py-[100px]">
@@ -28,6 +33,7 @@ export default function KakaoMessageBanner() {
             <div className="px-4 py-2">
               <Button
                 variant="default"
+                onClick={handleKakao}
                 className="w-full bg-[var(--gray-01)] border-none text-[var(--black)]"
               >
                 매일 기술면접 질문 받기

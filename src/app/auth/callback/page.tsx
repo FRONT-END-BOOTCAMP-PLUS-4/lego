@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function OAuthCallback() {
