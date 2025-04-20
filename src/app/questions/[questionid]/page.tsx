@@ -8,15 +8,18 @@ import QusetionHeader from "@/app/api/answers/componsts/QusetionHeader";
 import { useParams } from "next/navigation";
 
 type AnswerAction = "create" | "update";
-type QuestionResponse = {
-  message: string;
-  data: {
-    question: string;
-    category: string;
-    solution: string;
-    answer?: string;
-  };
-};
+interface QuestionResponse {
+  id: number;
+  categoryId: number;
+  categoryName: string;
+  content: string;
+  answer: string;
+  isBookmarked: boolean;
+  solution: string;
+  views: number;
+  createdAt: string;
+}
+
 export default function AnswerFormPage() {
   const params = useParams();
   const questionId = Number(params.questionid);
@@ -45,7 +48,7 @@ export default function AnswerFormPage() {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
-      setQuestionData(data.data);
+      setQuestionData(data?.data);
     } catch (error) {
       alert("답변 불러오기 실패: " + (error as Error).message);
     }
@@ -53,7 +56,14 @@ export default function AnswerFormPage() {
   useEffect(() => {
     handleGetQuestion();
   }, []);
-  console.log(questionData);
+
+  useEffect(() => {
+    if (questionData && answerRef.current) {
+      answerRef.current.value = questionData.answer;
+      setIsSubmitted(true);
+      setIsEditing(false);
+    }
+  }, [questionData]);
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     const method = action === "create" ? "POST" : "PUT";
@@ -112,10 +122,12 @@ export default function AnswerFormPage() {
       alert("답변 저장 실패: " + (error as Error).message);
     }
   };
-
+  if (!questionData) return <div>로딩 중...</div>;
+  console.log(questionData);
+  const { content, answer, solution, isBookmarked, categoryName } = questionData;
   return (
     <div className="w-[1270px] container mx-auto pt-[40px]">
-      <QusetionHeader />
+      <QusetionHeader content={content} categoryName={categoryName} isBookmarked={isBookmarked} />
       <form>
         <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
           <TabsList className="mr-0 ml-auto">

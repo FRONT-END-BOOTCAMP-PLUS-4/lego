@@ -2,14 +2,23 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-export default function QusetionHeader() {
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+interface QuestionHeaderProps {
+  content: string;
+  categoryName: string;
+  isBookmarked: boolean;
+}
+export default function QusetionHeader({
+  content,
+  categoryName,
+  isBookmarked: bookmarkState,
+}: QuestionHeaderProps) {
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(bookmarkState);
   const handleToggleBookmark = () => setIsBookmarked((prev) => !prev);
   return (
     <header className="flex justify-between items-center pb-[18px]">
       <div className="flex items-center pb-[18px]">
-        <Badge className="mr-[16px]">Javascript</Badge>
-        <h3 className="txt-3xl-b">HTTP 메소드에 대한 설명</h3>
+        <Badge className="mr-[16px]">{categoryName}</Badge>
+        <h3 className="txt-3xl-b">{content}</h3>
       </div>
       <div
         className="flex items-center justify-center w-[32px] h-[32px]"
