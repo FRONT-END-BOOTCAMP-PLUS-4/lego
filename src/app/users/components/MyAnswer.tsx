@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { formatNumber } from "@/utils/format";
+import { formatNumber } from "@/utils/handleFormat";
 import { Heart } from "lucide-react";
 
 // 실제 데이터로 매핑 필요
