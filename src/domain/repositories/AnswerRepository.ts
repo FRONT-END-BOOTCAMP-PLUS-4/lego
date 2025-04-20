@@ -2,7 +2,7 @@ import { Answer } from "../entities/Answer";
 import { AnswerView } from "../entities/AnswerView";
 
 interface UserAnswerParams {
-  userId: string;
+  userId: string | null;
   questionId: number;
 }
 
@@ -17,7 +17,7 @@ export interface AnswerRepository {
   deleteAnswer(params: UserAnswerParams): Promise<void>;
 
   //유저의 특정 답변 조회
-  findUserAnswer(params: UserAnswerParams): Promise<AnswerView>;
+  getUserAnswer(params: UserAnswerParams): Promise<AnswerView>;
 
   //특정 문제의 답변 리스트 조회
   findAnswersByQuestion(params: UserAnswerParams): Promise<Answer[]>;
