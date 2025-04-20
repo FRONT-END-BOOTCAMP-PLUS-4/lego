@@ -18,6 +18,16 @@ interface KakaoModalProps {
 }
 
 export default function KakaoModal({ open, onClose, onConfirm }: KakaoModalProps) {
+  const handleSubscribe = () => {
+    const clientId = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY!;
+    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL!}/auth/kakao/callback`;
+    const scope = "talk_message";
+
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+
+    window.location.href = kakaoAuthUrl;
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
       <AlertDialogContent>
@@ -31,7 +41,8 @@ export default function KakaoModal({ open, onClose, onConfirm }: KakaoModalProps
           <AlertDialogCancel onClick={onClose}>취소</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              onConfirm();
+              // onConfirm();
+              handleSubscribe();
               onClose();
             }}
           >
