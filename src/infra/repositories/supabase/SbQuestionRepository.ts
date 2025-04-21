@@ -83,44 +83,39 @@ export class SbQuestionRepository implements QuestionRepository {
 
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count)")
       .order("created_at", { ascending: false });
 
-    // 디버깅 로그
-    console.log("✅ Supabase Response - getAllQuestions");
-    console.log("data:", data);
-    console.log("error:", error);
-
     if (error) {
-      console.error("❌ Supabase Error:", error.message);
+      console.error("[getAllQuestions] Supabase Error:", error.message);
       throw new Error(error.message);
     }
 
     if (!data) {
-      console.warn("⚠️ Supabase returned no data for 'question' table");
+      // console.warn("[getAllQuestions] No data returned");
       return [];
     }
 
-    return data.map(
-      (item) =>
-        new QuestionDto(
-          item.id,
-          item.category_id,
-          item.content,
-          item.solution,
-          item.views,
-          item.created_at
-        )
-    );
+    return data.map((item: any) => {
+      const bookmarkCount = item.bookmark?.[0]?.count ?? 0;
+      return new QuestionDto(
+        item.id,
+        item.category_id,
+        item.content,
+        item.solution,
+        item.views,
+        item.created_at,
+        bookmarkCount
+      );
+    });
   }
 
-  // 카테고리별 문제 출력
   async getQuestionsByCategory(categoryId: number): Promise<QuestionDto[]> {
     const supabase = await createClient();
 
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count)")
       .eq("category_id", categoryId)
       .order("created_at", { ascending: false });
 
@@ -130,25 +125,26 @@ export class SbQuestionRepository implements QuestionRepository {
     console.log("error:", error);
 
     if (error) {
-      console.error("❌ Supabase Error:", error.message);
+      console.error(`[getQuestionsByCategory] Supabase Error:`, error.message);
       throw new Error(error.message);
     }
 
     if (!data) {
-      console.warn(`⚠️ No data found for categoryId ${categoryId}`);
+      // console.warn(`[getQuestionsByCategory] No data for categoryId ${categoryId}`);
       return [];
     }
 
-    return data.map(
-      (item) =>
-        new QuestionDto(
-          item.id,
-          item.category_id,
-          item.content,
-          item.solution,
-          item.views,
-          item.created_at
-        )
-    );
+    return data.map((item: any) => {
+      const bookmarkCount = item.bookmark?.[0]?.count ?? 0;
+      return new QuestionDto(
+        item.id,
+        item.category_id,
+        item.content,
+        item.solution,
+        item.views,
+        item.created_at,
+        bookmarkCount
+      );
+    });
   }
 }
