@@ -7,7 +7,7 @@ import "aos/dist/aos.css";
 import CategoryList from "./components/CategoryList";
 import Guide from "./components/Guide";
 import BookmarkList from "./components/BookmarkList";
-import KakaoMessageBanner from "./components/KakaoMessageBanner";
+import EmailBanner from "./components/EmailBanner";
 import AnswerList from "./components/AnswerList";
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
       <CategoryList />
       <Guide />
       <BookmarkList />
-      <KakaoMessageBanner />
+      <EmailBanner />
       <AnswerList />
     </>
   );

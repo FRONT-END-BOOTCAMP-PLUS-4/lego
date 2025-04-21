@@ -50,7 +50,7 @@ export default function Activity() {
         </div>
         <div className="flex gap-3 items-center">
           <Switch checked={enabled} onCheckedChange={handleToggle} />
-          <p>카카오톡 알림 받기</p>
+          <p>메일 구독하기</p>
         </div>
       </Card>
 

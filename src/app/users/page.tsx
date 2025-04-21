@@ -13,7 +13,7 @@ import {
 import { useHasHydrated } from "@/hooks/useHasHydrated";
 import Profile from "./components/History";
 import Activity from "./components/Activity";
-import KakaoModal from "./components/KakaoModal";
+import MailModal from "./components/MailModal";
 
 export default function Mypage() {
   const hasHydrated = useHasHydrated();
@@ -23,19 +23,19 @@ export default function Mypage() {
     setActiveIndex,
     selectedYear,
     setSelectedYear,
-    kakaoAutoToggle,
-    setKakaoAutoToggle,
+    mailAutoToggle,
+    setMailAutoToggle,
     showModal,
     setShowModal,
   } = useProfileStore();
   const [activityKey, setActivityKey] = useState(0);
 
   useEffect(() => {
-    if (kakaoAutoToggle) {
+    if (mailAutoToggle) {
       setShowModal(true);
-      setKakaoAutoToggle(false);
+      setMailAutoToggle(false);
     }
-  }, [kakaoAutoToggle, setKakaoAutoToggle, setShowModal]);
+  }, [mailAutoToggle, setMailAutoToggle, setShowModal]);
 
   const redirectHandler = (value: number) => {
     setActiveIndex(value as MypageTabType);
@@ -53,7 +53,7 @@ export default function Mypage() {
   }
   return (
     <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
-      <KakaoModal
+      <MailModal
         open={showModal}
         onClose={() => setShowModal(false)}
         onConfirm={() => {

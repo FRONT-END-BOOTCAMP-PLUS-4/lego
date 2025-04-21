@@ -3,15 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/useProfileStore";
 
-export function useHandleKakao() {
-  const { setActiveIndex, setKakaoAutoToggle } = useProfileStore();
+export function useHandleMail() {
+  const { setActiveIndex, setMailAutoToggle } = useProfileStore();
   const router = useRouter();
 
-  const handleKakao = () => {
+  const handleMail = () => {
     setActiveIndex(0);
     router.push("/users");
-    setKakaoAutoToggle(true);
+    setMailAutoToggle(true);
   };
 
-  return handleKakao;
+  return handleMail;
 }

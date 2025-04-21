@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useHandleKakao } from "@/utils/handleKakao";
+import { useHandleMail } from "@/utils/handleMail";
+import { Mail } from "lucide-react";
 
-export default function KakaoMessageBanner() {
-  const handleKakao = useHandleKakao();
+export default function EmailBanner() {
+  const handleMail = useHandleMail();
 
   return (
     <section className="mb-[100px]" data-aos="fade-up">
@@ -17,7 +18,7 @@ export default function KakaoMessageBanner() {
             <div className="flex flex-col items-center gap-3 p-[var(--space-24)]">
               <Image
                 src="/assets/images/main/kakao-banner.png"
-                alt="카카오톡 알림설정 배너"
+                alt="메일 알림설정 배너"
                 width={150}
                 height={150}
               />
@@ -33,15 +34,16 @@ export default function KakaoMessageBanner() {
             <div className="px-4 py-2">
               <Button
                 variant="default"
-                onClick={handleKakao}
+                onClick={handleMail}
                 className="w-full bg-[var(--gray-01)] border-none text-[var(--black)]"
               >
                 매일 기술면접 질문 받기
               </Button>
             </div>
           </div>
+
           <Badge variant="default" className="absolute top-[-10px] right-[-10px] !rounded-full">
-            kakao
+            <Mail />
           </Badge>
         </div>
       </div>

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { User, LogOut } from "lucide-react";
-import KakaoAlertButton from "./KakaoAlert";
+import MailAlertButton from "./MailAlert";
 
 export default function Header() {
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function Header() {
 
       {isLoggedIn ? (
         <nav className="flex items-center gap-6">
-          <KakaoAlertButton />
+          <MailAlertButton />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
