@@ -27,17 +27,16 @@ export default function QuestionListPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [sortOption, setSortOption] = useState<"recent" | "bookmark">(() => {
-    const initialSort = searchParams.get("sortBy") as "recent" | "bookmark";
-    return initialSort ?? "recent";
-  });
-
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
   const categoryIdFromURL = searchParams.get("categoryId");
   const selectedCategoryId = categoryIdFromURL ? Number(categoryIdFromURL) : null;
   const user = useAuthStore((state) => state.user);
   const usesrEmail = user?.email;
+
+  const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
+  const filterOption = (searchParams.get("filter") as "all" | "bookmarked" | "answered") ?? "all";
+
   const selectedCategoryName =
     selectedCategoryId === null
       ? "전체"
@@ -60,52 +59,68 @@ export default function QuestionListPage() {
 
   useEffect(() => {
     const fetchSortedQuestions = async () => {
-      const url = selectedCategoryId
-        ? `/api/questions?categoryId=${selectedCategoryId}&sortBy=${sortOption}`
-        : `/api/questions?sortBy=${sortOption}`;
-
-      const res = await fetch(url);
+      let email: string | undefined = undefined;
+  
+      try {
+        // ✅ sessionStorage → localStorage로 변경!
+        const authStorage = localStorage.getItem("auth-storage");
+        console.log("auth-storage:", authStorage);
+  
+        if (authStorage) {
+          const parsed = JSON.parse(authStorage);
+          email = parsed?.state?.user?.email;
+          console.log("✅ 이메일:", email);
+        }
+      } catch (err) {
+        console.error("auth-storage 파싱 오류:", err);
+      }
+  
+      const currentSort = searchParams.get("sortBy") ?? "recent";
+      const currentFilter = searchParams.get("filter") ?? "all";
+      const currentCategoryId = searchParams.get("categoryId");
+  
+      const url = new URL("/api/questions", window.location.origin);
+      url.searchParams.set("sortBy", currentSort);
+      url.searchParams.set("filter", currentFilter);
+      if (currentCategoryId) url.searchParams.set("categoryId", currentCategoryId);
+      if (currentFilter === "bookmarked" && email) url.searchParams.set("email", email);
+  
+      const res = await fetch(url.toString());
       const data = await res.json();
       setQuestions(data);
       setFilteredQuestions([]);
     };
-
+  
     fetchSortedQuestions();
-  }, [sortOption, selectedCategoryId]);
-
-  useEffect(() => {
-    const currentSort = searchParams.get("sortBy") as "recent" | "bookmark";
-    if (currentSort && currentSort !== sortOption) {
-      setSortOption(currentSort);
-    }
-  }, [searchParams]);
+  }, [searchParams.toString()]);
 
   const handleCategoryChange = (name: string) => {
     const category = categories.find((c) => c.name === name);
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams.toString());
 
     if (category) {
       params.set("categoryId", category.id.toString());
+    } else {
+      params.delete("categoryId");
     }
 
-    params.set("sortBy", sortOption);
     router.push(`/questions?${params.toString()}`);
-
     setPageNumber(1);
     setSearchKeyword("");
     setFilteredQuestions([]);
   };
 
+  const handleFilterChange = (filter: "all" | "bookmarked" | "answered") => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("filter", filter);
+    router.push(`/questions?${params.toString()}`);
+    setPageNumber(1);
+  };
+
   const handleSortClick = (sortBy: "recent" | "bookmark") => {
     const params = new URLSearchParams(searchParams.toString());
-
     params.set("sortBy", sortBy);
-    if (selectedCategoryId) {
-      params.set("categoryId", selectedCategoryId.toString());
-    }
-
     router.push(`/questions?${params.toString()}`);
-    setSortOption(sortBy);
     setPageNumber(1);
   };
 
@@ -170,7 +185,8 @@ export default function QuestionListPage() {
             ))}
           </SelectContent>
         </Select>
-        <Select>
+
+        <Select onValueChange={handleFilterChange} value={filterOption}>
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
             <SelectValue placeholder="필터" />
           </SelectTrigger>

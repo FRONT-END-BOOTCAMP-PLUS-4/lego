@@ -6,13 +6,22 @@ export class GetQuestionListUsecase {
 
   async execute(
     categoryId?: number,
-    sortBy: "recent" | "bookmark" = "recent"
+    sortBy: "recent" | "bookmark" = "recent",
+    email?: string, // ✅ userId → email
+    filter: "bookmarked" | "answered" | "all" = "all"
   ): Promise<QuestionDto[]> {
     let questions: QuestionDto[];
 
-    if (categoryId) {
+    // ✅ email 기반 북마크 필터 처리
+    if (filter === "bookmarked" && email) {
+      questions = await this.questionRepository.getBookmarkedQuestionsByUser(email);
+    }
+    // 카테고리별 조회
+    else if (categoryId) {
       questions = await this.questionRepository.getQuestionsByCategory(categoryId);
-    } else {
+    }
+    // 전체 조회
+    else {
       questions = await this.questionRepository.getAllQuestions();
     }
 
