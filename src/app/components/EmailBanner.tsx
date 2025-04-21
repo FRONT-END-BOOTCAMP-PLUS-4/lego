@@ -3,21 +3,24 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useHandleKakao } from "@/utils/handleKakao";
+import { useHandleMail } from "@/utils/handleMail";
 
-export default function KakaoMessageBanner() {
-  const handleKakao = useHandleKakao();
+export default function EmailBanner() {
+  const handleMail = useHandleMail();
 
   return (
-    <section className="mb-[100px]" data-aos="fade-up">
+    <section className="mb-[100px]">
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[var(--blue-03)] flex justify-center items-center px-4 py-[100px]">
-        <div className="relative w-1/2 max-w-screen-sm rounded-[24px] bg-[var(--white)] shadow-md">
+        <div
+          className="relative w-1/2 max-w-screen-sm rounded-[24px] bg-[var(--white)] shadow-md"
+          data-aos="fade-up"
+        >
           <div className="bg-[var(--white)] rounded-lg ">
             <p className="bg-[var(--yellow)] txt-lg !font-bold px-4 py-1.5">알림톡 도착</p>
             <div className="flex flex-col items-center gap-3 p-[var(--space-24)]">
               <Image
-                src="/assets/images/main/kakao-banner.png"
-                alt="카카오톡 알림설정 배너"
+                src="/assets/images/main/email.png"
+                alt="메일 알림설정 배너"
                 width={150}
                 height={150}
               />
@@ -33,13 +36,14 @@ export default function KakaoMessageBanner() {
             <div className="px-4 py-2">
               <Button
                 variant="default"
-                onClick={handleKakao}
+                onClick={handleMail}
                 className="w-full bg-[var(--gray-01)] border-none text-[var(--black)]"
               >
                 매일 기술면접 질문 받기
               </Button>
             </div>
           </div>
+
           <Badge variant="default" className="absolute top-[-10px] right-[-10px] !rounded-full">
             kakao
           </Badge>

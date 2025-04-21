@@ -1,32 +1,70 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import GitHubCalendar from "react-github-calendar";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { formatNumber } from "@/utils/handleFormat";
 
 export default function Activity() {
-  const { selectedYear, setShowModal } = useProfileStore();
-  const [enabled, setEnabled] = useState(false);
+  const { user } = useAuthStore();
+  const { selectedYear, setShowModal, mailAutoToggle, setMailAutoToggle } = useProfileStore();
 
+  // 실제 구독여부를 토글에 반영
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
-      const isSubscribed = true; // subscribe 테이블에서 가져온 구독 여부
-      setEnabled(isSubscribed);
+      const res = await fetch(`/api/users?email=${user?.email}`);
+      const data = await res.json();
+      setMailAutoToggle(data.subscribed);
     };
     fetchSubscriptionStatus();
-  }, []);
+  }, [setMailAutoToggle, user?.email]);
 
-  const handleToggle = (checked: boolean) => {
-    setEnabled(checked);
+  // 토글 상태 반영 - DB
+  const handleToggle = async (checked: boolean) => {
+    setMailAutoToggle(checked);
 
-    if (checked) {
-      setShowModal(true);
+    if (!checked) {
+      try {
+        // 토글 off - 구독 해지
+        await fetch("/api/users", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user?.email }),
+        });
+      } catch (error) {
+        console.error(error);
+      }
     } else {
-      // 구독 해제 로직
+      setShowModal(true);
     }
+
+    // if (checked) {
+    //   setShowModal(true);
+    //   try {
+    //     // 토글 on - 구독 등록
+    //     await fetch("/api/users", {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ email: user?.email }),
+    //     });
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   try {
+    //     // 토글 off - 구독 해지
+    //     await fetch("/api/users", {
+    //       method: "DELETE",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ email: user?.email }),
+    //     });
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
   };
 
   return (
@@ -49,8 +87,8 @@ export default function Activity() {
           </div>
         </div>
         <div className="flex gap-3 items-center">
-          <Switch checked={enabled} onCheckedChange={handleToggle} />
-          <p>카카오톡 알림 받기</p>
+          <Switch checked={mailAutoToggle} onCheckedChange={handleToggle} />
+          <p>메일 구독하기</p>
         </div>
       </Card>
 
