@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useProfileStore, MypageTabType, MypageYearType } from "@/store/useProfileStore";
 import { UnderlineTab } from "@/components/ui/underLinetab";
 import {
@@ -23,19 +23,12 @@ export default function Mypage() {
     setActiveIndex,
     selectedYear,
     setSelectedYear,
-    mailAutoToggle,
     setMailAutoToggle,
     showModal,
     setShowModal,
   } = useProfileStore();
-  const [activityKey, setActivityKey] = useState(0);
 
-  useEffect(() => {
-    if (mailAutoToggle) {
-      setShowModal(true);
-      setMailAutoToggle(false);
-    }
-  }, [mailAutoToggle, setMailAutoToggle, setShowModal]);
+  const [activityKey, setActivityKey] = useState(0);
 
   const redirectHandler = (value: number) => {
     setActiveIndex(value as MypageTabType);
@@ -51,12 +44,17 @@ export default function Mypage() {
       </section>
     );
   }
+
   return (
     <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
       <MailModal
         open={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={() => {
+          setMailAutoToggle(false);
+          setShowModal(false);
+        }}
         onConfirm={() => {
+          setMailAutoToggle(true);
           setShowModal(false);
         }}
       />

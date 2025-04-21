@@ -19,7 +19,7 @@ interface MailModalProps {
 
 export default function MailModal({ open, onClose, onConfirm }: MailModalProps) {
   return (
-    <AlertDialog open={open} onOpenChange={onClose}>
+    <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>메일 알림을 설정하시겠습니까?</AlertDialogTitle>
@@ -32,7 +32,6 @@ export default function MailModal({ open, onClose, onConfirm }: MailModalProps) 
           <AlertDialogAction
             onClick={() => {
               onConfirm();
-              onClose();
             }}
           >
             구독하기

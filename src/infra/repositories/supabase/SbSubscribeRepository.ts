@@ -5,7 +5,7 @@ export class SbSubscribeRepository implements SubscribeRepository {
   async subscribe(email: string): Promise<void> {
     const supabase = await createClient();
 
-    const { error } = await supabase.from("subscribe").upsert({ email, is_active: true });
+    const { error } = await supabase.from("subscribe").insert({ email });
     if (error) throw new Error("구독 실패");
   }
 
