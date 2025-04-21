@@ -66,7 +66,7 @@ export default function QuestionListPage() {
   useEffect(() => {
     const fetchSortedQuestions = async () => {
       let email: string | undefined = undefined;
-
+  
       try {
         const authStorage = localStorage.getItem("auth-storage");
         if (authStorage) {
@@ -76,32 +76,32 @@ export default function QuestionListPage() {
       } catch (err) {
         console.error("auth-storage 파싱 오류:", err);
       }
-
+  
       const currentSort = searchParams.get("sortBy") ?? "recent";
       const currentFilter = searchParams.get("filter") ?? "all";
       const currentCategoryId = searchParams.get("categoryId");
-
-      const url = new URL("/api/questions", window.location.origin);
-      url.searchParams.set("filter", currentFilter);
-
-      // 북마크 or 답변한 문제일 경우 email만 전달
+  
+      const params = new URLSearchParams(searchParams.toString());
+  
+      // 📌 북마크 or 답변 필터일 경우 email 파라미터 강제로 붙임
       if ((currentFilter === "bookmarked" || currentFilter === "answered") && email) {
-        url.searchParams.set("email", email);
+        params.set("email", email);
       } else {
-        // 일반 필터일 경우 서버로 sortBy/categoryId 전달
-        url.searchParams.set("sortBy", currentSort);
-        if (currentCategoryId) url.searchParams.set("categoryId", currentCategoryId);
+        params.delete("email");
       }
-
+  
+      const url = new URL("/api/questions", window.location.origin);
+      params.forEach((value, key) => url.searchParams.set(key, value));
+  
       const res = await fetch(url.toString());
       let data: QuestionDto[] = await res.json();
-
-      // 클라이언트 측 필터링 (북마크, 답변한 문제)
+  
+      // 클라이언트 추가 정렬/필터
       if (currentFilter === "bookmarked" || currentFilter === "answered") {
         if (currentCategoryId) {
           data = data.filter((q) => q.categoryId === Number(currentCategoryId));
         }
-
+  
         if (currentSort === "bookmark") {
           data.sort((a, b) => b.bookmark_count - a.bookmark_count);
         } else {
@@ -112,11 +112,11 @@ export default function QuestionListPage() {
           );
         }
       }
-
+  
       setQuestions(data);
       setFilteredQuestions([]);
     };
-
+  
     fetchSortedQuestions();
   }, [searchParams.toString()]);
 
@@ -141,6 +141,20 @@ export default function QuestionListPage() {
   const handleFilterChange = (filter: "all" | "bookmarked" | "answered") => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("filter", filter);
+  
+    const authStorage = localStorage.getItem("auth-storage");
+    if (authStorage) {
+      const parsed = JSON.parse(authStorage);
+      const email = parsed?.state?.user?.email;
+      if (filter === "bookmarked" || filter === "answered") {
+        if (email) {
+          params.set("email", email);
+        }
+      } else {
+        params.delete("email");
+      }
+    }
+  
     router.push(`/questions?${params.toString()}`);
     setPageNumber(1);
   };
@@ -162,6 +176,28 @@ export default function QuestionListPage() {
     setFilteredQuestions(matched);
     setPageNumber(1);
   };
+
+  useEffect(() => {
+    const updateURLWithEmail = async () => {
+      const filter = searchParams.get("filter");
+      const emailFromURL = searchParams.get("email");
+  
+      if ((filter === "bookmarked" || filter === "answered") && !emailFromURL) {
+        const authStorage = localStorage.getItem("auth-storage");
+        if (authStorage) {
+          const parsed = JSON.parse(authStorage);
+          const email = parsed?.state?.user?.email;
+          if (email) {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("email", email);
+            router.push(`/questions?${params.toString()}`);
+          }
+        }
+      }
+    };
+  
+    updateURLWithEmail();
+  }, []);
 
   // ====================== 페이지네이션 데이터 ======================
 
