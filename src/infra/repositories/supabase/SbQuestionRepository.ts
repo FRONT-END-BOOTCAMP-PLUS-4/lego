@@ -14,7 +14,7 @@ type QuestionType = {
     email: string;
     content: string;
     created_at: string;
-  }[];
+  };
   bookmark?: {
     email: string;
   }[];
@@ -29,7 +29,7 @@ export class SbQuestionRepository implements QuestionRepository {
   //question 조회
   async getQuestion(questionId: number, userId?: string): Promise<QuestionView> {
     const supabase = await createClient();
-    let query = supabase
+    const query = supabase
       .from("question")
       .select(
         `
@@ -53,16 +53,15 @@ export class SbQuestionRepository implements QuestionRepository {
       )
     `
       )
-      .eq("id", questionId)
-      .eq("answer.email", userId)
-      .eq("bookmark.email", userId);
+      .eq("id", questionId);
 
     const { data, error } = await query.maybeSingle();
-
     if (error || !data) {
       console.error("조회 실패:", error);
       throw new Error("문제를 불러오는 데 실패했습니다.");
     }
+    const filteredAnswer = data.answer?.find((a) => a.email === userId);
+    const isBookmarked = !!data.bookmark?.find((b) => b.email === userId);
     const typedData = data as unknown as QuestionType;
 
     return new QuestionView(
@@ -70,10 +69,10 @@ export class SbQuestionRepository implements QuestionRepository {
       typedData.category_id,
       typedData.content,
       typedData.solution,
-      typedData.answer?.[0]?.content ?? "",
+      filteredAnswer?.content ?? "",
       typedData.views ?? 0,
       new Date(typedData.created_at),
-      !!typedData.bookmark?.[0],
+      isBookmarked,
       typedData.category?.name ?? ""
     );
   }

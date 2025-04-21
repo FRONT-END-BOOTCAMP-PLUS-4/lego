@@ -1,12 +1,12 @@
 import { QuestionRepository } from "@/domain/repositories/QuestionRepository";
 import { GetQuestionDto } from "./dto/GetQuestionDto";
-import { Question } from "@/domain/entities/Question";
+import { QuestionView } from "@/domain/entities/QuestionView";
 
 export class GetQuestionUsecase {
   constructor(private readonly questionRepo: QuestionRepository) {}
-  async execute(getDto: GetQuestionDto): Promise<Question> {
-    const { questionId } = getDto;
-    const view: Question = await this.questionRepo.getQuestion(questionId);
+  async execute(getDto: GetQuestionDto): Promise<QuestionView> {
+    const { questionId, userId } = getDto;
+    const view: QuestionView = await this.questionRepo.getQuestion(questionId, userId);
     return view;
   }
 }

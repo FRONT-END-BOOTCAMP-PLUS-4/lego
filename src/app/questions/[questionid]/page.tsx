@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import AnswerPreviewCard from "./componsts/AnswerPreviewCard";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
+import { useParams } from "next/navigation";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -27,9 +28,10 @@ interface Props {
     userId?: string;
   };
 }
-export default function AnswerFormPage({ params, searchParams }: Props) {
-  const questionId = Number(params.questionid ?? 1);
-  const userEmail = searchParams.userId ?? "";
+export default function AnswerFormPage({ searchParams }: Props) {
+  const params = useParams();
+  const questionId = Number(params.questionid);
+  const userEmail = searchParams.userId;
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -56,7 +58,6 @@ export default function AnswerFormPage({ params, searchParams }: Props) {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
-      console.log("data", data);
       setQuestionData(data?.data);
     } catch (error) {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);
@@ -135,7 +136,7 @@ export default function AnswerFormPage({ params, searchParams }: Props) {
     }
   };
   if (!questionData) return <div>로딩 중...</div>;
-  const { content, answer, solution, isBookmarked, categoryName } = questionData;
+  const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <div className="container mx-auto pt-[40px]">
       <QusetionHeader content={content} categoryName={categoryName} isBookmarked={isBookmarked} />
