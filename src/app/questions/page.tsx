@@ -26,6 +26,10 @@ export default function QuestionListPage() {
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionDto[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ====================== URL 파라미터 추출 ======================
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -72,9 +76,11 @@ export default function QuestionListPage() {
         if (authStorage) {
           const parsed = JSON.parse(authStorage);
           email = parsed?.state?.user?.email;
+          setIsLoggedIn(!!email);
         }
       } catch (err) {
         console.error("auth-storage 파싱 오류:", err);
+        setIsLoggedIn(false);
       }
   
       const currentSort = searchParams.get("sortBy") ?? "recent";
@@ -258,16 +264,18 @@ export default function QuestionListPage() {
           </SelectContent>
         </Select>
 
-        <Select onValueChange={handleFilterChange} value={filterOption}>
-          <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
-            <SelectValue placeholder="필터" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">전체</SelectItem>
-            <SelectItem value="bookmarked">북마크한 문제</SelectItem>
-            <SelectItem value="answered">답변한 문제</SelectItem>
-          </SelectContent>
-        </Select>
+        {isLoggedIn && (
+          <Select onValueChange={handleFilterChange} value={filterOption}>
+            <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
+              <SelectValue placeholder="필터" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체</SelectItem>
+              <SelectItem value="bookmarked">북마크한 문제</SelectItem>
+              <SelectItem value="answered">답변한 문제</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       <div className="mb-[44px]" />
@@ -277,7 +285,7 @@ export default function QuestionListPage() {
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex gap-[12px]">
           <Button
-            variant={sortOption === "bookmark" ? "default" : "ghost"}
+            variant="ghost"
             size="sm"
             className="font-normal"
             onClick={() => handleSortClick("bookmark")}
@@ -285,12 +293,12 @@ export default function QuestionListPage() {
             인기순
           </Button>
           <Button
-            variant={sortOption === "recent" ? "default" : "ghost"}
+            variant="ghost"
             size="sm"
             className="font-normal"
             onClick={() => handleSortClick("recent")}
           >
-            최신순
+          최신순
           </Button>
         </div>
       </div>
