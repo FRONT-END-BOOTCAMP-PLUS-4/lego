@@ -26,19 +26,7 @@ export default function Activity() {
   const handleToggle = async (checked: boolean) => {
     setMailAutoToggle(checked);
 
-    if (checked) {
-      setShowModal(true);
-      try {
-        // 토글 on - 구독 등록
-        await fetch("/api/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: user?.email }),
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
+    if (!checked) {
       try {
         // 토글 off - 구독 해지
         await fetch("/api/users", {
@@ -49,7 +37,34 @@ export default function Activity() {
       } catch (error) {
         console.error(error);
       }
+    } else {
+      setShowModal(true);
     }
+
+    // if (checked) {
+    //   setShowModal(true);
+    //   try {
+    //     // 토글 on - 구독 등록
+    //     await fetch("/api/users", {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ email: user?.email }),
+    //     });
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   try {
+    //     // 토글 off - 구독 해지
+    //     await fetch("/api/users", {
+    //       method: "DELETE",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ email: user?.email }),
+    //     });
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
   };
 
   return (
