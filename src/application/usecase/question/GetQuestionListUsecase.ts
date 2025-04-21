@@ -16,6 +16,12 @@ export class GetQuestionListUsecase {
     if (filter === "bookmarked" && email) {
       questions = await this.questionRepository.getBookmarkedQuestionsByUser(email);
     }
+
+     // ✅ answered 필터 추가
+    else if (filter === "answered" && email) {
+        return await this.questionRepository.getAnsweredQuestionsByUser(email);
+    }
+
     // 카테고리별 조회
     else if (categoryId) {
       questions = await this.questionRepository.getQuestionsByCategory(categoryId);

@@ -189,4 +189,38 @@ export class SbQuestionRepository implements QuestionRepository {
       }) ?? []
     );
   }
+
+  // 사용자가 답변한 질문 목록 조회
+  async getAnsweredQuestionsByUser(email: string): Promise<QuestionDto[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("answer")
+      .select(`
+        question:question_id (
+          id, category_id, content, solution, views, created_at,
+          bookmark:bookmark(count),
+          answer:answer(count)
+        )
+      `)
+      .eq("email", email);
+
+    if (error) throw new Error(error.message);
+
+    return (
+      data?.map((item: any) => {
+        const q = item.question;
+        return new QuestionDto(
+          q.id,
+          q.category_id,
+          q.content,
+          q.solution,
+          q.views,
+          q.created_at,
+          q.bookmark?.[0]?.count ?? 0,
+          q.answer?.[0]?.count ?? 0
+        );
+      }) ?? []
+    );
+  }
 }

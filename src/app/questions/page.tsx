@@ -20,6 +20,8 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
+  // ====================== 상태 관리 ======================
+
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionDto[]>([]);
@@ -44,6 +46,8 @@ export default function QuestionListPage() {
 
   const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
 
+  // ====================== 카테고리 목록 가져오기 ======================
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -57,10 +61,12 @@ export default function QuestionListPage() {
     fetchCategories();
   }, []);
 
+  // ====================== 질문 리스트 가져오기 ======================
+
   useEffect(() => {
     const fetchSortedQuestions = async () => {
       let email: string | undefined = undefined;
-  
+
       try {
         const authStorage = localStorage.getItem("auth-storage");
         if (authStorage) {
@@ -70,32 +76,32 @@ export default function QuestionListPage() {
       } catch (err) {
         console.error("auth-storage 파싱 오류:", err);
       }
-  
+
       const currentSort = searchParams.get("sortBy") ?? "recent";
       const currentFilter = searchParams.get("filter") ?? "all";
       const currentCategoryId = searchParams.get("categoryId");
-  
+
       const url = new URL("/api/questions", window.location.origin);
       url.searchParams.set("filter", currentFilter);
-      if (currentFilter === "bookmarked" && email) {
+
+      // 북마크 or 답변한 문제일 경우 email만 전달
+      if ((currentFilter === "bookmarked" || currentFilter === "answered") && email) {
         url.searchParams.set("email", email);
       } else {
-        // 정렬과 카테고리는 서버에 보냄 (비북마크일 때만)
+        // 일반 필터일 경우 서버로 sortBy/categoryId 전달
         url.searchParams.set("sortBy", currentSort);
         if (currentCategoryId) url.searchParams.set("categoryId", currentCategoryId);
       }
-  
+
       const res = await fetch(url.toString());
       let data: QuestionDto[] = await res.json();
-  
-      // ✅ 클라이언트 필터링
-      if (currentFilter === "bookmarked") {
-        // 카테고리 필터
+
+      // 클라이언트 측 필터링 (북마크, 답변한 문제)
+      if (currentFilter === "bookmarked" || currentFilter === "answered") {
         if (currentCategoryId) {
           data = data.filter((q) => q.categoryId === Number(currentCategoryId));
         }
-  
-        // 정렬
+
         if (currentSort === "bookmark") {
           data.sort((a, b) => b.bookmark_count - a.bookmark_count);
         } else {
@@ -106,13 +112,15 @@ export default function QuestionListPage() {
           );
         }
       }
-  
+
       setQuestions(data);
       setFilteredQuestions([]);
     };
-  
+
     fetchSortedQuestions();
   }, [searchParams.toString()]);
+
+  // ====================== 이벤트 핸들러 ======================
 
   const handleCategoryChange = (name: string) => {
     const category = categories.find((c) => c.name === name);
@@ -155,20 +163,27 @@ export default function QuestionListPage() {
     setPageNumber(1);
   };
 
+  // ====================== 페이지네이션 데이터 ======================
+
   const visibleQuestions = filteredQuestions.length > 0 ? filteredQuestions : questions;
   const totalCount = visibleQuestions.length;
   const startIdx = (pageNumber - 1) * 10;
   const endIdx = startIdx + 10;
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
 
+  // ====================== 렌더링 ======================
+
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
+
+      {/* 배너 */}
       <div className="relative w-[948px] h-[115px] mb-6">
         <Image src="/banner.png" alt="배너 이미지" fill className="object-cover rounded-md" />
       </div>
 
       <div className="mb-[48px]" />
 
+      {/* 검색창 */}
       <div className="flex items-center gap-4">
         <Input
           placeholder="면접 문제 검색"
@@ -191,6 +206,7 @@ export default function QuestionListPage() {
 
       <div className="mb-[12px]" />
 
+      {/* 카테고리 & 필터 선택 */}
       <div className="flex items-center gap-2 mb-6">
         <Select onValueChange={handleCategoryChange} value={selectedCategoryName}>
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
@@ -220,6 +236,7 @@ export default function QuestionListPage() {
 
       <div className="mb-[44px]" />
 
+      {/* 정렬 옵션 */}
       <div className="flex items-center justify-between">
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex gap-[12px]">
@@ -244,6 +261,7 @@ export default function QuestionListPage() {
 
       <div className="mb-[12px]" />
 
+      {/* 문제 리스트 출력 */}
       <div className="flex flex-col gap-[16px]">
         {pagedQuestions.map((question) => (
           <Link
@@ -277,6 +295,7 @@ export default function QuestionListPage() {
         ))}
       </div>
 
+      {/* 페이지네이션 */}
       <Pagination
         totalCount={totalCount}
         itemsPerPage={10}

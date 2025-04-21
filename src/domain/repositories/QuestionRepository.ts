@@ -9,4 +9,5 @@ export interface QuestionRepository {
   getQuestionsByCategory(categoryId: number): Promise<QuestionDto[]>;//카테고리별 문제 조회
   getAllQuestionsSorted(sortBy: "recent" | "bookmark"): Promise<QuestionDto[]>;//문제 정렬
   getBookmarkedQuestionsByUser(userId: string): Promise<QuestionDto[]>; // 🔥 북마크된 문제 조회
+  getAnsweredQuestionsByUser(userId: string): Promise<QuestionDto[]>;//         답변한 문제 조회
 }
