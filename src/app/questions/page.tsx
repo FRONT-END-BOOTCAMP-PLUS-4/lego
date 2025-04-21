@@ -196,11 +196,13 @@ export default function QuestionListPage() {
                   <span className="txt-2xl-b">{question.content}</span>
                 </div>
                 <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                  <span>조회수 {question.views}</span>
-                </div>
+                <span>북마크한 사람 {question.bookmark_count}</span>
+                <span>답변을 완료한 사람 {question.answer_count}</span>
+              </div>
               </div>
             </Card>
           </Link>
+              
         ))}
       </div>
 

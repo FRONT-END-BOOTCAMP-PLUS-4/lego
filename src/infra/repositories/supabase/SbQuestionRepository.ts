@@ -83,7 +83,7 @@ export class SbQuestionRepository implements QuestionRepository {
 
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count)")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -98,6 +98,7 @@ export class SbQuestionRepository implements QuestionRepository {
 
     return data.map((item: any) => {
       const bookmarkCount = item.bookmark?.[0]?.count ?? 0;
+      const answerCount = item.answer?.[0]?.count ?? 0;
       return new QuestionDto(
         item.id,
         item.category_id,
@@ -105,7 +106,8 @@ export class SbQuestionRepository implements QuestionRepository {
         item.solution,
         item.views,
         item.created_at,
-        bookmarkCount
+        bookmarkCount,
+        answerCount
       );
     });
   }
@@ -115,7 +117,7 @@ export class SbQuestionRepository implements QuestionRepository {
 
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count)")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
       .eq("category_id", categoryId)
       .order("created_at", { ascending: false });
 
@@ -136,6 +138,7 @@ export class SbQuestionRepository implements QuestionRepository {
 
     return data.map((item: any) => {
       const bookmarkCount = item.bookmark?.[0]?.count ?? 0;
+      const answerCount = item.answer?.[0]?.count ?? 0;
       return new QuestionDto(
         item.id,
         item.category_id,
@@ -143,7 +146,8 @@ export class SbQuestionRepository implements QuestionRepository {
         item.solution,
         item.views,
         item.created_at,
-        bookmarkCount
+        bookmarkCount,
+        answerCount
       );
     });
   }
