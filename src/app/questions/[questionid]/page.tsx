@@ -25,7 +25,7 @@ interface Props {
   };
 }
 export default function AnswerFormPage({ params }: Props) {
-  const questionId = Number(params.questionid ?? 9);
+  const questionId = Number(params.questionid ?? 1);
 
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
@@ -41,7 +41,7 @@ export default function AnswerFormPage({ params }: Props) {
 
   const handleGetQuestion = async () => {
     try {
-      const response = await fetch(`/api/questions?questionId=${questionId}`, {
+      const response = await fetch(`/api/questions/${questionId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -1,24 +1,20 @@
-//문제, 답변 조회
-
-import { GetQuestionDto } from "@/application/question/dto/GetQuestionDto";
-import { GetQuestionUsecase } from "@/application/question/GetQuestionUsecase";
-import { SbQuestionRepository } from "@/infra/repositories/supabase/SbQuestionRepository";
 import { NextResponse } from "next/server";
+import { SbQuestionRepository } from "@/infra/repositories/supabase/SbQuestionRepository";
+import { GetQuestionListUsecase } from "@/application/usecase/question/GetQuestionListUsecase";
 
-//이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
-export async function GET(request: Request) {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const categoryIdParam = searchParams.get("categoryId");
+
+  const repo = new SbQuestionRepository();
+  const usecase = new GetQuestionListUsecase(repo);
+
   try {
-    const { searchParams } = new URL(request.url);
-    const questionId = Number(searchParams.get("questionId"));
+    const categoryId = categoryIdParam ? Number(categoryIdParam) : undefined;
 
-    const questionDto = new GetQuestionDto(questionId);
-    const getQuestionRepo = new SbQuestionRepository();
-    const getQuestionUsecase = new GetQuestionUsecase(getQuestionRepo);
-    const respond = await getQuestionUsecase.execute(questionDto);
-
-    return NextResponse.json({ message: "문제 조회 완료", data: respond }, { status: 200 });
-  } catch (error) {
-    console.error("Error creating answer:", error);
-    return NextResponse.json({ error: "문제 조회 실패" }, { status: 500 });
+    const questions = await usecase.execute(categoryId);
+    return NextResponse.json(questions);
+  } catch (e) {
+    return NextResponse.json({ error: (e as Error).message }, { status: 500 });
   }
 }

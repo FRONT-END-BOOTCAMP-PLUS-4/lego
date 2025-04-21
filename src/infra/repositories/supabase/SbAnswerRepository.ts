@@ -1,6 +1,6 @@
 import { Answer } from "@/domain/entities/Answer";
 import { AnswerRepository } from "@/domain/repositories/AnswerRepository";
-import { supabase } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 
 interface UserAnswerParams {
   userId: string | null;
@@ -10,6 +10,7 @@ interface UserAnswerParams {
 export class SbAnswerRepository implements AnswerRepository {
   //답변 저장
   async createAnswer(answer: Answer): Promise<Answer> {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("answer")
       .insert([
@@ -38,6 +39,7 @@ export class SbAnswerRepository implements AnswerRepository {
   //답변 수정
   //특정 userId와 questionId 조합을 가진 답변 content 수정
   async updateAnswer(answer: Answer): Promise<Answer> {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("answer")
       .update({ content: answer.content, updated_at: new Date().toISOString() })
@@ -58,6 +60,7 @@ export class SbAnswerRepository implements AnswerRepository {
 
   //답변 삭제
   async deleteAnswer(params: UserAnswerParams): Promise<void> {
+    const supabase = await createClient();
     const { userId, questionId } = params;
     const { error } = await supabase
       .from("answer")
