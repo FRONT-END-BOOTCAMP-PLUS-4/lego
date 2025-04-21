@@ -26,6 +26,12 @@ export default function QuestionListPage() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [sortOption, setSortOption] = useState<"recent" | "bookmark">(() => {
+    const initialSort = searchParams.get("sortBy") as "recent" | "bookmark";
+    return initialSort ?? "recent";
+  });
+
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
   const categoryIdFromURL = searchParams.get("categoryId");
@@ -52,35 +58,55 @@ export default function QuestionListPage() {
     fetchCategories();
   }, []);
 
-  const fetchQuestions = async (categoryId?: number) => {
-    const url = categoryId ? `/api/questions?categoryId=${categoryId}` : `/api/questions`;
+  useEffect(() => {
+    const fetchSortedQuestions = async () => {
+      const url = selectedCategoryId
+        ? `/api/questions?categoryId=${selectedCategoryId}&sortBy=${sortOption}`
+        : `/api/questions?sortBy=${sortOption}`;
 
-    try {
       const res = await fetch(url);
       const data = await res.json();
       setQuestions(data);
-      setFilteredQuestions([]); // 새로 가져올 때 필터 초기화
-    } catch (err) {
-      console.error("문제 불러오기 실패", err);
-    }
-  };
+      setFilteredQuestions([]);
+    };
+
+    fetchSortedQuestions();
+  }, [sortOption, selectedCategoryId]);
 
   useEffect(() => {
-    const categoryId = categoryIdFromURL ? Number(categoryIdFromURL) : undefined;
-    fetchQuestions(categoryId);
-  }, [categoryIdFromURL]);
+    const currentSort = searchParams.get("sortBy") as "recent" | "bookmark";
+    if (currentSort && currentSort !== sortOption) {
+      setSortOption(currentSort);
+    }
+  }, [searchParams]);
 
   const handleCategoryChange = (name: string) => {
     const category = categories.find((c) => c.name === name);
+    const params = new URLSearchParams();
+
+    if (category) {
+      params.set("categoryId", category.id.toString());
+    }
+
+    params.set("sortBy", sortOption);
+    router.push(`/questions?${params.toString()}`);
+
     setPageNumber(1);
     setSearchKeyword("");
     setFilteredQuestions([]);
+  };
 
-    if (category) {
-      router.push(`/questions?categoryId=${category.id}`);
-    } else {
-      router.push(`/questions`);
+  const handleSortClick = (sortBy: "recent" | "bookmark") => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("sortBy", sortBy);
+    if (selectedCategoryId) {
+      params.set("categoryId", selectedCategoryId.toString());
     }
+
+    router.push(`/questions?${params.toString()}`);
+    setSortOption(sortBy);
+    setPageNumber(1);
   };
 
   const handleSearch = () => {
@@ -144,15 +170,14 @@ export default function QuestionListPage() {
             ))}
           </SelectContent>
         </Select>
-
         <Select>
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
-            <SelectValue placeholder="정렬 기준" />
+            <SelectValue placeholder="필터" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="latest">북마크한 문제</SelectItem>
-            <SelectItem value="views">조회순</SelectItem>
-            <SelectItem value="answers">답변한 문제</SelectItem>
+            <SelectItem value="all">전체</SelectItem>
+            <SelectItem value="bookmarked">북마크한 문제</SelectItem>
+            <SelectItem value="answered">답변한 문제</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -162,10 +187,20 @@ export default function QuestionListPage() {
       <div className="flex items-center justify-between">
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex gap-[12px]">
-          <Button variant="ghost" size="sm" className="font-normal">
+          <Button
+            variant={sortOption === "bookmark" ? "default" : "ghost"}
+            size="sm"
+            className="font-normal"
+            onClick={() => handleSortClick("bookmark")}
+          >
             인기순
           </Button>
-          <Button variant="ghost" size="sm" className="font-normal">
+          <Button
+            variant={sortOption === "recent" ? "default" : "ghost"}
+            size="sm"
+            className="font-normal"
+            onClick={() => handleSortClick("recent")}
+          >
             최신순
           </Button>
         </div>

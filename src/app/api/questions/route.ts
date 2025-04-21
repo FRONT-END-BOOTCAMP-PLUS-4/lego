@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
-import { SbQuestionRepository } from "@/infra/repositories/supabase/SbQuestionRepository";
 import { GetQuestionListUsecase } from "@/application/usecase/question/GetQuestionListUsecase";
+import { SbQuestionRepository } from "@/infra/repositories/supabase/SbQuestionRepository";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const categoryIdParam = searchParams.get("categoryId");
+  const categoryId = searchParams.get("categoryId");
+  const sortBy = (searchParams.get("sortBy") ?? "recent") as "recent" | "bookmark";
 
-  const repo = new SbQuestionRepository();
-  const usecase = new GetQuestionListUsecase(repo);
+  const usecase = new GetQuestionListUsecase(new SbQuestionRepository());
+  const result = await usecase.execute(
+    categoryId ? Number(categoryId) : undefined,
+    sortBy
+  );
 
-  try {
-    const categoryId = categoryIdParam ? Number(categoryIdParam) : undefined;
-
-    const questions = await usecase.execute(categoryId);
-    return NextResponse.json(questions);
-  } catch (e) {
-    return NextResponse.json({ error: (e as Error).message }, { status: 500 });
-  }
+  return NextResponse.json(result);
 }
