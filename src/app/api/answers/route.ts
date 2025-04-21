@@ -1,22 +1,17 @@
 import { CreateAnswerUsecase } from "@/application/answer/CreateAnswerUsecase";
 import { DeleteAnswerUsecase } from "@/application/answer/DeleteAnswerUsecase";
 import { CreateAnswerDto } from "@/application/answer/dto/CreateAnswerDto";
-import { GetAnswerDto } from "@/application/answer/dto/GetAnswerDto";
-import { RespondAnswerDto } from "@/application/answer/dto/RespondAnswerDto";
 import { UpdateAnswerDto } from "@/application/answer/dto/UpdateAnswerDto";
-import { GetAnswerUsecase } from "@/application/answer/GetAnswerUsecase";
 import { UpdateAnswerUsecase } from "@/application/answer/UpdateAnswerUsecase";
 import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerRepository";
 import { NextResponse } from "next/server";
-import { URL } from "url";
 
 //답변 저장
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { userId, questionId, content } = body;
-
-    const answerDto = new CreateAnswerDto(userId, questionId, content, new Date());
+    const { userId, questionId, content, userName, avatarUrl } = body;
+    const answerDto = new CreateAnswerDto(userId, questionId, content, userName, avatarUrl);
     const answerRepository = new SbAnswerRepository();
     const createAnswerUsecase = new CreateAnswerUsecase(answerRepository);
     const answer = await createAnswerUsecase.execute(answerDto);

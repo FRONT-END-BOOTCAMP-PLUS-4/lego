@@ -34,14 +34,17 @@ export default function AnswerFormPage({ params }: Props) {
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
+  console.log(user);
   const userEmail = user?.email;
+  const avatar = user?.avatarUrl;
+  const nickName = user?.nickname;
 
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
 
   const handleGetQuestion = async () => {
     try {
-      const response = await fetch(`/api/questions/${questionId}`, {
+      const response = await fetch(`/api/questions/${questionId}?userId=${userEmail}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -52,6 +55,7 @@ export default function AnswerFormPage({ params }: Props) {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
+      console.log("data", data);
       setQuestionData(data?.data);
     } catch (error) {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);
@@ -81,6 +85,8 @@ export default function AnswerFormPage({ params }: Props) {
       userId: userEmail,
       questionId,
       content: userAnswer,
+      userName: nickName,
+      avatarUrl: avatar,
     };
     try {
       const response = await fetch(`/api/answers`, {

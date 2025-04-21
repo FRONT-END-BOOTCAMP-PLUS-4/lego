@@ -18,6 +18,8 @@ export class SbAnswerRepository implements AnswerRepository {
           email: answer.userId,
           question_id: answer.questionId,
           content: answer.content,
+          username: answer.userName,
+          avatar_url: answer.avatarUrl,
         },
       ])
       .select()
@@ -27,13 +29,7 @@ export class SbAnswerRepository implements AnswerRepository {
       console.error("답변 저장 실패:", error);
       throw new Error("답변 저장 실패.");
     }
-
-    return {
-      userId: data.email,
-      questionId: data.question_id,
-      content: data.content,
-      createdAt: new Date(data.created_at),
-    };
+    return data;
   }
 
   //답변 수정
@@ -51,11 +47,7 @@ export class SbAnswerRepository implements AnswerRepository {
       console.error("답변 수정 실패:", error);
       throw new Error("답변 수정 실패.");
     }
-    return {
-      userId: data.email,
-      questionId: data.question_id,
-      content: data.content,
-    };
+    return data;
   }
 
   //답변 삭제

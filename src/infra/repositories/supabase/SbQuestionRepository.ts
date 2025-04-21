@@ -53,10 +53,9 @@ export class SbQuestionRepository implements QuestionRepository {
       )
     `
       )
-      .eq("id", questionId);
-    if (userId) {
-      query = query.eq("answer.email", userId).eq("bookmark.email", userId);
-    }
+      .eq("id", questionId)
+      .eq("answer.email", userId)
+      .eq("bookmark.email", userId);
 
     const { data, error } = await query.maybeSingle();
 

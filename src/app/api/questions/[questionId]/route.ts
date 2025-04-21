@@ -5,10 +5,13 @@ import { NextResponse } from "next/server";
 
 //이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
 //문제, 답변 조회
-export async function GET(request: Request, context: { params: { questionId: string } }) {
+export async function GET(request: Request, { params }: { params: { questionId: string } }) {
   try {
-    const { questionId } = context.params;
-    const questionDto = new GetQuestionDto(Number(questionId));
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId") || undefined;
+    const questionId = Number(params.questionId);
+    console.log("dddd", questionId, userId);
+    const questionDto = new GetQuestionDto(Number(questionId), userId);
     const getQuestionRepo = new SbQuestionRepository();
     const getQuestionUsecase = new GetQuestionUsecase(getQuestionRepo);
     const respond = await getQuestionUsecase.execute(questionDto);

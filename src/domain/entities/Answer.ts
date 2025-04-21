@@ -3,7 +3,7 @@ export class Answer {
     public userId: string,
     public questionId: number,
     public content: string,
-    public createdAt?: Date,
-    public updatedAt?: Date
+    public userName: string,
+    public avatarUrl: string
   ) {}
 }
