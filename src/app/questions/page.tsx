@@ -62,14 +62,10 @@ export default function QuestionListPage() {
       let email: string | undefined = undefined;
   
       try {
-        // ✅ sessionStorage → localStorage로 변경!
         const authStorage = localStorage.getItem("auth-storage");
-        console.log("auth-storage:", authStorage);
-  
         if (authStorage) {
           const parsed = JSON.parse(authStorage);
           email = parsed?.state?.user?.email;
-          console.log("✅ 이메일:", email);
         }
       } catch (err) {
         console.error("auth-storage 파싱 오류:", err);
@@ -80,13 +76,37 @@ export default function QuestionListPage() {
       const currentCategoryId = searchParams.get("categoryId");
   
       const url = new URL("/api/questions", window.location.origin);
-      url.searchParams.set("sortBy", currentSort);
       url.searchParams.set("filter", currentFilter);
-      if (currentCategoryId) url.searchParams.set("categoryId", currentCategoryId);
-      if (currentFilter === "bookmarked" && email) url.searchParams.set("email", email);
+      if (currentFilter === "bookmarked" && email) {
+        url.searchParams.set("email", email);
+      } else {
+        // 정렬과 카테고리는 서버에 보냄 (비북마크일 때만)
+        url.searchParams.set("sortBy", currentSort);
+        if (currentCategoryId) url.searchParams.set("categoryId", currentCategoryId);
+      }
   
       const res = await fetch(url.toString());
-      const data = await res.json();
+      let data: QuestionDto[] = await res.json();
+  
+      // ✅ 클라이언트 필터링
+      if (currentFilter === "bookmarked") {
+        // 카테고리 필터
+        if (currentCategoryId) {
+          data = data.filter((q) => q.categoryId === Number(currentCategoryId));
+        }
+  
+        // 정렬
+        if (currentSort === "bookmark") {
+          data.sort((a, b) => b.bookmark_count - a.bookmark_count);
+        } else {
+          data.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() -
+              new Date(a.createdAt).getTime()
+          );
+        }
+      }
+  
       setQuestions(data);
       setFilteredQuestions([]);
     };
