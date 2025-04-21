@@ -1,7 +1,5 @@
 "use client";
 
-import { SubscribeUsecase } from "@/application/subscribe/SubscribeUsecase";
-import { SbSubscribeRepository } from "@/infra/repositories/supabase/SbSubscribeRepository";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -12,7 +10,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { useAuthStore } from "@/store/useAuthStore";
 
 interface MailModalProps {
   open: boolean;
@@ -21,19 +18,6 @@ interface MailModalProps {
 }
 
 export default function MailModal({ open, onClose, onConfirm }: MailModalProps) {
-  // const { user } = useAuthStore();
-
-  // const subscribeUsecase = new SubscribeUsecase(new SbSubscribeRepository());
-  // const handleToggle = async (checked: boolean) => {
-  //   if (checked) {
-  //     await subscribeUsecase.subscribe(user?.email);
-  //     // setSubscribed(true);
-  //   } else {
-  //     await subscribeUsecase.unsubscribe(user?.email);
-  //     // setSubscribed(false);
-  //   }
-  // };
-
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
       <AlertDialogContent>

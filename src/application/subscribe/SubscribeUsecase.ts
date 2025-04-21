@@ -10,4 +10,8 @@ export class SubscribeUsecase {
   async unsubscribe(email: string) {
     await this.repo.unsubscribe(email);
   }
+
+  async isSubscribed(email: string): Promise<boolean> {
+    return this.repo.isSubscribed(email);
+  }
 }

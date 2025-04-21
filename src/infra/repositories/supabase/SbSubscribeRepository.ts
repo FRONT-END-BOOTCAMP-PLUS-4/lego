@@ -15,4 +15,16 @@ export class SbSubscribeRepository implements SubscribeRepository {
     const { error } = await supabase.from("subscribe").delete().eq("email", email);
     if (error) throw new Error("구독 취소 실패");
   }
+
+  async isSubscribed(email: string): Promise<boolean> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("subscribe")
+      .select("*")
+      .eq("email", email)
+      .single();
+    if (error && error.code !== "PGRST116") throw error;
+    return !!data;
+  }
 }
