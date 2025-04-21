@@ -163,9 +163,9 @@ export default function QuestionListPage() {
             <SelectValue placeholder="정렬 기준" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="latest">북마크순</SelectItem>
+            <SelectItem value="latest">북마크한 문제제</SelectItem>
             <SelectItem value="views">조회순</SelectItem>
-            <SelectItem value="answers">답변 많은 순</SelectItem>
+            <SelectItem value="answers">답변한 문제</SelectItem>
           </SelectContent>
         </Select>
       </div>
