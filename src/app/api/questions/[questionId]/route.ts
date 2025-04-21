@@ -9,7 +9,7 @@ export async function GET(request: Request, { params }: { params: { questionId: 
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId") || undefined;
-    const questionId = Number(params.questionId);
+    const questionId = Number(params?.questionId);
     console.log("dddd", questionId, userId);
     const questionDto = new GetQuestionDto(Number(questionId), userId);
     const getQuestionRepo = new SbQuestionRepository();

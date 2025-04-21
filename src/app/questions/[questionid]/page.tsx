@@ -23,10 +23,13 @@ interface Props {
   params: {
     questionid: string;
   };
+  searchParams: {
+    userId?: string;
+  };
 }
-export default function AnswerFormPage({ params }: Props) {
+export default function AnswerFormPage({ params, searchParams }: Props) {
   const questionId = Number(params.questionid ?? 1);
-
+  const userEmail = searchParams.userId ?? "";
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -34,8 +37,6 @@ export default function AnswerFormPage({ params }: Props) {
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
-  console.log(user);
-  const userEmail = user?.email;
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
 
@@ -134,10 +135,9 @@ export default function AnswerFormPage({ params }: Props) {
     }
   };
   if (!questionData) return <div>로딩 중...</div>;
-  console.log(questionData);
   const { content, answer, solution, isBookmarked, categoryName } = questionData;
   return (
-    <div className="w-[1270px] container mx-auto pt-[40px]">
+    <div className="container mx-auto pt-[40px]">
       <QusetionHeader content={content} categoryName={categoryName} isBookmarked={isBookmarked} />
       <form>
         <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
