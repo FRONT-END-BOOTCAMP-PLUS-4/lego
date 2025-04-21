@@ -16,29 +16,28 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { CategoryDto } from "@/application/usecase/category/dto/CategoryDto";
 import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
+import Link from "next/link";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionDto[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
-
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
-
   const categoryIdFromURL = searchParams.get("categoryId");
   const selectedCategoryId = categoryIdFromURL ? Number(categoryIdFromURL) : null;
-
+  const user = useAuthStore((state) => state.user);
+  const usesrEmail = user?.email;
   const selectedCategoryName =
     selectedCategoryId === null
       ? "전체"
-      : categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체";
+      : (categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체");
 
-  const getImageUrlByCategory = (categoryId: number) =>
-    `/assets/images/category/${categoryId}.svg`;
+  const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -54,9 +53,7 @@ export default function QuestionListPage() {
   }, []);
 
   const fetchQuestions = async (categoryId?: number) => {
-    const url = categoryId
-      ? `/api/questions?categoryId=${categoryId}`
-      : `/api/questions`;
+    const url = categoryId ? `/api/questions?categoryId=${categoryId}` : `/api/questions`;
 
     try {
       const res = await fetch(url);
@@ -92,9 +89,7 @@ export default function QuestionListPage() {
       setFilteredQuestions([]);
       return;
     }
-    const matched = questions.filter((q) =>
-      q.content.toLowerCase().includes(keyword)
-    );
+    const matched = questions.filter((q) => q.content.toLowerCase().includes(keyword));
     setFilteredQuestions(matched);
     setPageNumber(1);
   };
@@ -108,12 +103,7 @@ export default function QuestionListPage() {
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
       <div className="relative w-[948px] h-[115px] mb-6">
-        <Image
-          src="/banner.png"
-          alt="배너 이미지"
-          fill
-          className="object-cover rounded-md"
-        />
+        <Image src="/banner.png" alt="배너 이미지" fill className="object-cover rounded-md" />
       </div>
 
       <div className="mb-[48px]" />
@@ -141,10 +131,7 @@ export default function QuestionListPage() {
       <div className="mb-[12px]" />
 
       <div className="flex items-center gap-2 mb-6">
-        <Select
-          onValueChange={handleCategoryChange}
-          value={selectedCategoryName}
-        >
+        <Select onValueChange={handleCategoryChange} value={selectedCategoryName}>
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
             <SelectValue placeholder="전체" />
           </SelectTrigger>
@@ -188,23 +175,32 @@ export default function QuestionListPage() {
 
       <div className="flex flex-col gap-[16px]">
         {pagedQuestions.map((question) => (
-          <Card key={question.id} className="h-[74px]">
-            <div className="flex h-full items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Image
-                  src={getImageUrlByCategory(question.categoryId)}
-                  alt="문"
-                  width={32}
-                  height={32}
-                  className="rounded-md"
-                />
-                <span className="txt-2xl-b">{question.content}</span>
+          <Link
+            key={question.id}
+            href={
+              usesrEmail
+                ? `/questions/${question.id}?userId=${usesrEmail}`
+                : `/questions/${question.id}`
+            }
+          >
+            <Card className="h-[74px]">
+              <div className="flex h-full items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Image
+                    src={getImageUrlByCategory(question.categoryId)}
+                    alt="문"
+                    width={32}
+                    height={32}
+                    className="rounded-md"
+                  />
+                  <span className="txt-2xl-b">{question.content}</span>
+                </div>
+                <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+                  <span>조회수 {question.views}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                <span>조회수 {question.views}</span>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </Link>
         ))}
       </div>
 
