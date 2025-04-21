@@ -28,16 +28,14 @@ function getTodayQuestion() {
   const { filename, filepath } = findQuestionFile(categoryDir, questionNum);
 
   const content = fs.readFileSync(filepath, "utf-8").trim();
-
   const rawTitle = filename.replace(/\.md$/, "");
   const subject = rawTitle.replace(/^\d+-/, "").replace(/-/g, " ");
 
   return {
     subject: `오늘의 질문 - ${subject}`,
     body: content,
-    // 아이디를 어떻게 전달할 것인가...
-    // link: `http://localhost:3000/questions/${category}/${questionNum}`,
-    link: `http://localhost:3000/questions/${category}`,
+    category,
+    questionNum,
   };
 }
 
@@ -72,10 +70,13 @@ const transporter = nodemailer.createTransport({
 
 // 메일 발송
 async function sendDailyQuestionMail() {
-  const { subject, body, link } = getTodayQuestion();
+  const { subject, body, category, questionNum } = getTodayQuestion();
   const recipients = await getSubscribedEmails();
 
-  const html = createTemplate(marked.parse(body), link);
+  const questionId = (category - 1) * 10 + questionNum;
+  const linkUrl = `http://localhost:3000/questions/${questionId}`;
+
+  const html = createTemplate(marked.parse(body), linkUrl);
 
   for (const email of recipients) {
     await transporter.sendMail({
