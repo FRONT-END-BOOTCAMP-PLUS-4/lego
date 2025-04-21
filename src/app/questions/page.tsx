@@ -20,6 +20,8 @@ import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
 export default function QuestionListPage() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<QuestionDto[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,6 +62,7 @@ export default function QuestionListPage() {
       const res = await fetch(url);
       const data = await res.json();
       setQuestions(data);
+      setFilteredQuestions([]); // 새로 가져올 때 필터 초기화
     } catch (err) {
       console.error("문제 불러오기 실패", err);
     }
@@ -73,6 +76,8 @@ export default function QuestionListPage() {
   const handleCategoryChange = (name: string) => {
     const category = categories.find((c) => c.name === name);
     setPageNumber(1);
+    setSearchKeyword("");
+    setFilteredQuestions([]);
 
     if (category) {
       router.push(`/questions?categoryId=${category.id}`);
@@ -81,10 +86,24 @@ export default function QuestionListPage() {
     }
   };
 
-  const totalCount = questions.length;
+  const handleSearch = () => {
+    const keyword = searchKeyword.trim().toLowerCase();
+    if (!keyword) {
+      setFilteredQuestions([]);
+      return;
+    }
+    const matched = questions.filter((q) =>
+      q.content.toLowerCase().includes(keyword)
+    );
+    setFilteredQuestions(matched);
+    setPageNumber(1);
+  };
+
+  const visibleQuestions = filteredQuestions.length > 0 ? filteredQuestions : questions;
+  const totalCount = visibleQuestions.length;
   const startIdx = (pageNumber - 1) * 10;
   const endIdx = startIdx + 10;
-  const pagedQuestions = questions.slice(startIdx, endIdx);
+  const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
 
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
@@ -103,11 +122,17 @@ export default function QuestionListPage() {
         <Input
           placeholder="면접 문제 검색"
           className="w-[824px] h-[54px] px-4 text-sm flex-1"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch();
+          }}
         />
         <Button
           variant="outline"
           size="default"
           className="w-[115px] h-[54px] px-6 text-lg"
+          onClick={handleSearch}
         >
           문제 검색
         </Button>
@@ -182,8 +207,6 @@ export default function QuestionListPage() {
           </Card>
         ))}
       </div>
-
-      <div className="mb-[150px]" />
 
       <Pagination
         totalCount={totalCount}
