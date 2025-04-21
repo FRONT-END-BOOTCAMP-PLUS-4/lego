@@ -127,6 +127,8 @@ export default function AnswerFormPage({ params }: Props) {
       }
       alert("답변이 삭제되었습니다.");
       setUserAnswer("");
+      setIsSubmitted(false);
+      setIsEditing(true);
     } catch (error) {
       alert("답변 저장 실패: " + (error as Error).message);
     }
