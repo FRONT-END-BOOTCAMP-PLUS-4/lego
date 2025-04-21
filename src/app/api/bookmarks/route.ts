@@ -33,6 +33,6 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ message: "북마크 해제 완료", date: result }, { status: 200 });
   } catch (error) {
     console.error("Error creating answer:", error);
-    return NextResponse.json({ error: "북마크 저장 실패" }, { status: 500 });
+    return NextResponse.json({ error: "북마크 해제 실패" }, { status: 500 });
   }
 }

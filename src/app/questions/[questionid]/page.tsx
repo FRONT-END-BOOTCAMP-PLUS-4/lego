@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import AnswerPreviewCard from "./componsts/AnswerPreviewCard";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -20,18 +20,12 @@ interface QuestionResponse {
   views: number;
   createdAt: string;
 }
-interface Props {
-  params: {
-    questionid: string;
-  };
-  searchParams: {
-    userId?: string;
-  };
-}
-export default function AnswerFormPage({ searchParams }: Props) {
+
+export default function AnswerFormPage() {
+  const searchParams = useSearchParams();
   const params = useParams();
   const questionId = Number(params.questionid);
-  const userEmail = searchParams.userId;
+  const userEmail = searchParams.get("userId");
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
