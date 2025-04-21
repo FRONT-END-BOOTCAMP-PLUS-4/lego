@@ -139,7 +139,12 @@ export default function AnswerFormPage({ searchParams }: Props) {
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <div className="container mx-auto pt-[40px]">
-      <QusetionHeader content={content} categoryName={categoryName} isBookmarked={isBookmarked} />
+      <QusetionHeader
+        content={content}
+        categoryName={categoryName}
+        isBookmarked={isBookmarked}
+        questionId={questionId}
+      />
       <form>
         <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
           <TabsList className="mr-0 ml-auto">

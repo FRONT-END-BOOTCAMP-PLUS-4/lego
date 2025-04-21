@@ -2,18 +2,57 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
+
 interface QuestionHeaderProps {
   content: string;
   categoryName: string;
   isBookmarked: boolean;
+  questionId: number;
 }
+
 export default function QusetionHeader({
   content,
   categoryName,
   isBookmarked: bookmarkState,
+  questionId,
 }: QuestionHeaderProps) {
+  const user = useAuthStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
+  const userEmail = user?.email;
+
   const [isBookmarked, setIsBookmarked] = useState<boolean>(bookmarkState);
-  const handleToggleBookmark = () => setIsBookmarked((prev) => !prev);
+
+  const handleToggleBookmark = async () => {
+    const newState = !isBookmarked;
+    const method = newState ? "POST" : "DELETE";
+    console.log(method, "method");
+    const formData = {
+      userId: userEmail,
+      questionId,
+    };
+
+    try {
+      const response = await fetch("/api/bookmarks", {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(newState ? "북마크 저장 실패" : "북마크 해제 실패");
+      }
+
+      setIsBookmarked(newState);
+      alert(newState ? "북마크가 저장되었습니다." : "북마크가 해제되었습니다.");
+    } catch (error) {
+      alert(`북마크 처리 중 오류: ${(error as Error).message}`);
+    }
+  };
+
   return (
     <header className="flex justify-between items-center pb-[18px]">
       <div className="flex items-center pb-[18px]">
