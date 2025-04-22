@@ -16,7 +16,7 @@ interface answerType {
   updated_at: string;
   avatar_url: string;
   username: string;
-  like: number;
+  like: { like_email: string }[];
 }
 
 export class SbAnswerRepository implements AnswerRepository {
@@ -105,7 +105,7 @@ export class SbAnswerRepository implements AnswerRepository {
       throw new Error("답변을 불러오지 못했습니다.");
     }
 
-    const result: AnswerView[] = (data ?? []).map((row) => {
+    const result: AnswerView[] = (data ?? []).map((row: answerType) => {
       return new AnswerView(
         row.email,
         row.content,
@@ -134,19 +134,3 @@ export class SbAnswerRepository implements AnswerRepository {
 //     (item) => new Answer(item.user_id, item.question_id, item.content, new Date(item.created_at))
 //   );
 // }
-
-/*
-  private toEntity(data: CommentTableRow): Comment {
-  return new Comment(
-    data.id,
-    data.content,
-    new Date(data.created_at),
-    data.updated_at ? new Date(data.updated_at) : null,
-    data.user?.[0]?.nickname ?? "",
-    data.user_id,
-    data.plan_id,
-    undefined,
-    data.user?.[0]?.profile_image ?? undefined
-  );
-}
-  */
