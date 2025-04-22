@@ -89,4 +89,16 @@ export class SbCommentRepository implements CommentRepository {
 
     if (error) throw new Error(error.message);
   }
+
+  //댓글 삭제
+  async delete(id: number): Promise<void> {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+      .from("comment")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw new Error(error.message);
+  }
 }
