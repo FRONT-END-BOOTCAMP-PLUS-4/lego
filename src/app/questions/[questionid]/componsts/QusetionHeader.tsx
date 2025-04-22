@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 interface QuestionHeaderProps {
   content: string;

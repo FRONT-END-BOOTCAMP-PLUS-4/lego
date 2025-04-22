@@ -7,7 +7,8 @@ import AnswerPreviewCard from "./componsts/AnswerPreviewCard";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
 import { useParams, useSearchParams } from "next/navigation";
-import { Toaster } from "sonner";
+import { handleCheckUser } from "@/utils/handleCheckUser";
+import { useRouter } from "next/navigation";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -36,10 +37,13 @@ export default function AnswerFormPage() {
   const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
+  const localStorageUserToken = handleCheckUser();
+  const isTokenMatch = token !== null && token === localStorageUserToken;
 
+  const router = useRouter();
+  console.log("isTokenMatch", isTokenMatch);
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
-
   const handleGetQuestion = async () => {
     try {
       const response = await fetch(`/api/questions/${questionId}?userId=${userEmail}`, {
@@ -73,11 +77,15 @@ export default function AnswerFormPage() {
 
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
+    if (!isTokenMatch) {
+      return router.push("/login");
+    }
     const method = action === "create" ? "POST" : "PUT";
     if (!content.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
+
     const formData = {
       userId: userEmail,
       questionId,
@@ -85,6 +93,7 @@ export default function AnswerFormPage() {
       userName: nickName,
       avatarUrl: avatar,
     };
+
     try {
       const response = await fetch(`/api/answers`, {
         method,
