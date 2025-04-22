@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 import { Card } from "@/components/ui/card";
 import { Bookmark } from "lucide-react";
-import { useAuthStore } from "@/store/useAuthStore";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pagination } from "@/components/ui/pagination";
 
-interface BookmarkItem {
+interface UserBookmark {
   questionId: number;
   questionTitle: string;
   categoryImageUrl: string;
@@ -16,8 +17,14 @@ interface BookmarkItem {
 
 export default function BookmarkPage() {
   const { user } = useAuthStore();
-  const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
+  const [bookmarks, setBookmarks] = useState<UserBookmark[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [currentPageBlock, setCurrentPageBlock] = useState(1);
+
+  const itemsPerPage = 5;
+  const totalCount = bookmarks.length;
+  const currentItems = bookmarks.slice((pageNumber - 1) * itemsPerPage, pageNumber * itemsPerPage);
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -34,10 +41,12 @@ export default function BookmarkPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <Card key={i} variant="tight" className="flex items-center gap-6">
-            <Skeleton className="w-9 h-9 rounded-full" />
-            <Skeleton className="h-6 w-[80%]" />
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i} variant="tight" className="flex items-center justify-between p-6">
+            <div className="flex items-center gap-6 w-[90%]">
+              <Skeleton className="w-8 h-8 rounded-full" />
+              <Skeleton className="h-4 w-4/5" />
+            </div>
           </Card>
         ))}
       </div>
@@ -46,7 +55,7 @@ export default function BookmarkPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      {bookmarks.map((item) => (
+      {currentItems.map((item) => (
         <Link href={`/questions/${item.questionId}?userId=${user?.email}`} key={item.questionId}>
           <Card variant="tight" className="flex items-center justify-between">
             <div className="txt-2xl-b flex items-center gap-6 cursor-pointer w-[90%]">
@@ -57,6 +66,15 @@ export default function BookmarkPage() {
           </Card>
         </Link>
       ))}
+
+      <Pagination
+        totalCount={totalCount}
+        itemsPerPage={itemsPerPage}
+        pageNumber={pageNumber}
+        currentPageBlock={currentPageBlock}
+        handleMovePage={setPageNumber}
+        handleMovePageBlock={setCurrentPageBlock}
+      />
     </div>
   );
 }
