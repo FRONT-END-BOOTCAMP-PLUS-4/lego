@@ -19,6 +19,7 @@ export class SbCommentRepository implements CommentRepository {
     return count ?? 0;
   }
 
+  //댓글 리스트 출력
   async getByQuestionAndAnswer(questionId: number, answerEmail: string): Promise<Comment[]> {
     const supabase = await createClient();
 
@@ -45,6 +46,7 @@ export class SbCommentRepository implements CommentRepository {
     );
   }
 
+  //댓글 생성
   async create(comment: Comment): Promise<Comment> {
     const supabase = await createClient();
 
@@ -74,5 +76,17 @@ export class SbCommentRepository implements CommentRepository {
       data.username,
       data.avatar_url
     );
+  }
+
+  //댓글 수정
+  async updateContent(id: number, content: string): Promise<void> {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+      .from("comment")
+      .update({ content })
+      .eq("id", id);
+
+    if (error) throw new Error(error.message);
   }
 }
