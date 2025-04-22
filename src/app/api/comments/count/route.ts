@@ -1,5 +1,3 @@
-//댓글 개수 카운트
-
 import { NextResponse } from "next/server";
 import { SbCommentRepository } from "@/infra/repositories/supabase/SbCommentRepository";
 import { GetCommentCountUsecase } from "@/application/usecase/comment/GetCommentCountUsecase";

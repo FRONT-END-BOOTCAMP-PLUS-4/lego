@@ -3,7 +3,7 @@ export class Comment {
         public id: number,
         public question_id: number,
         public answer_email: string,
-        public context: string,
+        public content: string,
         public createdAt: Date,
         public email: string,
         public user_name: string,
