@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { formatNumber } from "@/utils/handleFormat";
 import CalendarHeatmap from "react-calendar-heatmap";
+import { Tooltip } from "react-tooltip";
 import "react-calendar-heatmap/dist/styles.css";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function Activity() {
   // 구독 관련 상태
@@ -95,14 +97,27 @@ export default function Activity() {
           startDate={new Date(`${selectedYear}-01-01`)}
           endDate={new Date(`${selectedYear}-12-31`)}
           values={dailyActivity}
-          showMonthLabels={true}
           classForValue={(value) => {
             if (!value) {
               return "color-empty";
             }
             return `color-scale-${value.count}`;
           }}
+          transformDayElement={(element, value) => {
+            const tooltip =
+              value?.date && value.count !== undefined
+                ? `${value.date} - ${value.count}개`
+                : "활동 없음";
+
+            return React.cloneElement(element as React.ReactElement, {
+              ...({
+                "data-tooltip-id": "heatmap-tooltip",
+                "data-tooltip-content": tooltip,
+              } as Record<string, unknown>),
+            });
+          }}
         />
+        <Tooltip id="heatmap-tooltip" />
       </div>
     </>
   );
