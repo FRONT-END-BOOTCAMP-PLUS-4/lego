@@ -49,9 +49,9 @@ export default function MyAnswerPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-[var(--space-24)] mb-[100px]">
+      <div className="flex flex-col gap-4 mb-[100px]">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} variant="default" className="space-y-9">
+          <Card key={i} variant="default" className="space-y-12">
             <div className="flex gap-4 items-center">
               <Skeleton className="h-6 w-20" />
               <Skeleton className="h-6 flex-1" />
@@ -65,9 +65,9 @@ export default function MyAnswerPage() {
   }
 
   return (
-    <div className="flex flex-col gap-[var(--space-24)] mb-[100px]">
+    <div className="flex flex-col gap-4 mb-[100px]">
       {paginatedAnswers.map((answer, index) => (
-        <Link href={`/questions/${answer.questionId}`} key={index}>
+        <Link href={`/questions/${answer.questionId}?userId=${user?.email}`} key={index}>
           <Card variant="default">
             <div className="flex items-center gap-4 mb-4">
               <Badge variant="default">{answer.categoryName}</Badge>
