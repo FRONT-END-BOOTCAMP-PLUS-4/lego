@@ -2,6 +2,7 @@ import { UserRepository } from "@/domain/repositories/UserRepository";
 import { createClient } from "@/utils/supabase/server";
 import { UserActivity } from "@/domain/entities/UserActivity";
 import { UserAnswer } from "@/domain/entities/UserAnswer";
+import { UserBookmark } from "@/domain/entities/UserBookmark";
 
 export class SbUserRepository implements UserRepository {
   async getUserActivity(email: string): Promise<UserActivity> {
@@ -81,5 +82,37 @@ export class SbUserRepository implements UserRepository {
     }
 
     return result;
+  }
+
+  async getUserBookmarks(email: string): Promise<UserBookmark[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("bookmark")
+      .select(
+        `
+        question:question (
+          id,
+          content,
+          category:category (
+            image_url
+          )
+        )
+      `
+      )
+      .eq("email", email);
+
+    if (error || !data) {
+      console.error("북마크 조회 오류: ", error);
+      throw new Error("북마크 조회 실패");
+    }
+
+    return data.map((row) => {
+      return new UserBookmark(
+        row.question.id,
+        row.question.content,
+        row.question.category.image_url
+      );
+    });
   }
 }

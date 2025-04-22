@@ -1,5 +1,5 @@
 import { UserRepository } from "@/domain/repositories/UserRepository";
-import { UserAnswerDto } from "./dto/UserAnswerDto";
+import { UserAnswerDto } from "@/application/user/dto/UserAnswerDto";
 
 export class GetUserAnswersUsecase {
   constructor(private readonly userRepository: UserRepository) {}

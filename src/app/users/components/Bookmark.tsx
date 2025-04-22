@@ -34,7 +34,7 @@ export default function BookmarkPage() {
               <Image src={item.icon} width={32} height={32} alt={`${item.category} 아이콘`} />
               <p className="line-clamp-1 w-4/5">{item.title}</p>
             </div>
-            <Bookmark className="fill-amber-300 stroke-none" />
+            <Bookmark className="fill-[var(--black)] stroke-none" />
           </Card>
         </Link>
       ))}
