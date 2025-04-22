@@ -2,6 +2,7 @@
 
 import throttle from "lodash.throttle";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,6 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { CategoryDto } from "@/application/usecase/category/dto/CategoryDto";
 import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
-import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
@@ -295,36 +295,39 @@ export default function QuestionListPage() {
 
       {/* 문제 리스트 출력 */}
       <div className="flex flex-col gap-[16px]">
-        {pagedQuestions.map((question) => (
-          <Link
-            key={question.id}
-            href={
-              usesrEmail
-                ? `/questions/${question.id}?userId=${usesrEmail}`
-                : `/questions/${question.id}`
-            }
-          >
-            <Card className="h-[74px]">
-              <div className="flex h-full items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={getImageUrlByCategory(question.categoryId)}
-                    alt="문"
-                    width={32}
-                    height={32}
-                    className="rounded-md"
-                  />
-                  <span className="txt-2xl-b">{question.content}</span>
+        {pagedQuestions.length > 0 ? (
+          pagedQuestions.map((question) => (
+            <Link key={question.id} href={`/questions/${question.id}`}>
+              <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
+                <div className="flex h-full items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Image
+                        src={getImageUrlByCategory(question.categoryId)}
+                        alt="문"
+                        width={32}
+                        height={32}
+                        className="rounded-md"
+                    />
+                    <span className="txt-2xl-b">{question.content}</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+                    <span>북마크한 사람 {question.bookmark_count}</span>
+                    <span>답변을 완료한 사람 {question.answer_count}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                <span>북마크한 사람 {question.bookmark_count}</span>
-                <span>답변을 완료한 사람 {question.answer_count}</span>
-              </div>
-              </div>
-            </Card>
-          </Link>
-              
-        ))}
+              </Card>
+            </Link>
+          ))
+          ) : (
+          <div className="flex flex-col items-center justify-center mt-10">
+            <Image
+              src="/assets/images/QuestionsNotFound.png"
+              alt="결과 없음"
+              width={240}
+              height={240}
+            />
+          </div>
+        )}
       </div>
 
       {/* 페이지네이션 */}
