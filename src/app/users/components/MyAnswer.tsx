@@ -1,54 +1,102 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { formatNumber } from "@/utils/handleFormat";
 import { Heart } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Pagination } from "@/components/ui/pagination";
+import Link from "next/link";
 
-// 실제 데이터로 매핑 필요
-const myAnswers = [
-  {
-    id: 1,
-    category: "JavaScript",
-    title:
-      "HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명HTTP 메소드에 대한 설명",
-    content:
-      "Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. 시간이 흐르면서 많은 분이 이를 익숙하게 활용하고 있지만, 저처럼 개념 어쩌구저쩌구 늘려볼까",
-    date: "1995.12.14",
-    likeCount: 1000,
-  },
-  {
-    id: 2,
-    category: "React",
-    title: "useEffect는 언제 쓰나요?",
-    content:
-      "useEffect는 부수효과 처리용 훅으로, 컴포넌트가 마운트되거나 업데이트될 때 특정 로직을 실행하기 위해 사용됩니다...",
-    date: "2023.10.01",
-    likeCount: 284,
-  },
-];
+interface UserAnswer {
+  questionId: number;
+  categoryName: string;
+  questionTitle: string;
+  answerContent: string;
+  createdAt: string;
+  likeCount: number;
+}
 
 export default function MyAnswerPage() {
+  const { user } = useAuthStore();
+  const [myAnswers, setMyAnswers] = useState<UserAnswer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Pagination
+  const [pageNumber, setPageNumber] = useState(1);
+  const [currentPageBlock, setCurrentPageBlock] = useState(1);
+  const totalCount = myAnswers.length;
+  const itemsPerPage = 5;
+  const paginatedAnswers = myAnswers.slice(
+    (pageNumber - 1) * itemsPerPage,
+    pageNumber * itemsPerPage
+  );
+
+  useEffect(() => {
+    const fetchAnswers = async () => {
+      if (!user?.email) return;
+      setIsLoading(true);
+      const res = await fetch(`/api/users/history?email=${user.email}`);
+      const data = await res.json();
+      setMyAnswers(data);
+      setIsLoading(false);
+    };
+
+    fetchAnswers();
+  }, [user?.email]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-[var(--space-24)] mb-[100px]">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i} variant="default" className="space-y-9">
+            <div className="flex gap-4 items-center">
+              <Skeleton className="h-6 w-20" />
+              <Skeleton className="h-6 flex-1" />
+            </div>
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-[80%]" />
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-[var(--space-24)] mb-[100px]">
-      {myAnswers.map((answer) => (
-        <Card key={answer.id} variant="default">
-          <div className="flex items-center gap-4 mb-4">
-            <Badge variant="default">{answer.category}</Badge>
-            <p className="txt-2xl-b line-clamp-1">{answer.title}</p>
-          </div>
-          <div className="flex flex-col gap-[var(--space-40)]">
-            <p className="line-clamp-2">{answer.content}</p>
-            <div className="flex justify-between items-center">
-              <p className="txt-sm !text-[var(--gray-02)]">{answer.date}</p>
-              <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
-                <Heart className="w-4 h-4 fill-red-500 stroke-none" />
-                <p>{formatNumber(answer.likeCount)}</p>
+      {paginatedAnswers.map((answer, index) => (
+        <Link href={`/questions/${answer.questionId}`} key={index}>
+          <Card variant="default">
+            <div className="flex items-center gap-4 mb-4">
+              <Badge variant="default">{answer.categoryName}</Badge>
+              <p className="txt-2xl-b line-clamp-1">{answer.questionTitle}</p>
+            </div>
+            <div className="flex flex-col gap-[var(--space-40)]">
+              <p className="line-clamp-2">{answer.answerContent}</p>
+              <div className="flex justify-between items-center">
+                <p className="txt-sm !text-[var(--gray-02)]">
+                  {new Date(answer.createdAt).toLocaleDateString("ko-KR")}
+                </p>
+                <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
+                  <Heart className="w-4 h-4 fill-[var(--black)] stroke-none" />
+                  <p>{formatNumber(answer.likeCount)}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
       ))}
+
+      <Pagination
+        totalCount={totalCount}
+        itemsPerPage={5}
+        pageNumber={pageNumber}
+        currentPageBlock={currentPageBlock}
+        handleMovePage={setPageNumber}
+        handleMovePageBlock={setCurrentPageBlock}
+      />
     </div>
   );
 }

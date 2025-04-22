@@ -1,6 +1,7 @@
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { createClient } from "@/utils/supabase/server";
 import { UserActivity } from "@/domain/entities/UserActivity";
+import { UserAnswer } from "@/domain/entities/UserAnswer";
 
 export class SbUserRepository implements UserRepository {
   async getUserActivity(email: string): Promise<UserActivity> {
@@ -30,5 +31,55 @@ export class SbUserRepository implements UserRepository {
     const dailyActivity = Object.entries(dateMap).map(([date, count]) => ({ date, count }));
 
     return new UserActivity(email, count ?? 0, activeDays, dailyActivity);
+  }
+
+  async getUserAnswers(email: string): Promise<UserAnswer[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("answer")
+      .select(
+        `
+        question_id,
+        content,
+        created_at,
+        question:question (
+          content,
+          category:category (
+            name
+          )
+        )
+      `
+      )
+      .eq("email", email)
+      .order("created_at", { ascending: false });
+
+    if (error || !data) {
+      console.error("Supabase 오류: ", error);
+      throw new Error("답변 조회 실패");
+    }
+
+    const result: UserAnswer[] = [];
+
+    for (const row of data) {
+      const { count } = await supabase
+        .from("like")
+        .select("*", { count: "exact", head: true })
+        .eq("question_id", row.question_id)
+        .eq("answer_email", email);
+
+      result.push(
+        new UserAnswer(
+          row.question_id,
+          row.question.category.name,
+          row.question.content,
+          row.content,
+          row.created_at,
+          count ?? 0
+        )
+      );
+    }
+
+    return result;
   }
 }
