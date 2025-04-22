@@ -4,6 +4,7 @@ export class CreateAnswerDto {
     public userId: string,
     public questionId: number,
     public content: string,
-    public createdAt: Date
+    public userName: string,
+    public avatarUrl: string
   ) {}
 }
