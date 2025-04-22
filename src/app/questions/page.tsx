@@ -131,7 +131,6 @@ export default function QuestionListPage() {
 
   // ====================== Throttled 이벤트 핸들러 ======================
 
-  //카테고리 클릭시 스로틀 핸들러 호출
   const throttledHandleCategoryChange = throttle((name: string) => {
     const category = categories.find((c) => c.name === name);
     const params = new URLSearchParams(searchParams.toString());
@@ -220,7 +219,7 @@ export default function QuestionListPage() {
       {/* 배너 */}
       <div className="relative w-[948px] h-[115px] mb-6">
         <Image
-          src="assets\images\banner.svg"
+          src="/banner.png"
           alt="배너 이미지"
           fill
           className="object-cover rounded-md"
@@ -247,6 +246,9 @@ export default function QuestionListPage() {
           문제 검색
         </Button>
       </div>
+
+      {/* 검색창 하단 마진 */}
+      <div className="mb-[12px]" />
 
       {/* 카테고리 & 필터 선택 */}
       <div className="flex items-center gap-2 mb-6">
