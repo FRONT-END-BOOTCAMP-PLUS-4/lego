@@ -219,7 +219,7 @@ export default function QuestionListPage() {
       {/* 배너 */}
       <div className="relative w-[948px] h-[115px] mb-6">
         <Image
-          src="/banner.png"
+          src="\assets\images\banner.svg"
           alt="배너 이미지"
           fill
           className="object-cover rounded-md"
