@@ -9,6 +9,7 @@ import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSol
 import { useParams, useSearchParams } from "next/navigation";
 import { handleCheckUser } from "@/utils/handleCheckUser";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -112,11 +113,11 @@ export default function AnswerFormPage() {
       if (!response.ok) {
         throw new Error(action === "create" ? "답변 저장 실패." : "답변 변경 실패.");
       }
-      alert(action === "create" ? "답변이 저장되었습니다." : "답변이 변경되었습니다.");
+      toast.success(action === "create" ? "답변이 저장되었습니다." : "답변이 변경되었습니다.");
       setIsSubmitted(true);
       setIsEditing(false);
     } catch (error) {
-      alert(`${action === "create" ? "답변 저장" : "답변 변경"} 실패: ${(error as Error).message}`);
+      toast.error(`${(error as Error).message}`);
     }
   };
 
@@ -137,12 +138,12 @@ export default function AnswerFormPage() {
       if (!response.ok) {
         throw new Error("답변 삭제 실패");
       }
-      alert("답변이 삭제되었습니다.");
+      toast.success("답변이 삭제되었습니다.");
       setUserAnswer("");
       setIsSubmitted(false);
       setIsEditing(true);
     } catch (error) {
-      alert("답변 저장 실패: " + (error as Error).message);
+      toast.error(`${(error as Error).message}`);
     }
   };
   if (!questionData) return <div>로딩 중...</div>;
