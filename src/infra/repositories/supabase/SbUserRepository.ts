@@ -51,7 +51,8 @@ export class SbUserRepository implements UserRepository {
         )
       `
       )
-      .eq("email", email);
+      .eq("email", email)
+      .order("created_at", { ascending: false });
 
     if (error || !data) {
       console.error("Supabase 오류: ", error);
