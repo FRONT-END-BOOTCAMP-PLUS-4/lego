@@ -44,4 +44,35 @@ export class SbCommentRepository implements CommentRepository {
       )) ?? []
     );
   }
+
+  async create(comment: Comment): Promise<Comment> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("comment")
+      .insert({
+        question_id: comment.question_id,
+        answer_email: comment.answer_email,
+        content: comment.content,
+        email: comment.email,
+        username: comment.user_name,
+        avatar_url: comment.avatar_url,
+        created_at: comment.createdAt.toISOString(),
+      })
+      .select()
+      .single(); // ✅ 삽입된 레코드 반환
+
+    if (error) throw new Error(error.message);
+
+    return new Comment(
+      data.id,
+      data.question_id,
+      data.answer_email,
+      data.content,
+      new Date(data.created_at),
+      data.email,
+      data.username,
+      data.avatar_url
+    );
+  }
 }
