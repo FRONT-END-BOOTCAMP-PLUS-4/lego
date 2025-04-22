@@ -41,7 +41,7 @@ export default function RootLayout({
       <CSRHead />
       <body className="min-h-screen w-full flex flex-col">
         {isMounted && !isAuthCallback && <Header />}
-        <main className="w-full max-w-[1272px] mx-auto px-32 flex-1">
+        <main className="w-full max-w-[1080px] mx-auto flex-1">
           {children}
           <Toaster />
         </main>
