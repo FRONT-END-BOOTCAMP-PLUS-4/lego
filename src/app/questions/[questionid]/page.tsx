@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
-import AnswerPreviewCard from "./componsts/AnswerPreviewCard";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
 import { useParams, useSearchParams } from "next/navigation";
 import { handleCheckUser } from "@/utils/handleCheckUser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -69,6 +69,7 @@ export default function AnswerFormPage() {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);
     }
   };
+
   useEffect(() => {
     handleGetQuestion();
   }, []);
@@ -209,10 +210,7 @@ export default function AnswerFormPage() {
           )}
         </form>
         <div className="pt-[150px] pb-[150px]">
-          <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
-          <div className="grid grid-cols-2 grid-rows-auto gap-x-16 gap-y-24">
-            <AnswerPreviewCard />
-          </div>
+          <OtherUsersAnswer questionId={questionId} token={token} />
         </div>
       </div>
     </>

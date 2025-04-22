@@ -1,4 +1,5 @@
 import { Answer } from "@/domain/entities/Answer";
+import { AnswerView } from "@/domain/entities/AnswerView";
 import { AnswerRepository } from "@/domain/repositories/AnswerRepository";
 import { createClient } from "@/utils/supabase/server";
 
@@ -6,6 +7,20 @@ interface UserAnswerParams {
   userId: string | null;
   questionId: number;
 }
+
+type answerType = {
+  email: string;
+  question_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  avatar_url: string;
+  username: string;
+  like: {
+    answer_email: string;
+    like_email: string;
+  }[];
+};
 
 export class SbAnswerRepository implements AnswerRepository {
   //답변 저장
@@ -65,27 +80,47 @@ export class SbAnswerRepository implements AnswerRepository {
       throw new Error("답변 삭제에 실패했습니다.");
     }
   }
+  //특정 문제의 답변 리스트 조회
+  async getAnswersByQuestion(questionId: number): Promise<AnswerView[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("answer")
+      .select(
+        `
+      email,
+      question_id,
+      content,
+      created_at,
+      updated_at,
+      avatar_url,
+      username,
+      like:like(
+        like_email
+      )
+    `
+      )
+      .eq("question_id", questionId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("답변 리스트 조회 실패:", error);
+      throw new Error("답변을 불러오지 못했습니다.");
+    }
+
+    const result: AnswerView[] = (data ?? []).map((row) => {
+      return new AnswerView(
+        row.email,
+        row.content,
+        row.created_at,
+        row.avatar_url,
+        row.username,
+        row.like?.length ?? 0 // 좋아요 개수
+      );
+    });
+
+    return result;
+  }
 }
-//특정 문제의 답변 리스트 조회
-// async findAnswersByQuestion(params: UserAnswerParams): Promise<Answer[]> {
-//   const { questionId } = params;
-//   const { data, error } = await supabase
-//     .from("answer")
-//     .select("*")
-//     .eq("question_id", questionId)
-//     .order("created_at", { ascending: false }); // 최신순 정렬
-
-//   if (error) {
-//     console.error("답변 리스트 조회 실패:", error);
-//     throw new Error("답변을 불러오지 못했습니다.");
-//   }
-
-//   if (!data) return [];
-
-//   return data.map(
-//     (item) => new Answer(item.user_id, item.question_id, item.content, new Date(item.created_at))
-//   );
-// }
 
 //특정 유저의 답변 리스트 조회
 // async findAllAnswersByUser(userId: number): Promise<Answer[]> {
