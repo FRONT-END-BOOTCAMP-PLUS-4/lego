@@ -26,6 +26,7 @@ export default function QuestionListPage() {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ====================== URL 파라미터 추출 ======================
   const router = useRouter();
@@ -63,6 +64,7 @@ export default function QuestionListPage() {
 
   useEffect(() => {
     let isCurrent = true;
+    setIsLoading(true); // 로딩 시작
 
     const fetchSortedQuestions = async () => {
       let email: string | undefined = undefined;
@@ -116,6 +118,7 @@ export default function QuestionListPage() {
 
       setQuestions(data);
       setFilteredQuestions([]);
+      setIsLoading(false); // 로딩 끝
     };
 
     fetchSortedQuestions();
@@ -237,6 +240,7 @@ export default function QuestionListPage() {
           alt="배너 이미지"
           fill
           priority
+          sizes="948px"
           className="object-cover rounded-md"
         />
       </div>
@@ -308,49 +312,54 @@ export default function QuestionListPage() {
         </div>
       </div>
 
-      {/* 문제 리스트 출력 */}
-      <div className="flex flex-col gap-[16px]">
-        {pagedQuestions.length > 0 ? (
-          pagedQuestions.map((question) => (
-            <Link
-              key={question.id}
-              href={
-                usesrEmail
-                  ? `/questions/${question.id}?userId=${usesrEmail}`
-                  : `/questions/${question.id}`
-              }
-            >
-              <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
-                <div className="flex h-full items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src={getImageUrlByCategory(question.categoryId)}
-                      alt="문"
-                      width={32}
-                      height={32}
-                      className="rounded-md"
-                    />
-                    <span className="txt-2xl-b">{question.content}</span>
-                  </div>
-                  <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                    <span>북마크한 사람 {question.bookmark_count}</span>
-                    <span>답변을 완료한 사람 {question.answer_count}</span>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center mt-10">
-            <Image
-              src="/assets/images/QuestionsNotFound.png"
-              alt="결과 없음"
-              width={240}
-              height={240}
-            />
+      <div className="flex flex-col gap-[16px] min-h-[300px]">
+  {isLoading ? (
+    // 🔄 로딩 중
+    <div className="flex justify-center items-center py-20">
+      <Image
+        src="/assets/images/QuestionsLoading.png"
+        alt="문제 로딩 중"
+        width={240}
+        height={240}
+        className="animate-pulse" // 선택: 살짝 동적 효과 줄 수도 있어
+      />
+    </div>
+  ) : pagedQuestions.length > 0 ? (
+    // ✅ 문제 있음
+    pagedQuestions.map((question) => (
+      <Link key={question.id} href={`/questions/${question.id}`}>
+        <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
+          <div className="flex h-full items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Image
+                src={getImageUrlByCategory(question.categoryId)}
+                alt="문"
+                width={32}
+                height={32}
+                className="rounded-md"
+              />
+              <span className="txt-2xl-b">{question.content}</span>
+            </div>
+            <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+              <span>북마크한 사람 {question.bookmark_count}</span>
+              <span>답변을 완료한 사람 {question.answer_count}</span>
+            </div>
           </div>
-        )}
-      </div>
+        </Card>
+      </Link>
+    ))
+  ) : (
+    // ❌ 문제 없음
+    <div className="flex flex-col items-center justify-center mt-10 text-center">
+      <Image
+        src="/assets/images/QuestionsNotFound.png"
+        alt="결과 없음"
+        width={240}
+        height={240}
+      />
+    </div>
+  )}
+</div>
 
       {/* 페이지네이션 */}
       <Pagination
