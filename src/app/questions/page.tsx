@@ -231,11 +231,12 @@ export default function QuestionListPage() {
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
       {/* 배너 */}
-      <div className="relative w-[948px] h-[115px] mb-6">
+      <div className="relative w-[948px] h-[115px] mb-6 overflow-hidden">
         <Image
-          src="\assets\images\banner.svg"
+          src="/assets/images/banner.svg"
           alt="배너 이미지"
           fill
+          priority
           className="object-cover rounded-md"
         />
       </div>
