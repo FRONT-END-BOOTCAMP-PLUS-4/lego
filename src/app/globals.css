@@ -206,7 +206,7 @@
 }
 
 .react-calendar-heatmap .color-scale-1 {
-  fill: #e6e685;
+  fill: #a6e685;
 }
 .react-calendar-heatmap .color-scale-2 {
   fill: #8cc665;
@@ -225,5 +225,6 @@
   body {
     @apply bg-background text-foreground;
     font-family: "Pretendard", sans-serif;
+    overflow-x: hidden;
   }
 }
