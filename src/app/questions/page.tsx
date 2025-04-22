@@ -1,5 +1,6 @@
 "use client";
 
+import throttle from "lodash.throttle";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -20,8 +21,6 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
-  // ====================== 상태 관리 ======================
-
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionDto[]>([]);
@@ -50,8 +49,6 @@ export default function QuestionListPage() {
 
   const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
 
-  // ====================== 카테고리 목록 가져오기 ======================
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -65,12 +62,12 @@ export default function QuestionListPage() {
     fetchCategories();
   }, []);
 
-  // ====================== 질문 리스트 가져오기 ======================
-
   useEffect(() => {
+    let isCurrent = true;
+
     const fetchSortedQuestions = async () => {
       let email: string | undefined = undefined;
-  
+
       try {
         const authStorage = localStorage.getItem("auth-storage");
         if (authStorage) {
@@ -82,53 +79,60 @@ export default function QuestionListPage() {
         console.error("auth-storage 파싱 오류:", err);
         setIsLoggedIn(false);
       }
-  
+
       const currentSort = searchParams.get("sortBy") ?? "recent";
       const currentFilter = searchParams.get("filter") ?? "all";
       const currentCategoryId = searchParams.get("categoryId");
-  
+
       const params = new URLSearchParams(searchParams.toString());
-  
-      // 📌 북마크 or 답변 필터일 경우 email 파라미터 강제로 붙임
+
       if ((currentFilter === "bookmarked" || currentFilter === "answered") && email) {
         params.set("email", email);
       } else {
         params.delete("email");
       }
-  
+
       const url = new URL("/api/questions", window.location.origin);
       params.forEach((value, key) => url.searchParams.set(key, value));
-  
+
       const res = await fetch(url.toString());
       let data: QuestionDto[] = await res.json();
-  
-      // 클라이언트 추가 정렬/필터
+
+      if (!isCurrent) return;
+
       if (currentFilter === "bookmarked" || currentFilter === "answered") {
         if (currentCategoryId) {
           data = data.filter((q) => q.categoryId === Number(currentCategoryId));
         }
-  
+
         if (currentSort === "bookmark") {
           data.sort((a, b) => b.bookmark_count - a.bookmark_count);
         } else {
           data.sort(
             (a, b) =>
-              new Date(b.createdAt).getTime() -
-              new Date(a.createdAt).getTime()
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         }
       }
-  
+
+      // ✅ 중복 제거
+      data = Array.from(new Map(data.map((q) => [q.id, q])).values());
+
       setQuestions(data);
       setFilteredQuestions([]);
     };
-  
+
     fetchSortedQuestions();
+
+    return () => {
+      isCurrent = false;
+    };
   }, [searchParams.toString()]);
 
-  // ====================== 이벤트 핸들러 ======================
+  // ====================== Throttled 이벤트 핸들러 ======================
 
-  const handleCategoryChange = (name: string) => {
+  //카테고리 클릭시 스로틀 핸들러 호출
+  const throttledHandleCategoryChange = throttle((name: string) => {
     const category = categories.find((c) => c.name === name);
     const params = new URLSearchParams(searchParams.toString());
 
@@ -142,12 +146,12 @@ export default function QuestionListPage() {
     setPageNumber(1);
     setSearchKeyword("");
     setFilteredQuestions([]);
-  };
+  }, 500);
 
-  const handleFilterChange = (filter: "all" | "bookmarked" | "answered") => {
+  const throttledHandleFilterChange = throttle((filter: "all" | "bookmarked" | "answered") => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("filter", filter);
-  
+
     const authStorage = localStorage.getItem("auth-storage");
     if (authStorage) {
       const parsed = JSON.parse(authStorage);
@@ -160,10 +164,10 @@ export default function QuestionListPage() {
         params.delete("email");
       }
     }
-  
+
     router.push(`/questions?${params.toString()}`);
     setPageNumber(1);
-  };
+  }, 500);
 
   const handleSortClick = (sortBy: "recent" | "bookmark") => {
     const params = new URLSearchParams(searchParams.toString());
@@ -187,7 +191,7 @@ export default function QuestionListPage() {
     const updateURLWithEmail = async () => {
       const filter = searchParams.get("filter");
       const emailFromURL = searchParams.get("email");
-  
+
       if ((filter === "bookmarked" || filter === "answered") && !emailFromURL) {
         const authStorage = localStorage.getItem("auth-storage");
         if (authStorage) {
@@ -201,11 +205,9 @@ export default function QuestionListPage() {
         }
       }
     };
-  
+
     updateURLWithEmail();
   }, []);
-
-  // ====================== 페이지네이션 데이터 ======================
 
   const visibleQuestions = filteredQuestions.length > 0 ? filteredQuestions : questions;
   const totalCount = visibleQuestions.length;
@@ -213,17 +215,17 @@ export default function QuestionListPage() {
   const endIdx = startIdx + 10;
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
 
-  // ====================== 렌더링 ======================
-
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
-
       {/* 배너 */}
       <div className="relative w-[948px] h-[115px] mb-6">
-        <Image src="/banner.png" alt="배너 이미지" fill className="object-cover rounded-md" />
+        <Image
+          src="assets\images\banner.svg"
+          alt="배너 이미지"
+          fill
+          className="object-cover rounded-md"
+        />
       </div>
-
-      <div className="mb-[48px]" />
 
       {/* 검색창 */}
       <div className="flex items-center gap-4">
@@ -246,11 +248,9 @@ export default function QuestionListPage() {
         </Button>
       </div>
 
-      <div className="mb-[12px]" />
-
       {/* 카테고리 & 필터 선택 */}
       <div className="flex items-center gap-2 mb-6">
-        <Select onValueChange={handleCategoryChange} value={selectedCategoryName}>
+        <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
             <SelectValue placeholder="전체" />
           </SelectTrigger>
@@ -265,7 +265,7 @@ export default function QuestionListPage() {
         </Select>
 
         {isLoggedIn && (
-          <Select onValueChange={handleFilterChange} value={filterOption}>
+          <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
             <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
               <SelectValue placeholder="필터" />
             </SelectTrigger>
@@ -278,32 +278,18 @@ export default function QuestionListPage() {
         )}
       </div>
 
-      <div className="mb-[44px]" />
-
       {/* 정렬 옵션 */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-[12px]">
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex gap-[12px]">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="font-normal"
-            onClick={() => handleSortClick("bookmark")}
-          >
+          <Button variant="ghost" size="sm" onClick={() => handleSortClick("bookmark")}>
             인기순
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="font-normal"
-            onClick={() => handleSortClick("recent")}
-          >
-          최신순
+          <Button variant="ghost" size="sm" onClick={() => handleSortClick("recent")}>
+            최신순
           </Button>
         </div>
       </div>
-
-      <div className="mb-[12px]" />
 
       {/* 문제 리스트 출력 */}
       <div className="flex flex-col gap-[16px]">
