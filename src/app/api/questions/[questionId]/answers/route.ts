@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, context: { params: { questionId:
     const getAnswerListUsecase = new GetAnswerListUsecase(answerRepo);
     const answers = await getAnswerListUsecase.execute(answerDto);
     return NextResponse.json(
-      { message: "문제에 달린 답변 조회 완료", date: answers },
+      { message: "문제에 달린 답변 조회 완료", data: answers },
       { status: 200 }
     );
   } catch (error) {

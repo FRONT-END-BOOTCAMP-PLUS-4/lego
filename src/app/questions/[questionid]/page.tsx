@@ -29,13 +29,13 @@ export default function AnswerFormPage() {
   const params = useParams();
   const router = useRouter();
   const questionId = Number(params.questionid);
-  const userEmail = searchParams.get("userId");
+  const userEmail: string | null = searchParams.get("userId");
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
-  const token = useAuthStore((state) => state.token);
+  const token: string | null = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
@@ -209,7 +209,7 @@ export default function AnswerFormPage() {
             </div>
           )}
         </form>
-        <div className="pt-[150px] pb-[150px]">
+        <div className="pt-[150px] ">
           <OtherUsersAnswer questionId={questionId} userEmail={userEmail} token={token} />
         </div>
       </div>
