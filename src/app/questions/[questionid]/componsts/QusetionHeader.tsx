@@ -4,12 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface QuestionHeaderProps {
   content: string;
   categoryName: string;
   isBookmarked: boolean;
   questionId: number;
+  currentUser: boolean;
 }
 
 export default function QusetionHeader({
@@ -17,21 +19,24 @@ export default function QusetionHeader({
   categoryName,
   isBookmarked: bookmarkState,
   questionId,
+  currentUser,
 }: QuestionHeaderProps) {
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
   const userEmail = user?.email;
-
+  const router = useRouter();
   const [isBookmarked, setIsBookmarked] = useState<boolean>(bookmarkState);
 
   const handleToggleBookmark = async () => {
     const newState = !isBookmarked;
     const method = newState ? "POST" : "DELETE";
-    console.log(method, "method");
     const formData = {
       userId: userEmail,
       questionId,
     };
+    if (!currentUser) {
+      return router.push("/login");
+    }
 
     try {
       const response = await fetch("/api/bookmarks", {
@@ -49,7 +54,7 @@ export default function QusetionHeader({
       setIsBookmarked(newState);
       toast.success(newState ? "북마크가 저장되었습니다." : "북마크가 해제되었습니다.");
     } catch (error) {
-      toast.error(`북마크 해제에 실패했습니다.${(error as Error).message}`);
+      toast.error(`${(error as Error).message}`);
     }
   };
 

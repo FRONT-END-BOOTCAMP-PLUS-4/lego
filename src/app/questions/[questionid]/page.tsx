@@ -26,6 +26,7 @@ interface QuestionResponse {
 export default function AnswerFormPage() {
   const searchParams = useSearchParams();
   const params = useParams();
+  const router = useRouter();
   const questionId = Number(params.questionid);
   const userEmail = searchParams.get("userId");
   const [tab, setTab] = useState<string>("tab1");
@@ -37,26 +38,31 @@ export default function AnswerFormPage() {
   const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
-  const localStorageUserToken = handleCheckUser();
-  const isTokenMatch = token !== null && token === localStorageUserToken;
+  const { localToken, localEmail } = handleCheckUser();
+  const isMatchCurrentLoginUser =
+    token !== null && token === localToken && localEmail === userEmail;
 
-  const router = useRouter();
-  console.log("isTokenMatch", isTokenMatch);
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
   const handleGetQuestion = async () => {
     try {
-      const response = await fetch(`/api/questions/${questionId}?userId=${userEmail}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        isMatchCurrentLoginUser
+          ? `/api/questions/${questionId}?userId=${userEmail}`
+          : `/api/questions/${questionId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
+      console.log(data);
       setQuestionData(data?.data);
     } catch (error) {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);
@@ -77,7 +83,7 @@ export default function AnswerFormPage() {
 
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
-    if (!isTokenMatch) {
+    if (!isMatchCurrentLoginUser) {
       return router.push("/login");
     }
     const method = action === "create" ? "POST" : "PUT";
@@ -149,6 +155,7 @@ export default function AnswerFormPage() {
           categoryName={categoryName}
           isBookmarked={isBookmarked}
           questionId={questionId}
+          currentUser={isMatchCurrentLoginUser}
         />
         <form>
           <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
