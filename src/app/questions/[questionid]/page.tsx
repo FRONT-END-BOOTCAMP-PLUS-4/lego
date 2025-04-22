@@ -7,6 +7,7 @@ import AnswerPreviewCard from "./componsts/AnswerPreviewCard";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
 import { useParams, useSearchParams } from "next/navigation";
+import { Toaster } from "sonner";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -132,69 +133,71 @@ export default function AnswerFormPage() {
   if (!questionData) return <div>로딩 중...</div>;
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
-    <div className="container mx-auto pt-[40px]">
-      <QusetionHeader
-        content={content}
-        categoryName={categoryName}
-        isBookmarked={isBookmarked}
-        questionId={questionId}
-      />
-      <form>
-        <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
-          <TabsList className="mr-0 ml-auto">
-            <TabsTrigger value="tab1">나의 답변 작성하기</TabsTrigger>
-            <TabsTrigger value="tab2">모범 답안 확인하기</TabsTrigger>
-          </TabsList>
-          <TabsContent value="tab1">
-            <textarea
-              className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
-              placeholder="내용을 입력하세요..."
-              onChange={(e) => setUserAnswer(e.target.value)}
-              value={userAnswer}
-              disabled={!isEditing}
-            ></textarea>
-          </TabsContent>
-          <TabsContent value="tab2">
-            <QuestionSolution solution={solution} />
-          </TabsContent>
-        </Tabs>
-        {tab === "tab1" && (
-          <div className="flex justify-center mt-[24px]">
-            {/* 이미 기존에 작성한 답변이 있으면 수정 삭제 먼저 */}
-            {isSubmitted && (
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  type="button"
-                  onClick={() => {
-                    if (isEditing) {
-                      handleSaveAnswer("update");
-                    }
-                    setIsEditing((prev) => !prev);
-                  }}
-                >
-                  {isEditing ? "저장" : "수정"}
+    <>
+      <div className="container mx-auto pt-[40px]">
+        <QusetionHeader
+          content={content}
+          categoryName={categoryName}
+          isBookmarked={isBookmarked}
+          questionId={questionId}
+        />
+        <form>
+          <Tabs defaultValue="tab1" value={tab} onValueChange={setTab}>
+            <TabsList className="mr-0 ml-auto">
+              <TabsTrigger value="tab1">나의 답변 작성하기</TabsTrigger>
+              <TabsTrigger value="tab2">모범 답안 확인하기</TabsTrigger>
+            </TabsList>
+            <TabsContent value="tab1">
+              <textarea
+                className="box-border p-[24px] h-[500px] border border-[var(--blue-03)] radius mt-6 w-full resize-none focus:ring-1 focus:ring-[var(--blue-03)] focus:outline-none"
+                placeholder="내용을 입력하세요..."
+                onChange={(e) => setUserAnswer(e.target.value)}
+                value={userAnswer}
+                disabled={!isEditing}
+              ></textarea>
+            </TabsContent>
+            <TabsContent value="tab2">
+              <QuestionSolution solution={solution} />
+            </TabsContent>
+          </Tabs>
+          {tab === "tab1" && (
+            <div className="flex justify-center mt-[24px]">
+              {/* 이미 기존에 작성한 답변이 있으면 수정 삭제 먼저 */}
+              {isSubmitted && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    type="button"
+                    onClick={() => {
+                      if (isEditing) {
+                        handleSaveAnswer("update");
+                      }
+                      setIsEditing((prev) => !prev);
+                    }}
+                  >
+                    {isEditing ? "저장" : "수정"}
+                  </Button>
+                  <Button variant="gray" size="lg" type="button" onClick={handleDeleteAnswer}>
+                    삭제
+                  </Button>
+                </div>
+              )}
+              {!isSubmitted && (
+                <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
+                  저장
                 </Button>
-                <Button variant="gray" size="lg" type="button" onClick={handleDeleteAnswer}>
-                  삭제
-                </Button>
-              </div>
-            )}
-            {!isSubmitted && (
-              <Button size="lg" type="button" onClick={() => handleSaveAnswer("create")}>
-                저장
-              </Button>
-            )}
+              )}
+            </div>
+          )}
+        </form>
+        <div className="pt-[150px] pb-[150px]">
+          <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
+          <div className="grid grid-cols-2 grid-rows-auto gap-x-16 gap-y-24">
+            <AnswerPreviewCard />
           </div>
-        )}
-      </form>
-      <div className="pt-[150px] pb-[150px]">
-        <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
-        <div className="grid grid-cols-2 grid-rows-auto gap-x-16 gap-y-24">
-          <AnswerPreviewCard />
         </div>
       </div>
-    </div>
+    </>
   );
 }

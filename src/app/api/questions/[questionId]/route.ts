@@ -8,9 +8,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest, context: { params: { questionId: string } }) {
   try {
-    const { params } = context;
     const userId = request.nextUrl.searchParams.get("userId") ?? undefined;
-    const questionId = Number(params.questionId);
+    const questionId = Number(context.params.questionId);
     const questionDto = new GetQuestionDto(questionId, userId);
     const getQuestionRepo = new SbQuestionRepository();
     const getQuestionUsecase = new GetQuestionUsecase(getQuestionRepo);
