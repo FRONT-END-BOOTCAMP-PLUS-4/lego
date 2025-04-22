@@ -173,14 +173,32 @@ export default function QuestionListPage() {
 
   const handleSearch = () => {
     const keyword = searchKeyword.trim().toLowerCase();
-    if (!keyword) {
-      setFilteredQuestions([]);
-      return;
+    const params = new URLSearchParams(searchParams.toString());
+  
+    if (keyword) {
+      params.set("search", keyword);
+    } else {
+      params.delete("search");
     }
-    const matched = questions.filter((q) => q.content.toLowerCase().includes(keyword));
-    setFilteredQuestions(matched);
+  
+    router.push(`/questions?${params.toString()}`);
     setPageNumber(1);
   };
+
+  useEffect(() => {
+    const keywordFromURL = searchParams.get("search")?.trim().toLowerCase() ?? "";
+    setSearchKeyword(keywordFromURL);
+  
+    if (keywordFromURL && questions.length > 0) {
+      const matched = questions.filter((q) =>
+        q.content.toLowerCase().includes(keywordFromURL)
+      );
+      setFilteredQuestions(matched);
+      setPageNumber(1);
+    } else {
+      setFilteredQuestions([]);
+    }
+  }, [questions, searchParams]);
 
   useEffect(() => {
     const updateURLWithEmail = async () => {
