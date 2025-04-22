@@ -8,7 +8,7 @@ interface UserAnswerParams {
   questionId: number;
 }
 
-type answerType = {
+interface answerType {
   email: string;
   question_id: number;
   content: string;
@@ -16,11 +16,8 @@ type answerType = {
   updated_at: string;
   avatar_url: string;
   username: string;
-  like: {
-    answer_email: string;
-    like_email: string;
-  }[];
-};
+  like: number;
+}
 
 export class SbAnswerRepository implements AnswerRepository {
   //답변 저장
@@ -80,6 +77,7 @@ export class SbAnswerRepository implements AnswerRepository {
       throw new Error("답변 삭제에 실패했습니다.");
     }
   }
+
   //특정 문제의 답변 리스트 조회
   async getAnswersByQuestion(params: UserAnswerParams): Promise<AnswerView[]> {
     const supabase = await createClient();
@@ -95,9 +93,7 @@ export class SbAnswerRepository implements AnswerRepository {
       updated_at,
       avatar_url,
       username,
-      like:like(
-        like_email
-      )
+      like:like(like_email)
     `
       )
       .eq("question_id", questionId)
@@ -116,7 +112,7 @@ export class SbAnswerRepository implements AnswerRepository {
         row.created_at,
         row.avatar_url,
         row.username,
-        row.like?.length ?? 0 // 좋아요 개수
+        row.like.length
       );
     });
 
