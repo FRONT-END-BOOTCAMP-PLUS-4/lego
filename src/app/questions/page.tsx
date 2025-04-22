@@ -1,6 +1,8 @@
 "use client";
 
+import throttle from "lodash.throttle";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -16,7 +18,6 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { CategoryDto } from "@/application/usecase/category/dto/CategoryDto";
 import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
-import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
@@ -24,14 +25,23 @@ export default function QuestionListPage() {
   const [questions, setQuestions] = useState<QuestionDto[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionDto[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ====================== URL 파라미터 추출 ======================
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
   const categoryIdFromURL = searchParams.get("categoryId");
   const selectedCategoryId = categoryIdFromURL ? Number(categoryIdFromURL) : null;
   const user = useAuthStore((state) => state.user);
   const usesrEmail = user?.email;
+
+  const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
+  const filterOption = (searchParams.get("filter") as "all" | "bookmarked" | "answered") ?? "all";
+
   const selectedCategoryName =
     selectedCategoryId === null
       ? "전체"
@@ -52,35 +62,117 @@ export default function QuestionListPage() {
     fetchCategories();
   }, []);
 
-  const fetchQuestions = async (categoryId?: number) => {
-    const url = categoryId ? `/api/questions?categoryId=${categoryId}` : `/api/questions`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      setQuestions(data);
-      setFilteredQuestions([]); // 새로 가져올 때 필터 초기화
-    } catch (err) {
-      console.error("문제 불러오기 실패", err);
-    }
-  };
-
   useEffect(() => {
-    const categoryId = categoryIdFromURL ? Number(categoryIdFromURL) : undefined;
-    fetchQuestions(categoryId);
-  }, [categoryIdFromURL]);
+    let isCurrent = true;
 
-  const handleCategoryChange = (name: string) => {
+    const fetchSortedQuestions = async () => {
+      let email: string | undefined = undefined;
+
+      try {
+        const authStorage = localStorage.getItem("auth-storage");
+        if (authStorage) {
+          const parsed = JSON.parse(authStorage);
+          email = parsed?.state?.user?.email;
+          setIsLoggedIn(!!email);
+        }
+      } catch (err) {
+        console.error("auth-storage 파싱 오류:", err);
+        setIsLoggedIn(false);
+      }
+
+      const currentSort = searchParams.get("sortBy") ?? "recent";
+      const currentFilter = searchParams.get("filter") ?? "all";
+      const currentCategoryId = searchParams.get("categoryId");
+
+      const params = new URLSearchParams(searchParams.toString());
+
+      if ((currentFilter === "bookmarked" || currentFilter === "answered") && email) {
+        params.set("email", email);
+      } else {
+        params.delete("email");
+      }
+
+      const url = new URL("/api/questions", window.location.origin);
+      params.forEach((value, key) => url.searchParams.set(key, value));
+
+      const res = await fetch(url.toString());
+      let data: QuestionDto[] = await res.json();
+
+      if (!isCurrent) return;
+
+      if (currentFilter === "bookmarked" || currentFilter === "answered") {
+        if (currentCategoryId) {
+          data = data.filter((q) => q.categoryId === Number(currentCategoryId));
+        }
+
+        if (currentSort === "bookmark") {
+          data.sort((a, b) => b.bookmark_count - a.bookmark_count);
+        } else {
+          data.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        }
+      }
+
+      // ✅ 중복 제거
+      data = Array.from(new Map(data.map((q) => [q.id, q])).values());
+
+      setQuestions(data);
+      setFilteredQuestions([]);
+    };
+
+    fetchSortedQuestions();
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [searchParams.toString()]);
+
+  // ====================== Throttled 이벤트 핸들러 ======================
+
+  const throttledHandleCategoryChange = throttle((name: string) => {
     const category = categories.find((c) => c.name === name);
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (category) {
+      params.set("categoryId", category.id.toString());
+    } else {
+      params.delete("categoryId");
+    }
+
+    router.push(`/questions?${params.toString()}`);
     setPageNumber(1);
     setSearchKeyword("");
     setFilteredQuestions([]);
+  }, 500);
 
-    if (category) {
-      router.push(`/questions?categoryId=${category.id}`);
-    } else {
-      router.push(`/questions`);
+  const throttledHandleFilterChange = throttle((filter: "all" | "bookmarked" | "answered") => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("filter", filter);
+
+    const authStorage = localStorage.getItem("auth-storage");
+    if (authStorage) {
+      const parsed = JSON.parse(authStorage);
+      const email = parsed?.state?.user?.email;
+      if (filter === "bookmarked" || filter === "answered") {
+        if (email) {
+          params.set("email", email);
+        }
+      } else {
+        params.delete("email");
+      }
     }
+
+    router.push(`/questions?${params.toString()}`);
+    setPageNumber(1);
+  }, 500);
+
+  const handleSortClick = (sortBy: "recent" | "bookmark") => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sortBy", sortBy);
+    router.push(`/questions?${params.toString()}`);
+    setPageNumber(1);
   };
 
   const handleSearch = () => {
@@ -94,6 +186,28 @@ export default function QuestionListPage() {
     setPageNumber(1);
   };
 
+  useEffect(() => {
+    const updateURLWithEmail = async () => {
+      const filter = searchParams.get("filter");
+      const emailFromURL = searchParams.get("email");
+
+      if ((filter === "bookmarked" || filter === "answered") && !emailFromURL) {
+        const authStorage = localStorage.getItem("auth-storage");
+        if (authStorage) {
+          const parsed = JSON.parse(authStorage);
+          const email = parsed?.state?.user?.email;
+          if (email) {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("email", email);
+            router.push(`/questions?${params.toString()}`);
+          }
+        }
+      }
+    };
+
+    updateURLWithEmail();
+  }, []);
+
   const visibleQuestions = filteredQuestions.length > 0 ? filteredQuestions : questions;
   const totalCount = visibleQuestions.length;
   const startIdx = (pageNumber - 1) * 10;
@@ -102,12 +216,17 @@ export default function QuestionListPage() {
 
   return (
     <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
+      {/* 배너 */}
       <div className="relative w-[948px] h-[115px] mb-6">
-        <Image src="/banner.png" alt="배너 이미지" fill className="object-cover rounded-md" />
+        <Image
+          src="\assets\images\banner.svg"
+          alt="배너 이미지"
+          fill
+          className="object-cover rounded-md"
+        />
       </div>
 
-      <div className="mb-[48px]" />
-
+      {/* 검색창 */}
       <div className="flex items-center gap-4">
         <Input
           placeholder="면접 문제 검색"
@@ -128,10 +247,12 @@ export default function QuestionListPage() {
         </Button>
       </div>
 
+      {/* 검색창 하단 마진 */}
       <div className="mb-[12px]" />
 
+      {/* 카테고리 & 필터 선택 */}
       <div className="flex items-center gap-2 mb-6">
-        <Select onValueChange={handleCategoryChange} value={selectedCategoryName}>
+        <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
           <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
             <SelectValue placeholder="전체" />
           </SelectTrigger>
@@ -145,65 +266,71 @@ export default function QuestionListPage() {
           </SelectContent>
         </Select>
 
-        <Select>
-          <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
-            <SelectValue placeholder="정렬 기준" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="latest">북마크한 문제</SelectItem>
-            <SelectItem value="views">조회순</SelectItem>
-            <SelectItem value="answers">답변한 문제</SelectItem>
-          </SelectContent>
-        </Select>
+        {isLoggedIn && (
+          <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
+            <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
+              <SelectValue placeholder="필터" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체</SelectItem>
+              <SelectItem value="bookmarked">북마크한 문제</SelectItem>
+              <SelectItem value="answered">답변한 문제</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
-      <div className="mb-[44px]" />
-
-      <div className="flex items-center justify-between">
+      {/* 정렬 옵션 */}
+      <div className="flex items-center justify-between mb-[12px]">
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex gap-[12px]">
-          <Button variant="ghost" size="sm" className="font-normal">
+          <Button variant="ghost" size="sm" onClick={() => handleSortClick("bookmark")}>
             인기순
           </Button>
-          <Button variant="ghost" size="sm" className="font-normal">
+          <Button variant="ghost" size="sm" onClick={() => handleSortClick("recent")}>
             최신순
           </Button>
         </div>
       </div>
 
-      <div className="mb-[12px]" />
-
+      {/* 문제 리스트 출력 */}
       <div className="flex flex-col gap-[16px]">
-        {pagedQuestions.map((question) => (
-          <Link
-            key={question.id}
-            href={
-              usesrEmail
-                ? `/questions/${question.id}?userId=${usesrEmail}`
-                : `/questions/${question.id}`
-            }
-          >
-            <Card className="h-[74px]">
-              <div className="flex h-full items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={getImageUrlByCategory(question.categoryId)}
-                    alt="문"
-                    width={32}
-                    height={32}
-                    className="rounded-md"
-                  />
-                  <span className="txt-2xl-b">{question.content}</span>
+        {pagedQuestions.length > 0 ? (
+          pagedQuestions.map((question) => (
+            <Link key={question.id} href={`/questions/${question.id}`}>
+              <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
+                <div className="flex h-full items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Image
+                        src={getImageUrlByCategory(question.categoryId)}
+                        alt="문"
+                        width={32}
+                        height={32}
+                        className="rounded-md"
+                    />
+                    <span className="txt-2xl-b">{question.content}</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+                    <span>북마크한 사람 {question.bookmark_count}</span>
+                    <span>답변을 완료한 사람 {question.answer_count}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                  <span>조회수 {question.views}</span>
-                </div>
-              </div>
-            </Card>
-          </Link>
-        ))}
+              </Card>
+            </Link>
+          ))
+          ) : (
+          <div className="flex flex-col items-center justify-center mt-10">
+            <Image
+              src="/assets/images/QuestionsNotFound.png"
+              alt="결과 없음"
+              width={240}
+              height={240}
+            />
+          </div>
+        )}
       </div>
 
+      {/* 페이지네이션 */}
       <Pagination
         totalCount={totalCount}
         itemsPerPage={10}

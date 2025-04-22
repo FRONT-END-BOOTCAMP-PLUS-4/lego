@@ -27,7 +27,7 @@ export default function RootLayout({
 
   if (!hasHydrated) {
     return (
-      <html lang="ko" className="overflow-y-scroll">
+      <html lang="ko">
         <CSRHead />
         <body className="min-h-screen w-full flex justify-center items-center">
           <Spinner />
@@ -37,7 +37,7 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="ko" className="overflow-y-scroll">
+    <html lang="ko">
       <CSRHead />
       <body className="min-h-screen w-full flex flex-col">
         {isMounted && !isAuthCallback && <Header />}

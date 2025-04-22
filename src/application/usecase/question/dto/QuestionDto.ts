@@ -6,5 +6,7 @@ export class QuestionDto{
         public solution: string,
         public views: number,
         public createdAt: Date,
+        public bookmark_count: number,
+        public answer_count: number,
     ){}
 }

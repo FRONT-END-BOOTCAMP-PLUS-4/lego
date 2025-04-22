@@ -80,47 +80,30 @@ export class SbQuestionRepository implements QuestionRepository {
   // 전체 문제 출력
   async getAllQuestions(): Promise<QuestionDto[]> {
     const supabase = await createClient();
-
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
       .order("created_at", { ascending: false });
 
-    // 디버깅 로그
-    console.log("✅ Supabase Response - getAllQuestions");
-    console.log("data:", data);
-    console.log("error:", error);
-
-    if (error) {
-      console.error("❌ Supabase Error:", error.message);
-      throw new Error(error.message);
-    }
-
-    if (!data) {
-      console.warn("⚠️ Supabase returned no data for 'question' table");
-      return [];
-    }
-
-    return data.map(
-      (item) =>
-        new QuestionDto(
-          item.id,
-          item.category_id,
-          item.content,
-          item.solution,
-          item.views,
-          item.created_at
-        )
-    );
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((item: any) => new QuestionDto(
+      item.id,
+      item.category_id,
+      item.content,
+      item.solution,
+      item.views,
+      item.created_at,
+      item.bookmark?.[0]?.count ?? 0,
+      item.answer?.[0]?.count ?? 0
+    ));
   }
 
-  // 카테고리별 문제 출력
+  //카테고리별 문제 조회
   async getQuestionsByCategory(categoryId: number): Promise<QuestionDto[]> {
     const supabase = await createClient();
-
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
       .eq("category_id", categoryId)
       .order("created_at", { ascending: false });
 
@@ -130,25 +113,114 @@ export class SbQuestionRepository implements QuestionRepository {
     console.log("error:", error);
 
     if (error) {
-      console.error("❌ Supabase Error:", error.message);
+      console.error(`[getQuestionsByCategory] Supabase Error:`, error.message);
       throw new Error(error.message);
     }
 
     if (!data) {
-      console.warn(`⚠️ No data found for categoryId ${categoryId}`);
+      // console.warn(`[getQuestionsByCategory] No data for categoryId ${categoryId}`);
       return [];
     }
 
-    return data.map(
-      (item) =>
-        new QuestionDto(
-          item.id,
-          item.category_id,
-          item.content,
-          item.solution,
-          item.views,
-          item.created_at
+    return data.map((item: any) => {
+      const bookmarkCount = item.bookmark?.[0]?.count ?? 0;
+      const answerCount = item.answer?.[0]?.count ?? 0;
+      return new QuestionDto(
+        item.id,
+        item.category_id,
+        item.content,
+        item.solution,
+        item.views,
+        item.created_at,
+        bookmarkCount,
+        answerCount
+      );
+    });
+  }
+
+  //정렬 조회
+  async getAllQuestionsSorted(sortBy: "recent" | "bookmark"): Promise<QuestionDto[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("question")
+      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
+      .order(sortBy === "bookmark" ? "bookmark.count" : "created_at", {
+        ascending: false,
+        foreignTable: sortBy === "bookmark" ? "bookmark" : undefined,
+      });
+
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((item: any) => new QuestionDto(
+      item.id,
+      item.category_id,
+      item.content,
+      item.solution,
+      item.views,
+      item.created_at,
+      item.bookmark?.[0]?.count ?? 0,
+      item.answer?.[0]?.count ?? 0
+    ));
+  }
+
+  //북마크된 사용자별 문제 조회
+  async getBookmarkedQuestionsByUser(email: string): Promise<QuestionDto[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("bookmark")
+      .select("question:question_id(id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count))")
+      .eq("email", email);
+
+    if (error) throw new Error(error.message);
+
+    return (
+      data?.map((item: any) => {
+        const q = item.question;
+        return new QuestionDto(
+          q.id,
+          q.category_id,
+          q.content,
+          q.solution,
+          q.views,
+          q.created_at,
+          q.bookmark?.[0]?.count ?? 0,
+          q.answer?.[0]?.count ?? 0
+        );
+      }) ?? []
+    );
+  }
+
+  // 사용자가 답변한 질문 목록 조회
+  async getAnsweredQuestionsByUser(email: string): Promise<QuestionDto[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("answer")
+      .select(`
+        question:question_id (
+          id, category_id, content, solution, views, created_at,
+          bookmark:bookmark(count),
+          answer:answer(count)
         )
+      `)
+      .eq("email", email);
+
+    if (error) throw new Error(error.message);
+
+    return (
+      data?.map((item: any) => {
+        const q = item.question;
+        return new QuestionDto(
+          q.id,
+          q.category_id,
+          q.content,
+          q.solution,
+          q.views,
+          q.created_at,
+          q.bookmark?.[0]?.count ?? 0,
+          q.answer?.[0]?.count ?? 0
+        );
+      }) ?? []
     );
   }
 }
