@@ -43,26 +43,29 @@ export default function Header() {
   }, [router]);
 
   useEffect(() => {
-    if (isLoggedIn && user && user.email && !emailCheck.current) {
-      emailCheck.current = true;
+    if (isLoggedIn && user && !emailCheck.current) {
+      const timeout = setTimeout(() => {
+        if (!user.email) {
+          toast(<p className="txt-lg-b">이메일을 공개해주세요!</p>, {
+            description: (
+              <div className="txt-md">
+                클릭 시 GitHub 이메일 설정으로 이동합니다.
+                <br />
+                ⚠️ 변경 사항이 적용되기까지 시간이 조금 걸릴 수 있어요.
+              </div>
+            ),
+            action: {
+              label: "이동하기",
+              onClick: () => {
+                window.open("https://github.com/settings/emails", "_blank");
+              },
+            },
+            duration: Infinity,
+          });
+        }
+      }, 1000); // 1초 지연
 
-      toast(<p className="txt-lg-b">이메일을 공개해주세요!</p>, {
-        description: (
-          <div className="">
-            클릭 시 GitHub Email 설정으로 이동합니다.
-            <br />
-            <br />
-            ⚠️ 변경 사항이 적용되기까지 시간이 조금 걸릴 수 있어요.
-          </div>
-        ),
-        action: {
-          label: "이동하기",
-          onClick: () => {
-            window.open("https://github.com/settings/emails", "_blank");
-          },
-        },
-        duration: Infinity,
-      });
+      return () => clearTimeout(timeout);
     }
   }, [isLoggedIn, user]);
 

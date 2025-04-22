@@ -1,7 +1,5 @@
-import { User } from "../entities/User";
+import { UserActivity } from "../entities/UserActivity";
 
 export interface UserRepository {
-  findById(id: number): Promise<User>;
-  findAll(user: User): Promise<User[]>;
-  save(user: User): Promise<User>;
+  getUserActivity(email: string): Promise<UserActivity>;
 }
