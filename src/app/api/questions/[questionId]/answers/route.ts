@@ -1,15 +1,20 @@
+import { GetAnswerDto } from "@/application/usecase/answer/dto/GetAnswerDto";
 import { GetAnswerListUsecase } from "@/application/usecase/answer/GetAnswerListUsecase";
 import { AnswerRepository } from "@/domain/repositories/AnswerRepository";
 import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerRepository";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, context: { params: { questionId: string } }) {
+//특정 문제의 답변들 조회
+export async function GET(request: NextRequest, context: { params: { questionId: string } }) {
   try {
     const questionId = Number(context.params.questionId);
-    console.log("questionId", questionId);
+    const userId = request.nextUrl.searchParams.get("userId") ?? undefined;
+    console.log("userIduserId", userId);
+
+    const answerDto = new GetAnswerDto(userId, questionId);
     const answerRepo: AnswerRepository = new SbAnswerRepository();
     const getAnswerListUsecase = new GetAnswerListUsecase(answerRepo);
-    const answers = await getAnswerListUsecase.execute(questionId);
+    const answers = await getAnswerListUsecase.execute(answerDto);
     return NextResponse.json(
       { message: "문제에 달린 답변 조회 완료", date: answers },
       { status: 200 }

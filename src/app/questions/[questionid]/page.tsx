@@ -210,7 +210,7 @@ export default function AnswerFormPage() {
           )}
         </form>
         <div className="pt-[150px] pb-[150px]">
-          <OtherUsersAnswer questionId={questionId} token={token} />
+          <OtherUsersAnswer questionId={questionId} userEmail={userEmail} token={token} />
         </div>
       </div>
     </>

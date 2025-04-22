@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 
 interface Prop {
   questionId: number;
+  userEmail: string;
   token: string;
 }
 
-export default function OtherUsersAnswer({ questionId, token }: Prop) {
+export default function OtherUsersAnswer({ questionId, userEmail, token }: Prop) {
   const [QuestionAnswers, setQuestionAnswers] = useState();
   const handleGetOtherAnswers = async () => {
-    const response = await fetch(`/api/questions/${questionId}/answers`, {
+    const response = await fetch(`/api/questions/${questionId}/answers?userId=${userEmail}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

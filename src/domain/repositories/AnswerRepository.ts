@@ -17,7 +17,7 @@ export interface AnswerRepository {
   deleteAnswer(params: UserAnswerParams): Promise<void>;
 
   //특정 문제의 답변 리스트 조회
-  getAnswersByQuestion(questionId: number): Promise<AnswerView[]>;
+  getAnswersByQuestion(params: UserAnswerParams): Promise<AnswerView[]>;
 
   // //특정 유저의 답변 리스트 조회
   // findAllAnswersByUser(userId: number): Promise<Answer[]>;

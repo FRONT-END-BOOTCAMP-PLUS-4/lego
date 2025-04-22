@@ -81,8 +81,9 @@ export class SbAnswerRepository implements AnswerRepository {
     }
   }
   //특정 문제의 답변 리스트 조회
-  async getAnswersByQuestion(questionId: number): Promise<AnswerView[]> {
+  async getAnswersByQuestion(params: UserAnswerParams): Promise<AnswerView[]> {
     const supabase = await createClient();
+    const { userId, questionId } = params;
     const { data, error } = await supabase
       .from("answer")
       .select(
@@ -100,6 +101,7 @@ export class SbAnswerRepository implements AnswerRepository {
     `
       )
       .eq("question_id", questionId)
+      .neq("email", userId)
       .order("created_at", { ascending: false });
 
     if (error) {
