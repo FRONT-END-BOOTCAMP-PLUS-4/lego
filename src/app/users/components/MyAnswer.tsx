@@ -38,7 +38,7 @@ export default function MyAnswerPage() {
     const fetchAnswers = async () => {
       if (!user?.email) return;
       setIsLoading(true);
-      const res = await fetch(`/api/users/history?email=${user.email}`);
+      const res = await fetch(`/api/users/history/answers?email=${user.email}`);
       const data = await res.json();
       setMyAnswers(data);
       setIsLoading(false);
