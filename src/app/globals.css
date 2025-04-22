@@ -205,6 +205,19 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+.react-calendar-heatmap .color-scale-1 {
+  fill: #e6e685;
+}
+.react-calendar-heatmap .color-scale-2 {
+  fill: #8cc665;
+}
+.react-calendar-heatmap .color-scale-3 {
+  fill: #44a340;
+}
+.react-calendar-heatmap .color-scale-4 {
+  fill: #1e6823;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
