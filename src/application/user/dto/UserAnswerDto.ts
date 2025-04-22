@@ -2,6 +2,7 @@ import { UserAnswer } from "@/domain/entities/UserAnswer";
 
 export class UserAnswerDto {
   constructor(
+    public readonly questionId: number,
     public readonly categoryName: string,
     public readonly questionTitle: string,
     public readonly answerContent: string,
@@ -11,6 +12,7 @@ export class UserAnswerDto {
 
   static fromEntity(entity: UserAnswer): UserAnswerDto {
     return new UserAnswerDto(
+      entity.questionId,
       entity.categoryName,
       entity.questionTitle,
       entity.answerContent,

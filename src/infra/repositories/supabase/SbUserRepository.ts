@@ -69,6 +69,7 @@ export class SbUserRepository implements UserRepository {
 
       result.push(
         new UserAnswer(
+          row.question_id,
           row.question.category.name,
           row.question.content,
           row.content,
@@ -77,8 +78,6 @@ export class SbUserRepository implements UserRepository {
         )
       );
     }
-
-    console.log(result);
 
     return result;
   }

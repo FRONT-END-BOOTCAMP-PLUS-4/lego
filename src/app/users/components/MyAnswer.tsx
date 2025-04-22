@@ -8,14 +8,16 @@ import { Heart } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
+import Link from "next/link";
 
-type UserAnswer = {
+interface UserAnswer {
+  questionId: number;
   categoryName: string;
   questionTitle: string;
   answerContent: string;
   createdAt: string;
   likeCount: number;
-};
+}
 
 export default function MyAnswerPage() {
   const { user } = useAuthStore();
@@ -41,6 +43,7 @@ export default function MyAnswerPage() {
       setMyAnswers(data);
       setIsLoading(false);
     };
+
     fetchAnswers();
   }, [user?.email]);
 
@@ -64,24 +67,26 @@ export default function MyAnswerPage() {
   return (
     <div className="flex flex-col gap-[var(--space-24)] mb-[100px]">
       {paginatedAnswers.map((answer, index) => (
-        <Card key={index} variant="default">
-          <div className="flex items-center gap-4 mb-4">
-            <Badge variant="default">{answer.categoryName}</Badge>
-            <p className="txt-2xl-b line-clamp-1">{answer.questionTitle}</p>
-          </div>
-          <div className="flex flex-col gap-[var(--space-40)]">
-            <p className="line-clamp-2">{answer.answerContent}</p>
-            <div className="flex justify-between items-center">
-              <p className="txt-sm !text-[var(--gray-02)]">
-                {new Date(answer.createdAt).toLocaleDateString("ko-KR")}
-              </p>
-              <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
-                <Heart className="w-4 h-4 fill-[var(--black)] stroke-none" />
-                <p>{formatNumber(answer.likeCount)}</p>
+        <Link href={`/questions/${answer.questionId}`} key={index}>
+          <Card variant="default">
+            <div className="flex items-center gap-4 mb-4">
+              <Badge variant="default">{answer.categoryName}</Badge>
+              <p className="txt-2xl-b line-clamp-1">{answer.questionTitle}</p>
+            </div>
+            <div className="flex flex-col gap-[var(--space-40)]">
+              <p className="line-clamp-2">{answer.answerContent}</p>
+              <div className="flex justify-between items-center">
+                <p className="txt-sm !text-[var(--gray-02)]">
+                  {new Date(answer.createdAt).toLocaleDateString("ko-KR")}
+                </p>
+                <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
+                  <Heart className="w-4 h-4 fill-[var(--black)] stroke-none" />
+                  <p>{formatNumber(answer.likeCount)}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
       ))}
 
       <Pagination
