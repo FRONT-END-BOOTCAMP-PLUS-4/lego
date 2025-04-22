@@ -73,11 +73,11 @@ export default function AnswerDetailPage() {
             </div>
 
             {/* 수정/삭제 버튼 */}
-            <div className="flex items-start gap-2">
-              <Button variant="ghost" size="default">
+            <div className="flex flex-col items-end gap-2">
+              <Button variant="gray" size="sm">
                 수정
               </Button>
-              <Button variant="ghost" size="default">
+              <Button variant="gray" size="sm">
                 삭제
               </Button>
             </div>
