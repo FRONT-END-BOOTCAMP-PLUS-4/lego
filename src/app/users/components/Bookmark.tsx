@@ -59,7 +59,13 @@ export default function BookmarkPage() {
         <Link href={`/questions/${item.questionId}?userId=${user?.email}`} key={item.questionId}>
           <Card variant="tight" className="flex items-center justify-between">
             <div className="txt-2xl-b flex items-center gap-6 cursor-pointer w-[90%]">
-              <Image src={item.categoryImageUrl} width={32} height={32} alt="카테고리 아이콘" />
+              <Image
+                src={item.categoryImageUrl}
+                width={32}
+                height={32}
+                alt="카테고리 아이콘"
+                className="rounded-md"
+              />
               <p className="line-clamp-1 w-4/5">{item.questionTitle}</p>
             </div>
             <Bookmark className="fill-[var(--black)] stroke-none" />

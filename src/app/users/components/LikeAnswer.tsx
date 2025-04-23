@@ -63,7 +63,10 @@ export default function LikeAnswerPage() {
   return (
     <div className="flex flex-col gap-6 mb-[100px]">
       {paginatedData.map((item, index) => (
-        <Link key={index} href={`/questions/${item.questionId}/answers/${item.answerAuthorEmail}`}>
+        <Link
+          key={index}
+          href={`/questions/${item.questionId}/answers?userId=${item.answerAuthorEmail}`}
+        >
           <Card variant="default">
             <div className="flex flex-col gap-4">
               <div className="flex gap-4">
