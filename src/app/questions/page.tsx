@@ -296,6 +296,19 @@ export default function QuestionListPage() {
         )}
       </div>
 
+      {/* 정렬 옵션 */}
+      <div className="flex items-center justify-between mb-[12px]">
+        <h2 className="txt-lg-b">문제</h2>
+        <div className="flex gap-[12px]">
+          <Button variant="ghost" size="sm" onClick={() => handleSortClick("bookmark")}>
+            인기순
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => handleSortClick("recent")}>
+            최신순
+          </Button>
+        </div>
+      </div>
+
       <div className="flex justify-center items-center min-h-[300px]">
   {isLoading ? (
     // 🔄 로딩 중
