@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore, MypageTabType, MypageYearType } from "@/store/useProfileStore";
 import { UnderlineTab } from "@/components/ui/underLinetab";
 import {
@@ -10,14 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useHasHydrated } from "@/hooks/useHasHydrated";
 import Profile from "./components/History";
 import Activity from "./components/Activity";
 import MailModal from "./components/MailModal";
+import { Button } from "@/components/ui/button";
+import { MailIcon } from "lucide-react";
 
 export default function Mypage() {
-  const hasHydrated = useHasHydrated();
-
+  const { user } = useAuthStore();
   const {
     activeIndex,
     setActiveIndex,
@@ -30,20 +31,32 @@ export default function Mypage() {
 
   const [activityKey, setActivityKey] = useState(0);
 
+  if (!user?.email) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen gap-6">
+        <div className="flex flex-col items-center">
+          <MailIcon size={64} className="mb-3" />
+          <h3 className="txt-2xl-b">이메일을 공개해주세요!</h3>
+          <p>클릭 시 GitHub 이메일 설정으로 이동합니다.</p>
+        </div>
+
+        <Button
+          onClick={() => {
+            window.open("https://github.com/settings/emails", "_blank");
+          }}
+        >
+          이동하기
+        </Button>
+      </div>
+    );
+  }
+
   const redirectHandler = (value: number) => {
     setActiveIndex(value as MypageTabType);
     if (value === 0) setActivityKey((prev) => prev + 1);
   };
 
   const tabList = ["나의 활동", "히스토리"];
-
-  if (!hasHydrated) {
-    return (
-      <section className="w-full h-screen flex justify-center items-center">
-        <div className="text-xl text-gray-500">불러오는 중...</div>
-      </section>
-    );
-  }
 
   return (
     <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">

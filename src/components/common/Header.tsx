@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,8 +27,6 @@ export default function Header() {
     router.push("/login");
   };
 
-  const emailCheck = useRef(false);
-
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.origin) return;
@@ -44,32 +42,33 @@ export default function Header() {
     return () => window.removeEventListener("message", handleMessage);
   }, [router]);
 
-  useEffect(() => {
-    if (isLoggedIn && user && !emailCheck.current) {
-      const timeout = setTimeout(() => {
-        if (!user.email) {
-          toast(<p className="txt-lg-b">이메일을 공개해주세요!</p>, {
-            description: (
-              <div className="txt-md">
-                클릭 시 GitHub 이메일 설정으로 이동합니다.
-                <br />
-                ⚠️ 변경 사항이 적용되기까지 시간이 조금 걸릴 수 있어요.
-              </div>
-            ),
-            action: {
-              label: "이동하기",
-              onClick: () => {
-                window.open("https://github.com/settings/emails", "_blank");
-              },
-            },
-            duration: Infinity,
-          });
-        }
-      }, 1000);
+  // 메인페이지 이메일 공개 toast UI 안내가 필요한 경우 활성화
+  // useEffect(() => {
+  //   if (isLoggedIn && user && !emailCheck.current) {
+  //     const timeout = setTimeout(() => {
+  //       if (!user.email) {
+  //         toast(<p className="txt-lg-b">이메일을 공개해주세요!</p>, {
+  //           description: (
+  //             <div className="txt-md">
+  //               클릭 시 GitHub 이메일 설정으로 이동합니다.
+  //               <br />
+  //               ⚠️ 변경 사항이 적용되기까지 시간이 조금 걸릴 수 있어요.
+  //             </div>
+  //           ),
+  //           action: {
+  //             label: "이동하기",
+  //             onClick: () => {
+  //               window.open("https://github.com/settings/emails", "_blank");
+  //             },
+  //           },
+  //           duration: Infinity,
+  //         });
+  //       }
+  //     }, 1000);
 
-      return () => clearTimeout(timeout);
-    }
-  }, [isLoggedIn, user]);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [isLoggedIn, user]);
 
   // 이미 구독 중이면 toast UI
   useEffect(() => {
