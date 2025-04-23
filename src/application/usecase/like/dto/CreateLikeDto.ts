@@ -1,7 +1,7 @@
-export class Like {
+export class CreateLikeDto {
   constructor(
     public questionId: number,
     public answerEmail: string,
-    public likeEmail: string
+    public userId: string
   ) {}
 }
