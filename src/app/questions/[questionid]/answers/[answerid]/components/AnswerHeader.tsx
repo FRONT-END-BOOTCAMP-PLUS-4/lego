@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function AnswerHeader() {
+export default function AnswerHeader({ title }) {
   const [isLike, setisLike] = useState<boolean>(false); // likeState 서버에서 받아온 값
 
   // const handleToggleLike = () => {

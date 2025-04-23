@@ -1,15 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AnswerHeader from "./AnswerHeader";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useParams } from "next/navigation";
+import { AnswerView } from "@/domain/entities/AnswerView";
+import { formatDate } from "@/utils/handleFormatDate";
 
 export default function AnswerContents() {
   const { user, token } = useAuthStore();
-  const userId = user?.email;
+  const currentUserId = user?.email; //현재 로그인한 유저 아이디
   const params = useParams();
   const questionId = params.questionid;
   const answerId = params.answerid;
-
+  const [answerData, setAnswerDate] = useState<AnswerView>();
   const handleGetAnswerDetail = async () => {
     //답변을 작성한 유저의 아이디 필요
     const response = await fetch(`/api/questions/${questionId}/answers/${answerId}`, {
@@ -23,9 +25,9 @@ export default function AnswerContents() {
       throw new Error("서버 응답 실패");
     }
     const { data } = await response.json();
-    console.log("특정 유저의 답변", data);
+    setAnswerDate(data);
   };
-
+  console.log(answerData);
   useEffect(() => {
     handleGetAnswerDetail();
   }, []);
@@ -36,22 +38,21 @@ export default function AnswerContents() {
   */
   return (
     <>
-      <AnswerHeader />
-      {/* 작성자 정보 */}
+      <AnswerHeader title={answerData?.question} />
+
       <div className="flex items-center gap-4 mt-6">
-        <span className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
-        {/* 작성자 정보 */}
+        <span
+          className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
+          style={{ backgroundImage: `url(${answerData?.avatarUrl})` }}
+        ></span>
         <div>
-          <div className="text-sm mb-1 font-bold text-[var(--gray-02)]">작성자 이름</div>
-          <div className="text-xs text-[var(--gray-02)]">2025.02.28</div>
+          <div className="text-sm mb-1 font-bold text-[var(--gray-02)]">{answerData?.username}</div>
+          <div className="text-xs text-[var(--gray-02)]">{formatDate(answerData?.createdAt)}</div>
         </div>
       </div>
 
       {/* 본문 (예시 텍스트) */}
-      <div className="mt-[30px] text-base leading-[2]">
-        Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. 시간이 흐르면서
-        많은 분이 이를 익숙하게 활용하고 있지만, 저처럼 개념을 충분히 이해하지 못한 채 습관적으로
-      </div>
+      <div className="mt-[30px] text-base leading-[2]">{answerData?.content}</div>
     </>
   );
 }

@@ -11,10 +11,8 @@ export async function GET(
 ) {
   try {
     const questionId = Number(context.params.questionId);
-
     const rawUserId = context.params.userId;
     const userId = decodeURIComponent(rawUserId); //답변한 사람의 id
-    console.log("sssss", questionId, userId);
     const answerDto = new GetAnswerDto(userId, questionId);
     const answerRepo: AnswerRepository = new SbAnswerRepository();
     const getAnswerUsecase = new GetAnswerUsecase(answerRepo);

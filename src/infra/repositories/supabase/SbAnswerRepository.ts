@@ -16,7 +16,7 @@ interface answerType {
   updated_at: string;
   avatar_url: string;
   username: string;
-  question?: { content: string; category: { name: string }[] };
+  question?: { content: string; category: { name: string } };
   like: { like_email: string }[];
 }
 
@@ -121,7 +121,7 @@ export class SbAnswerRepository implements AnswerRepository {
         row.username,
         row.like?.length ?? 0,
         row.question_id,
-        row.question?.category?.[0]?.name,
+        row.question?.category?.name,
         row.question?.content,
         row.like?.some((l) => l.like_email === userId) ?? false
       );
@@ -169,7 +169,7 @@ export class SbAnswerRepository implements AnswerRepository {
       typedData.username,
       typedData.like?.length ?? 0,
       typedData.question_id,
-      typedData.question?.category?.[0]?.name,
+      typedData.question?.category?.name,
       typedData.question?.content,
       typedData.like?.some((l) => l.like_email === userId) ?? false
     );
