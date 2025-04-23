@@ -35,7 +35,6 @@ export default function AnswerContent() {
   return (
     <>
       <AnswerHeader title={answerData?.question} category={answerData?.category} />
-
       <div className="flex items-center gap-4 mt-6">
         <span
           className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
@@ -46,8 +45,7 @@ export default function AnswerContent() {
           <div className="text-xs text-[var(--gray-02)]">{formatDate(answerData?.createdAt)}</div>
         </div>
       </div>
-
-      <div className="mt-[30px] text-base leading-[2]">{answerData?.content}</div>
+      <p className="mt-[30px] txt-base leading-[2] break-words">{answerData?.content}</p>
     </>
   );
 }

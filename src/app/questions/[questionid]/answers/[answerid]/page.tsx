@@ -30,7 +30,7 @@ export default function AnswerDetailPage() {
   );
 
   return (
-    <div className="w-[1272px] container mx-auto pt-[40px] md:px-6">
+    <div className="container mx-auto pt-[40px] md:px-6">
       <div className="pb-[var(--space-24)] txt-2xl-b">답변 상세보기</div>
 
       <AnswerContent />
