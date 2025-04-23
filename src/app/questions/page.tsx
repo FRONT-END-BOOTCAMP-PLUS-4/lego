@@ -330,12 +330,12 @@ export default function QuestionListPage() {
               <div className="flex items-center gap-4">
                 <Image
                   src={getImageUrlByCategory(question.categoryId)}
-                  alt="문"
+                  alt="문제 카테고리"
                   width={32}
                   height={32}
                   className="rounded-md"
                 />
-                <span className="txt-2xl-b">{question.content}</span>
+                <span className="txt-2xl-b line-clamp-1">{question.content}</span>
               </div>
               <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
                 <span>북마크한 사람 {question.bookmark_count}</span>
