@@ -1,7 +1,9 @@
-import { UserActivity } from "../entities/UserActivity";
-import { UserAnswer } from "../entities/UserAnswer";
+import { UserActivity } from "@/domain/entities/UserActivity";
+import { UserAnswer } from "@/domain/entities/UserAnswer";
+import { UserBookmark } from "@/domain/entities/UserBookmark";
 
 export interface UserRepository {
   getUserActivity(email: string): Promise<UserActivity>;
   getUserAnswers(email: string): Promise<UserAnswer[]>;
+  getUserBookmarks(email: string): Promise<UserBookmark[]>;
 }

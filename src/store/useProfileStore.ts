@@ -20,6 +20,12 @@ interface ProfileStoreState {
 
   showModal: boolean;
   setShowModal: (value: boolean) => void;
+
+  showLoginAlert: boolean;
+  setShowLoginAlert: (value: boolean) => void;
+
+  showSubscribeAlert: boolean;
+  setShowSubscribeAlert: (value: boolean) => void;
 }
 
 export const useProfileStore = create<ProfileStoreState>()(
@@ -39,9 +45,21 @@ export const useProfileStore = create<ProfileStoreState>()(
 
       showModal: false,
       setShowModal: (value) => set({ showModal: value }),
+
+      showLoginAlert: false,
+      setShowLoginAlert: (value) => set({ showLoginAlert: value }),
+
+      showSubscribeAlert: false,
+      setShowSubscribeAlert: (value) => set({ showSubscribeAlert: value }),
     }),
     {
       name: "profile-store",
+      partialize: (state) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { showModal, showLoginAlert, showSubscribeAlert, ...persisted } = state;
+
+        return persisted;
+      },
     }
   )
 );
