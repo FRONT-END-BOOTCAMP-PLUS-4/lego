@@ -1,29 +1,79 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Pagination } from "@/components/ui/pagination";
+import { useAuthStore } from "@/store/useAuthStore";
+import Link from "next/link";
+
+type UserComment = {
+  questionId: number;
+  questionTitle: string;
+  commentContent: string;
+  answerAuthorEmail: string;
+};
 
 export default function CommentPage() {
-  const comments = [
-    {
-      id: 1,
-      content: "내공냠냠 내공냠냠 내공냠냠 내공냠냠 내공냠냠 내공냠냠 내공냠냠 내공냠냠 내공냠냠",
-      question: "HTTP 메소드에 대해 설명해주세요",
-    },
-    {
-      id: 2,
-      content: "어떻게 useEffect를 적절하게 활용할 수 있을까요?",
-      question: "React의 useEffect 동작 원리는 무엇인가요?",
-    },
-  ];
+  const { user } = useAuthStore();
+  const [comments, setComments] = useState<UserComment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 페이지네이션
+  const [pageNumber, setPageNumber] = useState(1);
+  const [currentPageBlock, setCurrentPageBlock] = useState(1);
+  const itemsPerPage = 5;
+  const totalCount = comments.length;
+  const paginated = comments.slice((pageNumber - 1) * itemsPerPage, pageNumber * itemsPerPage);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (!user?.email) return;
+      setIsLoading(true);
+      const res = await fetch(`/api/users/history/comments?email=${user.email}`);
+      const data = await res.json();
+      setComments(data);
+      setIsLoading(false);
+    };
+
+    fetchComments();
+  }, [user?.email]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 mb-[100px]">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i} variant="default" className="space-y-4">
+            <Skeleton className="h-5 w-[90%]" />
+            <Skeleton className="h-4 w-[50%]" />
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-4 mb-[100px]">
-      {comments.map((item) => (
-        <Card key={item.id} variant="default" className="flex flex-col gap-1">
-          <p className="line-clamp-2">{item.content}</p>
-          <p className="txt-sm !text-[var(--gray-02)] line-clamp-1">{item.question}</p>
-        </Card>
+    <div className="flex flex-col gap-4">
+      {paginated.map((item, i) => (
+        <Link
+          key={i}
+          href={`/questions/${item.questionId}/comments?userId=${item.answerAuthorEmail}`}
+        >
+          <Card variant="default" className="flex flex-col gap-1">
+            <p className="line-clamp-2">{item.commentContent}</p>
+            <p className="txt-sm !text-[var(--gray-02)] line-clamp-1">{item.questionTitle}</p>
+          </Card>
+        </Link>
       ))}
+
+      <Pagination
+        totalCount={totalCount}
+        itemsPerPage={itemsPerPage}
+        pageNumber={pageNumber}
+        currentPageBlock={currentPageBlock}
+        handleMovePage={setPageNumber}
+        handleMovePageBlock={setCurrentPageBlock}
+      />
     </div>
   );
 }

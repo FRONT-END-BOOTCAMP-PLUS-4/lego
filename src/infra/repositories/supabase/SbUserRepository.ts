@@ -4,6 +4,7 @@ import { UserActivity } from "@/domain/entities/UserActivity";
 import { UserAnswer } from "@/domain/entities/UserAnswer";
 import { UserBookmark } from "@/domain/entities/UserBookmark";
 import { UserLikedAnswer } from "@/domain/entities/UserLike";
+import { UserComment } from "@/domain/entities/UserComment";
 
 export class SbUserRepository implements UserRepository {
   async getUserActivity(email: string): Promise<UserActivity> {
@@ -150,6 +151,33 @@ export class SbUserRepository implements UserRepository {
         row.answer.avatar_url,
         row.answer.created_at
       );
+    });
+  }
+
+  async getUserComments(email: string): Promise<UserComment[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("comment")
+      .select(
+        `
+      content,
+      answer_email,
+      question_id,
+      question:question (
+        content
+      )
+    `
+      )
+      .eq("email", email);
+
+    if (error || !data) {
+      console.error("댓글 조회 오류:", error);
+      throw new Error("댓글 정보를 불러오지 못했습니다.");
+    }
+
+    return data.map((row) => {
+      return new UserComment(row.question_id, row.question.content, row.content, row.answer_email);
     });
   }
 }
