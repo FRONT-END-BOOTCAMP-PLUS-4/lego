@@ -52,8 +52,8 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
                 <>
                   <Link href={`/questions/${questionId}/answers/${email}`}>
                     <Card key={answer?.avatarUrl}>
-                      <div className="flex flex-col justify-between h-full">
-                        <div className="flex items-center mb-6 justify-between w-full">
+                      <div className="flex flex-col justify-between h-[90px]">
+                        <div className="flex items-center justify-between w-full">
                           <p className="line-clamp-2 txt-base">{answer?.content}</p>
                           <span
                             className="w-[32px] h-[32px] ml-4 inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
