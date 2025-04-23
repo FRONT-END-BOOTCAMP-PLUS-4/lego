@@ -1,10 +1,34 @@
+import { useEffect } from "react";
 import AnswerHeader from "./AnswerHeader";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useParams } from "next/navigation";
 
 export default function AnswerContents() {
-  const { user } = useAuthStore();
-  console.log(user);
+  const { user, token } = useAuthStore();
   const userId = user?.email;
+  const params = useParams();
+  const questionId = params.questionid;
+  const answerId = params.answerid;
+
+  const handleGetAnswerDetail = async () => {
+    //답변을 작성한 유저의 아이디 필요
+    const response = await fetch(`/api/questions/${questionId}/answers/${answerId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("서버 응답 실패");
+    }
+    const { data } = await response.json();
+    console.log("특정 유저의 답변", data);
+  };
+
+  useEffect(() => {
+    handleGetAnswerDetail();
+  }, []);
 
   /*
   문제 id 랑 작성자 id 로 제목, 답변, 카테고리

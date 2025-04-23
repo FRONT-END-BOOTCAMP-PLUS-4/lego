@@ -15,11 +15,11 @@ export async function GET(request: NextRequest, context: { params: { questionId:
     const getAnswerListUsecase = new GetAnswerListUsecase(answerRepo);
     const answers = await getAnswerListUsecase.execute(answerDto);
     return NextResponse.json(
-      { message: "문제에 달린 답변 조회 완료", data: answers },
+      { message: "문제에 달린 답변들 조회 완료", data: answers },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error creating answer:", error);
-    return NextResponse.json({ error: "문제에 달린 답변 조회 실패" }, { status: 500 });
+    return NextResponse.json({ error: "문제에 달린 답변들 조회 실패" }, { status: 500 });
   }
 }

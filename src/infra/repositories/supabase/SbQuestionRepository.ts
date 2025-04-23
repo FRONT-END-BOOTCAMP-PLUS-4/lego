@@ -82,20 +82,25 @@ export class SbQuestionRepository implements QuestionRepository {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
+      .select(
+        "id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)"
+      )
       .order("created_at", { ascending: false });
 
     if (error) throw new Error(error.message);
-    return (data ?? []).map((item: any) => new QuestionDto(
-      item.id,
-      item.category_id,
-      item.content,
-      item.solution,
-      item.views,
-      item.created_at,
-      item.bookmark?.[0]?.count ?? 0,
-      item.answer?.[0]?.count ?? 0
-    ));
+    return (data ?? []).map(
+      (item: any) =>
+        new QuestionDto(
+          item.id,
+          item.category_id,
+          item.content,
+          item.solution,
+          item.views,
+          item.created_at,
+          item.bookmark?.[0]?.count ?? 0,
+          item.answer?.[0]?.count ?? 0
+        )
+    );
   }
 
   //카테고리별 문제 조회
@@ -103,7 +108,9 @@ export class SbQuestionRepository implements QuestionRepository {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
+      .select(
+        "id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)"
+      )
       .eq("category_id", categoryId)
       .order("created_at", { ascending: false });
 
@@ -143,23 +150,28 @@ export class SbQuestionRepository implements QuestionRepository {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("question")
-      .select("id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)")
+      .select(
+        "id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count)"
+      )
       .order(sortBy === "bookmark" ? "bookmark.count" : "created_at", {
         ascending: false,
         foreignTable: sortBy === "bookmark" ? "bookmark" : undefined,
       });
 
     if (error) throw new Error(error.message);
-    return (data ?? []).map((item: any) => new QuestionDto(
-      item.id,
-      item.category_id,
-      item.content,
-      item.solution,
-      item.views,
-      item.created_at,
-      item.bookmark?.[0]?.count ?? 0,
-      item.answer?.[0]?.count ?? 0
-    ));
+    return (data ?? []).map(
+      (item: any) =>
+        new QuestionDto(
+          item.id,
+          item.category_id,
+          item.content,
+          item.solution,
+          item.views,
+          item.created_at,
+          item.bookmark?.[0]?.count ?? 0,
+          item.answer?.[0]?.count ?? 0
+        )
+    );
   }
 
   //북마크된 사용자별 문제 조회
@@ -168,7 +180,9 @@ export class SbQuestionRepository implements QuestionRepository {
 
     const { data, error } = await supabase
       .from("bookmark")
-      .select("question:question_id(id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count))")
+      .select(
+        "question:question_id(id, category_id, content, solution, views, created_at, bookmark:bookmark(count), answer:answer(count))"
+      )
       .eq("email", email);
 
     if (error) throw new Error(error.message);
@@ -196,13 +210,15 @@ export class SbQuestionRepository implements QuestionRepository {
 
     const { data, error } = await supabase
       .from("answer")
-      .select(`
+      .select(
+        `
         question:question_id (
           id, category_id, content, solution, views, created_at,
           bookmark:bookmark(count),
           answer:answer(count)
         )
-      `)
+      `
+      )
       .eq("email", email);
 
     if (error) throw new Error(error.message);

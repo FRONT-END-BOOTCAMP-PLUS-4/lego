@@ -153,7 +153,9 @@ export class SbAnswerRepository implements AnswerRepository {
     `
       )
       .eq("question_id", questionId)
-      .eq("email", userId);
+      .eq("email", userId)
+      .single();
+
     if (error) {
       console.error("답변 조회 실패:", error);
       throw new Error("답변을 불러오지 못했습니다.");

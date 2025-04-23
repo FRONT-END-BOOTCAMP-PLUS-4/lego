@@ -33,7 +33,6 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
       throw new Error("서버 응답 실패");
     }
     const { data } = await response.json();
-    console.log("--- other user answer ", data);
     setQuestionAnswers(data);
   };
 

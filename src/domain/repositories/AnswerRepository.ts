@@ -19,6 +19,6 @@ export interface AnswerRepository {
   //특정 문제의 답변 리스트 조회
   getAnswersByQuestion(params: UserAnswerParams): Promise<AnswerView[]>;
 
-  // //특정 유저의 답변 리스트 조회
-  // findAllAnswersByUser(userId: number): Promise<Answer[]>;
+  // //특정 유저의 특정 답변 조회
+  getAnswersByUser(params: UserAnswerParams): Promise<AnswerView>;
 }
