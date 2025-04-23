@@ -21,12 +21,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: |
-          if [ ! -f package-lock.json ]; then
-            echo "package-lock.json not found, generating it..."
-            npm install
-          fi
-          npm ci
+        run: npm install
 
       - name: Send daily question email
         run: node src/lib/mail/sendMail.js
