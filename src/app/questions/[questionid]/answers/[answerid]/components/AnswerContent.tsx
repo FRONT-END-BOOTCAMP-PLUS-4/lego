@@ -5,13 +5,13 @@ import { useParams } from "next/navigation";
 import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
 
-export default function AnswerContents() {
+export default function AnswerContent() {
   const { user, token } = useAuthStore();
   const currentUserId = user?.email; //현재 로그인한 유저 아이디
   const params = useParams();
   const questionId = params.questionid;
   const answerId = params.answerid;
-  const [answerData, setAnswerDate] = useState<AnswerView>();
+  const [answerData, setAnswerDate] = useState<AnswerView | null>(null);
   const handleGetAnswerDetail = async () => {
     //답변을 작성한 유저의 아이디 필요
     const response = await fetch(`/api/questions/${questionId}/answers/${answerId}`, {
@@ -32,13 +32,9 @@ export default function AnswerContents() {
     handleGetAnswerDetail();
   }, []);
 
-  /*
-  문제 id 랑 작성자 id 로 제목, 답변, 카테고리
-  로그인 한 유저의 해당 답변에 대한 좋아요 여부 데이터 필요, 
-  */
   return (
     <>
-      <AnswerHeader title={answerData?.question} />
+      <AnswerHeader title={answerData?.question} category={answerData?.category} />
 
       <div className="flex items-center gap-4 mt-6">
         <span
@@ -51,7 +47,6 @@ export default function AnswerContents() {
         </div>
       </div>
 
-      {/* 본문 (예시 텍스트) */}
       <div className="mt-[30px] text-base leading-[2]">{answerData?.content}</div>
     </>
   );
