@@ -15,8 +15,8 @@ export default function BookmarkList() {
               <p className="txt-2xl-b">HTTP 메소드에 대한 설명</p>
               <div className="flex justify-between">
                 <Badge variant="outline">JavaScript</Badge>
-                <div className="flex gap-[8px]">
-                  <Bookmark className="fill-amber-300 stroke-none" />
+                <div className="flex gap-2">
+                  <Bookmark className="fill-[var(--black)] stroke-none" />
                   <p>{formatNumber(1000)}</p>
                 </div>
               </div>
