@@ -16,6 +16,7 @@ interface answerType {
   updated_at: string;
   avatar_url: string;
   username: string;
+  question?: { content: string; category: { name: string }[] };
   like: { like_email: string }[];
 }
 
@@ -93,6 +94,12 @@ export class SbAnswerRepository implements AnswerRepository {
       updated_at,
       avatar_url,
       username,
+      question:question_id(
+        content,
+        category:category_id(
+        name
+        )
+      ),
       like:like(like_email)
     `
       )
@@ -105,33 +112,64 @@ export class SbAnswerRepository implements AnswerRepository {
       throw new Error("답변을 불러오지 못했습니다.");
     }
 
-    const result: AnswerView[] = (data ?? []).map((row: answerType) => {
+    const result: AnswerView[] = (data ?? []).map((row) => {
       return new AnswerView(
-        row.question_id,
         row.email,
         row.content,
         row.created_at,
         row.avatar_url,
         row.username,
-        row.like.length
+        row.like?.length ?? 0,
+        row.question_id,
+        row.question?.category?.[0]?.name,
+        row.question?.content,
+        row.like?.some((l) => l.like_email === userId) ?? false
       );
     });
 
     return result;
   }
+
+  //특정 유저의 특정 답변 상세 조회
+  async getAnswersByUser(params: UserAnswerParams): Promise<AnswerView> {
+    const supabase = await createClient();
+    const { userId, questionId } = params;
+    const { data, error } = await supabase
+      .from("answer")
+      .select(
+        `
+      email,
+      content,
+      created_at,
+      avatar_url,
+      username,
+      question:question_id(
+        content,
+        category:category_id(
+        name
+        )
+      ),
+      like:like(like_email)
+    `
+      )
+      .eq("question_id", questionId)
+      .eq("email", userId);
+    if (error) {
+      console.error("답변 조회 실패:", error);
+      throw new Error("답변을 불러오지 못했습니다.");
+    }
+    const typedData = data as unknown as answerType;
+    return new AnswerView(
+      typedData.email,
+      typedData.content,
+      typedData.created_at,
+      typedData.avatar_url,
+      typedData.username,
+      typedData.like?.length ?? 0,
+      typedData.question_id,
+      typedData.question?.category?.[0]?.name,
+      typedData.question?.content,
+      typedData.like?.some((l) => l.like_email === userId) ?? false
+    );
+  }
 }
-
-//특정 유저의 답변 리스트 조회
-// async findAllAnswersByUser(userId: number): Promise<Answer[]> {
-//   const { data, error } = await supabase.from("answer").select("*").eq("user_id", userId);
-//   if (error) {
-//     console.error("답변 조회 실패:", error);
-//     throw new Error("답변을 불러오지 못했습니다.");
-//   }
-
-//   if (!data) return [];
-
-//   return data.map(
-//     (item) => new Answer(item.user_id, item.question_id, item.content, new Date(item.created_at))
-//   );
-// }

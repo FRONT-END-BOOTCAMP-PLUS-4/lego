@@ -49,7 +49,6 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
           <>
             {paginatedAnswers?.map((answer) => {
               const { questionId, email } = answer;
-              console.log(email);
               return (
                 <>
                   <Link href={`/questions/${questionId}/answers/${email}`}>
