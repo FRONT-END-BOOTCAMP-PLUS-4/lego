@@ -5,6 +5,8 @@ export class UserLikedAnswerDto {
     public readonly questionId: number,
     public readonly answerContent: string,
     public readonly answerAuthor: string,
+    public readonly answerAuthorEmail: string,
+    public readonly avatarUrl: string,
     public readonly createdAt: string
   ) {}
 
@@ -13,6 +15,8 @@ export class UserLikedAnswerDto {
       entity.questionId,
       entity.answerContent,
       entity.answerAuthor,
+      entity.answerAuthorEmail,
+      entity.avatarUrl,
       entity.createdAt
     );
   }

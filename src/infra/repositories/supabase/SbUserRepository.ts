@@ -127,8 +127,10 @@ export class SbUserRepository implements UserRepository {
           answer:answer (
             question_id,
             content,
-            created_at,
-            username
+            username,
+            email,
+            avatar_url,
+            created_at
           )
         `
       )
@@ -144,6 +146,8 @@ export class SbUserRepository implements UserRepository {
         row.answer.question_id,
         row.answer.content,
         row.answer.username,
+        row.answer.email,
+        row.answer.avatar_url,
         row.answer.created_at
       );
     });
