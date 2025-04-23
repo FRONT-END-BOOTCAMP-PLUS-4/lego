@@ -33,7 +33,7 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
       throw new Error("서버 응답 실패");
     }
     const { data } = await response.json();
-    console.log(data);
+    console.log("--- other user answer ", data);
     setQuestionAnswers(data);
   };
 
@@ -48,11 +48,12 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
         {questionAnswers.length > 0 ? (
           <>
             {paginatedAnswers?.map((answer) => {
-              console.log(answer);
+              const { questionId, email } = answer;
+              console.log(email);
               return (
                 <>
-                  <Link href={``}>
-                    <Card key={answer.email}>
+                  <Link href={`/questions/${questionId}/answers/${email}`}>
+                    <Card key={answer.avatarUrl}>
                       <div className="flex flex-col justify-between h-full">
                         <div className="flex items-center mb-6 justify-between w-full">
                           <p className="line-clamp-2 txt-base">{answer.content}</p>
