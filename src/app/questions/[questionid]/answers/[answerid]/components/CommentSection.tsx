@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, KeyboardEvent } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -106,6 +106,13 @@ export default function CommentSection() {
     await fetchComments();
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleCreate();
+    }
+  };
+
   const handleEdit = async (id: number) => {
     await fetch(`/api/comments/${id}`, {
       method: "PATCH",
@@ -116,6 +123,9 @@ export default function CommentSection() {
     setEditingId(null);
     setEditingContent("");
     await fetchComments();
+    toast.success("댓글이 수정되었습니다.", {
+      position: "bottom-right",
+    });
   };
 
   const handleDelete = async (id: number) => {
@@ -151,6 +161,7 @@ export default function CommentSection() {
                 value={newContent}
                 label={currentUserName}
                 onChange={(e) => setNewContent(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
               <Button
                 className="w-[80px] h-[120px]"
@@ -166,75 +177,85 @@ export default function CommentSection() {
 
       <div className="mb-[58px]" />
 
-      <div className="mt-[30px] space-y-8">
-        {currentComments.map((comment) => (
-          <div key={comment.id} className="border-b pb-4 flex gap-4">
-            <div className="relative w-[36px] h-[36px] shrink-0">
-              <Image
-                src={comment.avatarUrl}
-                alt="avatar"
-                fill
-                className="rounded-full object-cover"
-              />
-            </div>
-            <div className="flex-1">
-              {editingId !== comment.id && (
-                <div className="text-sm font-bold mb-1">{comment.username}</div>
-              )}
-              {editingId === comment.id ? (
-                <div className="flex gap-2 w-full">
-                  <TextArea
-                    placeholder="Type your message here"
-                    value={editingContent}
-                    onChange={(e) => setEditingContent(e.target.value)}
-                    label={currentUserName}
-                  />
-                  <div className="flex flex-col gap-2">
-                    <Button size="sm" onClick={() => handleEdit(comment.id)}>
-                      저장
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="gray"
-                      onClick={() => setEditingId(null)}
-                    >
-                      취소
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="text-base mb-1">{comment.content}</div>
-                  <div className="text-xs text-[var(--gray-02)]">
-                    {new Date(comment.createdAt).toLocaleDateString()}
-                  </div>
-                </>
-              )}
-            </div>
-            {editingId !== comment.id && comment.email === currentUserEmail && (
-              <div className="flex flex-col items-end gap-2">
-                <Button
-                  variant="gray"
-                  size="sm"
-                  onClick={() => {
-                    setEditingId(comment.id);
-                    setEditingContent(comment.content);
-                  }}
-                >
-                  수정
-                </Button>
-                <Button
-                  variant="gray"
-                  size="sm"
-                  onClick={() => handleDelete(comment.id)}
-                >
-                  삭제
-                </Button>
+      {comments.length === 0 ? (
+        <div className="text-sm text-[var(--gray-02)] text-center py-4">
+          아직 작성된 댓글이 없습니다.
+        </div>
+      ) : (
+        <div className="mt-[30px] space-y-8">
+          {currentComments.map((comment) => (
+            <div key={comment.id} className="border-b pb-4 flex gap-4">
+              <div className="relative w-[36px] h-[36px] shrink-0">
+                <Image
+                  src={comment.avatarUrl}
+                  alt="avatar"
+                  fill
+                  className="rounded-full object-cover"
+                />
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+              <div className="flex-1">
+                {editingId !== comment.id && (
+                  <div className="text-sm font-bold mb-1">{comment.username}</div>
+                )}
+                {editingId === comment.id ? (
+                  <div className="flex gap-2 w-full">
+                    <TextArea
+                      placeholder="Type your message here"
+                      value={editingContent}
+                      onChange={(e) => setEditingContent(e.target.value)}
+                      label={currentUserName}
+                    />
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        variant="gray"
+                        size="sm"
+                        onClick={() => handleEdit(comment.id)}
+                      >
+                        저장
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="gray"
+                        onClick={() => setEditingId(null)}
+                      >
+                        취소
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="text-base mb-1">{comment.content}</div>
+                    <div className="text-xs text-[var(--gray-02)]">
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </div>
+                  </>
+                )}
+              </div>
+              {editingId !== comment.id && comment.email === currentUserEmail && (
+                <div className="flex flex-col items-end gap-2">
+                  <Button
+                    variant="gray"
+                    size="sm"
+                    onClick={() => {
+                      setEditingId(comment.id);
+                      setEditingContent(comment.content);
+                    }}
+                  >
+                    수정
+                  </Button>
+                  <Button
+                    variant="gray"
+                    size="sm"
+                    onClick={() => handleDelete(comment.id)}
+                  >
+                    삭제
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="mt-[40px]">
         <Pagination
