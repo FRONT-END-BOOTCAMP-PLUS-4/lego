@@ -41,7 +41,7 @@ export default function MailModal({ open, onClose, onConfirm }: MailModalProps) 
     <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>메일 알림을 설정하시겠습니까?</AlertDialogTitle>
+          <AlertDialogTitle>소셜 계정으로 간편하게!</AlertDialogTitle>
           <AlertDialogDescription>
             매일 아침 기술면접 질문을 메일로 간편하게 받아볼 수 있어요 😃
           </AlertDialogDescription>

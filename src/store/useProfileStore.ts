@@ -56,7 +56,7 @@ export const useProfileStore = create<ProfileStoreState>()(
       name: "profile-store",
       partialize: (state) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { showLoginAlert, showSubscribeAlert, ...persisted } = state;
+        const { showModal, showLoginAlert, showSubscribeAlert, ...persisted } = state;
 
         return persisted;
       },
