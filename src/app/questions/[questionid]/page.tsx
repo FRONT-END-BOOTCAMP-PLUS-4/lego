@@ -63,7 +63,6 @@ export default function AnswerFormPage() {
         throw new Error("서버 응답 실패");
       }
       const data = await response.json();
-      console.log("답변 물러오기", data);
       setQuestionData(data?.data);
     } catch (error) {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);

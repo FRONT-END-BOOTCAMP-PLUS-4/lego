@@ -24,7 +24,6 @@ export class SbLikeRepository implements LikeRepository {
       console.error("Supabase error:", error);
       throw new Error("좋아요 요청 실패");
     }
-    console.log(data);
     return data;
   }
 

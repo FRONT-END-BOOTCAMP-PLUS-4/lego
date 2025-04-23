@@ -31,7 +31,6 @@ export default function AnswerContent() {
       throw new Error("서버 응답 실패");
     }
     const { data } = await response.json();
-    console.log("--------현재", data);
     setAnswerDate(data);
   };
   useEffect(() => {
