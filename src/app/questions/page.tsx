@@ -1,5 +1,4 @@
 "use client";
-
 import throttle from "lodash.throttle";
 import Image from "next/image";
 import Link from "next/link";

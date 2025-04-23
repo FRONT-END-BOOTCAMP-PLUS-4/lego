@@ -10,6 +10,7 @@ import { handleCheckUser } from "@/utils/handleCheckUser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
+import Loader from "@/components/common/Loader";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -146,7 +147,7 @@ export default function AnswerFormPage() {
       toast.error(`${(error as Error).message}`);
     }
   };
-  if (!questionData) return <div>로딩 중...</div>;
+  if (!questionData) return <Loader />;
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <>

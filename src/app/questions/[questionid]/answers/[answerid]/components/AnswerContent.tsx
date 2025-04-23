@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AnswerView } from "@/domain/entities/AnswerView";
@@ -6,10 +7,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 export default function AnswerContent() {
   const { user, token } = useAuthStore();
   const params = useParams();
+  const router = useRouter();
   const questionId = Number(params.questionid);
   const answerId = params.answerid;
   const [answerData, setAnswerDate] = useState<AnswerView | null>(null);
@@ -42,7 +45,11 @@ export default function AnswerContent() {
       setIsLike(answerData.isLike);
     }
   }, [answerData]);
+
   const handleToggleLike = async () => {
+    if (!user?.email) {
+      return router.push("/login");
+    }
     const newState = !isLike;
     const method = newState ? "POST" : "DELETE";
     const formData = {
