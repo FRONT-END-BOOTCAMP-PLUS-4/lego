@@ -46,12 +46,12 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
       <div className="grid grid-cols-2 grid-rows-auto gap-x-4 gap-y-4">
         {questionAnswers.length > 0 ? (
           <>
-            {paginatedAnswers?.map((answer) => {
+            {paginatedAnswers?.map((answer, idx) => {
               const { questionId, email } = answer;
               return (
                 <>
                   <Link href={`/questions/${questionId}/answers/${email}`}>
-                    <Card key={answer?.avatarUrl}>
+                    <Card key={idx}>
                       <div className="flex flex-col justify-between h-[90px]">
                         <div className="flex items-center justify-between w-full">
                           <p className="line-clamp-2 txt-base">{answer?.content}</p>

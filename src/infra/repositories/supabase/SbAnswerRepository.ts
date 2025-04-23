@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 interface UserAnswerParams {
   userId: string | null;
   questionId: number;
+  answerAuthorId?: string; // 답변 작성자 이메일
 }
 
 interface answerType {
@@ -133,7 +134,7 @@ export class SbAnswerRepository implements AnswerRepository {
   //특정 유저의 특정 답변 상세 조회
   async getAnswersByUser(params: UserAnswerParams): Promise<AnswerView> {
     const supabase = await createClient();
-    const { userId, questionId } = params;
+    const { userId, questionId, answerAuthorId } = params;
     const { data, error } = await supabase
       .from("answer")
       .select(
@@ -153,13 +154,15 @@ export class SbAnswerRepository implements AnswerRepository {
     `
       )
       .eq("question_id", questionId)
-      .eq("email", userId)
+      .eq("email", answerAuthorId)
       .single();
 
     if (error) {
       console.error("답변 조회 실패:", error);
       throw new Error("답변을 불러오지 못했습니다.");
     }
+    const isLike = !!data.like?.find((b) => b.like_email === userId);
+
     const typedData = data as unknown as answerType;
     return new AnswerView(
       typedData.email,
@@ -171,7 +174,7 @@ export class SbAnswerRepository implements AnswerRepository {
       typedData.question_id,
       typedData.question?.category?.name,
       typedData.question?.content,
-      typedData.like?.some((l) => l.like_email === userId) ?? false
+      isLike
     );
   }
 }
