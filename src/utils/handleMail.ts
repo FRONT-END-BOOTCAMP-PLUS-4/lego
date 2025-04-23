@@ -1,17 +1,27 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore } from "@/store/useProfileStore";
 
 export function useHandleMail() {
-  const { mailAutoToggle, setActiveIndex, setShowModal } = useProfileStore();
+  const { user } = useAuthStore();
+  const { mailAutoToggle, setActiveIndex, setShowModal, setShowLoginAlert, setShowSubscribeAlert } =
+    useProfileStore();
   const router = useRouter();
 
   const handleMail = () => {
-    router.push("/users");
+    if (!user) {
+      setShowLoginAlert(true);
+      return null;
+    }
+
     if (!mailAutoToggle) {
       setActiveIndex(0);
+      router.push("/users");
       setShowModal(true);
+    } else {
+      setShowSubscribeAlert(true);
     }
   };
 

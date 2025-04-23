@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useProfileStore } from "@/store/useProfileStore";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ import MailAlertButton from "./MailAlert";
 export default function Header() {
   const router = useRouter();
   const { isLoggedIn, logout, user } = useAuthStore();
+  const { showSubscribeAlert, setShowSubscribeAlert } = useProfileStore();
 
   const handleLogout = () => {
     logout();
@@ -63,21 +65,39 @@ export default function Header() {
             duration: Infinity,
           });
         }
-      }, 1000); // 1초 지연
+      }, 1000);
 
       return () => clearTimeout(timeout);
     }
   }, [isLoggedIn, user]);
+
+  // 이미 구독 중이면 toast UI
+  useEffect(() => {
+    if (showSubscribeAlert) {
+      toast(<p className="txt-lg-b">이미 구독 중입니다 😎</p>, {
+        description: <p className="txt-md">더 많은 기술면접 질문을 확인해보세요!</p>,
+        action: {
+          label: "이동하기",
+          onClick: () => {
+            router.push("/questions");
+          },
+        },
+        duration: 5000,
+      });
+
+      setShowSubscribeAlert(false);
+    }
+  }, [showSubscribeAlert, router, setShowSubscribeAlert]);
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[10vh] px-20 py-4 shadow-md">
       <Link href="/">
         <Image src="/logo.svg" alt="Logo" width={100} height={100} />
       </Link>
+      <nav className="flex items-center gap-3">
+        <MailAlertButton />
 
-      {isLoggedIn ? (
-        <nav className="flex items-center gap-6">
-          <MailAlertButton />
+        {isLoggedIn ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
@@ -102,12 +122,26 @@ export default function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </nav>
-      ) : (
-        <Link href="/login">
-          <Button variant="ghost">로그인/회원가입</Button>
-        </Link>
-      )}
+        ) : (
+          <Link href="/login">
+            <Button variant="ghost">로그인/회원가입</Button>
+          </Link>
+        )}
+      </nav>
+
+      {/* <AlertDialog open={showSubscribeAlert} onOpenChange={setShowSubscribeAlert}>
+        <AlertDialogContent className="flex flex-col items-center">
+          <AlertDialogTitle>이미 구독 중입니다</AlertDialogTitle>
+          <AlertDialogAction
+            onClick={() => {
+              setShowSubscribeAlert(false);
+            }}
+            className="w-2/6 bg-[var(--blue-02)] border-none"
+          >
+            이동하기
+          </AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog> */}
     </header>
   );
 }
