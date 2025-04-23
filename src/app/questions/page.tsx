@@ -17,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { CategoryDto } from "@/application/usecase/category/dto/CategoryDto";
 import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
-//import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
@@ -36,8 +36,8 @@ export default function QuestionListPage() {
 
   const categoryIdFromURL = searchParams.get("categoryId");
   const selectedCategoryId = categoryIdFromURL ? Number(categoryIdFromURL) : null;
-  //const user = useAuthStore((state) => state.user);
-  //const usesrEmail = user?.email;
+  const user = useAuthStore((state) => state.user);
+  const userEmail = user?.email;
 
   //const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
   const filterOption = (searchParams.get("filter") as "all" | "bookmarked" | "answered") ?? "all";
@@ -322,7 +322,12 @@ export default function QuestionListPage() {
         ) : visibleQuestions.length > 0 ? (
           <div className="flex flex-col gap-[16px] w-full">
             {pagedQuestions.map((question) => (
-              <Link key={question.id} href={`/questions/${question.id}`}>
+              <Link 
+              key={question.id}  href={
+                userEmail
+                  ? `/questions/${question.id}?userId=${userEmail}`
+                  : `/questions/${question.id}`
+              }>
                 <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
                   <div className="flex h-full items-center justify-between">
                     <div className="flex items-center gap-4">
