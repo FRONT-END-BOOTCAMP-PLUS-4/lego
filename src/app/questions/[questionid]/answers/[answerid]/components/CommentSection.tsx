@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { TextArea } from "@/components/ui/textArea";
+import { toast } from "sonner";
 
 interface Comment {
   id: number;
@@ -119,6 +120,9 @@ export default function CommentSection() {
 
   const handleDelete = async (id: number) => {
     await fetch(`/api/comments/${id}`, { method: "DELETE" });
+    toast.success("댓글이 삭제되었습니다.", {
+      position: "bottom-right",
+    });
     await fetchComments();
   };
 
