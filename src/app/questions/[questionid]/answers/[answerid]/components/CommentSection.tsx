@@ -34,7 +34,7 @@ export default function CommentSection() {
 
   const itemsPerPage = 10;
 
-  const fetchComments = async () => {
+  const fetchComments = async (): Promise<void> => {
     const res = await fetch(`/api/comments?questionId=${questionId}&answerEmail=${answerEmail}`);
     const data = await res.json();
     setComments(data);
@@ -68,7 +68,7 @@ export default function CommentSection() {
     }
   }, [questionId, answerEmail]);
 
-  const getUserInfo = () => {
+  const getUserInfo = (): { email: string; nickname: string; avatarUrl: string } | null => {
     if (typeof window === "undefined") return null;
 
     const authStorage = localStorage.getItem("auth-storage");
@@ -83,7 +83,7 @@ export default function CommentSection() {
     }
   };
 
-  const handleCreate = async () => {
+  const handleCreate = async (): Promise<void> => {
     if (!newContent.trim()) return;
 
     const user = getUserInfo();
@@ -106,34 +106,61 @@ export default function CommentSection() {
     await fetchComments();
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleCreate();
     }
   };
 
-  const handleEdit = async (id: number) => {
-    await fetch(`/api/comments/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: editingContent }),
-    });
+  const handleEdit = async (id: number): Promise<void> => {
+    try {
+      const res = await fetch(`/api/comments/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: editingContent }),
+      });
 
-    setEditingId(null);
-    setEditingContent("");
-    await fetchComments();
-    toast.success("댓글이 수정되었습니다.", {
-      position: "bottom-right",
-    });
+      if (!res.ok) {
+        throw new Error("댓글 수정 실패");
+      }
+
+      setEditingId(null);
+      setEditingContent("");
+      await fetchComments();
+      toast.success("댓글이 수정되었습니다.", {
+        id: "comment-toast",
+        position: "bottom-right",
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("댓글 수정에 실패했습니다.", {
+        id: "comment-toast",
+        position: "bottom-right",
+      });
+    }
   };
 
-  const handleDelete = async (id: number) => {
-    await fetch(`/api/comments/${id}`, { method: "DELETE" });
-    toast.success("댓글이 삭제되었습니다.", {
-      position: "bottom-right",
-    });
-    await fetchComments();
+  const handleDelete = async (id: number): Promise<void> => {
+    try {
+      const res = await fetch(`/api/comments/${id}`, { method: "DELETE" });
+
+      if (!res.ok) {
+        throw new Error("댓글 삭제 실패");
+      }
+
+      toast.success("댓글이 삭제되었습니다.", {
+        id: "comment-toast",
+        position: "bottom-right",
+      });
+      await fetchComments();
+    } catch (error) {
+      console.error(error);
+      toast.error("댓글 삭제에 실패했습니다.", {
+        id: "comment-toast",
+        position: "bottom-right",
+      });
+    }
   };
 
   const currentComments = comments.slice(
@@ -141,7 +168,7 @@ export default function CommentSection() {
     currentPage * itemsPerPage
   );
 
-  const handleMovePage = (page: number) => {
+  const handleMovePage = (page: number): void => {
     setCurrentPage(page);
   };
 
