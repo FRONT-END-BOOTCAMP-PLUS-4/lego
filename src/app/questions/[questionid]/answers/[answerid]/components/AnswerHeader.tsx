@@ -1,13 +1,47 @@
 import { Badge } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function AnswerHeader() {
-  const [liked, setLiked] = useState<boolean>(false); // likeState 서버에서 받아온 값
+  const [isLike, setisLike] = useState<boolean>(false); // likeState 서버에서 받아온 값
 
-  const handleToggleLike = () => {
-    setLiked((prev) => !prev);
-  };
+  // const handleToggleLike = () => {
+  //   setLiked((prev) => !prev);
+  // };
+
+  // const handleToggleLike = async () => {
+  //   const newState = !isLike;
+  //   const method = newState ? "POST" : "DELETE";
+  //   const formData = {
+  //     userId: userEmail,
+  //     questionId,
+  //   };
+  //   if (!currentUser) {
+  //     return router.push("/login");
+  //   }
+
+  //   try {
+  //     const response = await fetch("/api/bookmarks", {
+  //       method,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error(newState ? "좋아요 실패" : "좋아요 해제 실패");
+  //     }
+  //     setisLike(newState);
+  //     toast.success(newState ? "좋아요 등록." : "좋아요 해제되었습니다.");
+  //   } catch (error) {
+  //     toast.error(`${(error as Error).message}`);
+  //   }
+  // };
+
   return (
     <>
       <header className="flex items-center justify-between w-full">
@@ -17,10 +51,10 @@ export default function AnswerHeader() {
         </div>
         <div
           className="flex items-center justify-center w-[32px] h-[32px]"
-          onClick={handleToggleLike}
+          // onClick={handleToggleLike}
         >
           <Image
-            src={`/assets/icons/like${liked ? "_fill" : ""}.svg`}
+            src={`/assets/icons/like${isLike ? "_fill" : ""}.svg`}
             alt="like icon"
             width={24}
             height={24}

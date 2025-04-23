@@ -5,7 +5,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { TextArea } from "@/components/ui/textArea";
-import AnswerHeader from "./components/AnswerHeader";
+
+import AnswerContents from "./components/AnswerContents";
 
 export default function AnswerDetailPage() {
   // Mock data for comments
@@ -34,22 +35,8 @@ export default function AnswerDetailPage() {
   return (
     <div className="w-[1272px] container mx-auto pt-[40px] md:px-6">
       <div className="pb-[var(--space-24)] txt-2xl-b">답변 상세보기</div>
-      <AnswerHeader />
-      {/* 작성자 정보 */}
-      <div className="flex items-center gap-4 mt-6">
-        <span className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
-        {/* 작성자 정보 */}
-        <div>
-          <div className="text-sm mb-1 font-bold text-[var(--gray-02)]">작성자 이름</div>
-          <div className="text-xs text-[var(--gray-02)]">2025.02.28</div>
-        </div>
-      </div>
 
-      {/* 본문 (예시 텍스트) */}
-      <div className="mt-[30px] text-base leading-[2]">
-        Next.js는 버전 13부터 React 18에서 도입된 서버 컴포넌트를 지원하고 있습니다. 시간이 흐르면서
-        많은 분이 이를 익숙하게 활용하고 있지만, 저처럼 개념을 충분히 이해하지 못한 채 습관적으로
-      </div>
+      <AnswerContents />
 
       {/* 본문과 텍스트 사이의 패딩 */}
       <div className="mb-[150px]"></div>
