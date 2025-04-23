@@ -13,7 +13,7 @@ export default function AnswerContent() {
   const questionId = Number(params.questionid);
   const answerId = params.answerid;
   const [answerData, setAnswerDate] = useState<AnswerView | null>(null);
-  const [isLike, setisLike] = useState<boolean | undefined>(answerData?.isLike); // likeState 서버에서 받아온 값
+  const [isLike, setIsLike] = useState<boolean | undefined>(answerData?.isLike); // likeState 서버에서 받아온 값
   const currentUserId = user?.email; //현재 로그인한 유저 아이디
 
   const handleGetAnswerDetail = async () => {
@@ -38,6 +38,11 @@ export default function AnswerContent() {
     handleGetAnswerDetail();
   }, []);
 
+  useEffect(() => {
+    if (answerData?.isLike !== undefined) {
+      setIsLike(answerData.isLike);
+    }
+  }, [answerData]);
   const handleToggleLike = async () => {
     const newState = !isLike;
     const method = newState ? "POST" : "DELETE";
@@ -59,10 +64,10 @@ export default function AnswerContent() {
       if (!response.ok) {
         throw new Error(newState ? "좋아요 실패" : "좋아요 해제 실패");
       }
-      setisLike(newState);
+      setIsLike(newState);
       toast.success(newState ? "좋아요 등록." : "좋아요 해제되었습니다.");
     } catch (error) {
-      setisLike(!newState);
+      setIsLike(!newState);
       toast.error(`${(error as Error).message}`);
     }
   };
@@ -71,7 +76,7 @@ export default function AnswerContent() {
       <header className="flex items-center justify-between w-full">
         <div className="flex items-center gap-4">
           <Badge>{answerData?.category}</Badge>
-          <p className="txt-3xl-b text-[var(--gray-02)]">{answerData?.title}</p>
+          <p className="txt-3xl-b text-[var(--gray-02)]">{answerData?.question}</p>
         </div>
         <div
           className="flex items-center justify-center w-[32px] h-[32px]"
