@@ -95,6 +95,7 @@
   --text-14: 14px;
   --text-16: 16px;
   --text-18: 18px;
+  --text-22: 22px;
   --text-24: 24px;
   --text-30: 30px;
   --text-36: 36px;
@@ -130,6 +131,13 @@
   font-weight: var(--font-bold);
   color: var(--black);
 }
+.txt-xl-b {
+  font-size: var(--text-22);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+
 .txt-lg-b {
   font-size: var(--text-18);
   font-weight: var(--font-bold);

@@ -107,10 +107,10 @@ export class SbQuestionRepository implements QuestionRepository {
       .eq("category_id", categoryId)
       .order("created_at", { ascending: false });
 
-    console.log("✅ Supabase Response - getQuestionsByCategory");
-    console.log("categoryId:", categoryId);
-    console.log("data:", data);
-    console.log("error:", error);
+    // console.log("✅ Supabase Response - getQuestionsByCategory");
+    // console.log("categoryId:", categoryId);
+    // console.log("data:", data);
+    // console.log("error:", error);
 
     if (error) {
       console.error(`[getQuestionsByCategory] Supabase Error:`, error.message);
