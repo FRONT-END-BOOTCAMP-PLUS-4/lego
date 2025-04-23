@@ -296,7 +296,6 @@ export default function QuestionListPage() {
         )}
       </div>
 
-      {/* 정렬 옵션 */}
       <div className="flex items-center justify-between mb-[12px]">
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex gap-[12px]">
@@ -309,56 +308,54 @@ export default function QuestionListPage() {
         </div>
       </div>
 
-      <div className="flex justify-center items-center min-h-[300px]">
-  {isLoading ? (
-    // 🔄 로딩 중
-    <div className="flex flex-col items-center">
-      <Image
-        src="/assets/images/QuestionsLoading.png"
-        alt="문제 로딩 중"
-        width={240}
-        height={240}
-      />
-      <p className="mt-4 text-sm text-gray-500">문제를 불러오는 중입니다...</p>
-    </div>
-  ) : visibleQuestions.length > 0 ? (
-    <div className="flex flex-col gap-[16px] w-full">
-      {pagedQuestions.map((question) => (
-        <Link key={question.id} href={`/questions/${question.id}`}>
-          <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
-            <div className="flex h-full items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Image
-                  src={getImageUrlByCategory(question.categoryId)}
-                  alt="문제 카테고리"
-                  width={32}
-                  height={32}
-                  className="rounded-md"
-                />
-                <span className="txt-2xl-b line-clamp-1">{question.content}</span>
-              </div>
-              <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                <span>북마크한 사람 {question.bookmark_count}</span>
-                <span>답변을 완료한 사람 {question.answer_count}</span>
-              </div>
-            </div>
-          </Card>
-        </Link>
-      ))}
-    </div>
-  ) : (
-    // ❌ 문제 없음
-    <div className="flex flex-col items-center">
-      <Image
-        src="/assets/images/QuestionsNotFound.png"
-        alt="결과 없음"
-        width={240}
-        height={240}
-      />
-      <p className="mt-4 text-sm text-gray-500">조건에 해당하는 문제가 없습니다.</p>
-    </div>
-  )}
-</div>
+      <div className="flex justify-center min-h-[300px]">
+        {isLoading ? (
+          <div className="flex flex-col items-center">
+            <Image
+              src="/assets/images/QuestionsLoading.png"
+              alt="문제 로딩 중"
+              width={240}
+              height={240}
+            />
+            <p className="mt-4 text-sm text-gray-500">문제를 불러오는 중입니다...</p>
+          </div>
+        ) : visibleQuestions.length > 0 ? (
+          <div className="flex flex-col gap-[16px] w-full">
+            {pagedQuestions.map((question) => (
+              <Link key={question.id} href={`/questions/${question.id}`}>
+                <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
+                  <div className="flex h-full items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={getImageUrlByCategory(question.categoryId)}
+                        alt="문제 카테고리"
+                        width={32}
+                        height={32}
+                        className="rounded-md"
+                      />
+                      <span className="txt-2xl-b line-clamp-1">{question.content}</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+                      <span>북마크 {question.bookmark_count}</span>
+                      <span>답변 {question.answer_count}</span>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <Image
+              src="/assets/images/QuestionsNotFound.png"
+              alt="결과 없음"
+              width={240}
+              height={240}
+            />
+            <p className="mt-4 text-sm text-gray-500">조건에 해당하는 문제가 없습니다.</p>
+          </div>
+        )}
+      </div>
 
       <Pagination
         totalCount={totalCount}
