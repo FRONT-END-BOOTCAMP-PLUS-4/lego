@@ -17,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { CategoryDto } from "@/application/usecase/category/dto/CategoryDto";
 import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
-import { useAuthStore } from "@/store/useAuthStore";
+//import { useAuthStore } from "@/store/useAuthStore";
 
 export default function QuestionListPage() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
@@ -36,10 +36,10 @@ export default function QuestionListPage() {
 
   const categoryIdFromURL = searchParams.get("categoryId");
   const selectedCategoryId = categoryIdFromURL ? Number(categoryIdFromURL) : null;
-  const user = useAuthStore((state) => state.user);
-  const usesrEmail = user?.email;
+  //const user = useAuthStore((state) => state.user);
+  //const usesrEmail = user?.email;
 
-  const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
+  //const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
   const filterOption = (searchParams.get("filter") as "all" | "bookmarked" | "answered") ?? "all";
 
   const selectedCategoryName =
