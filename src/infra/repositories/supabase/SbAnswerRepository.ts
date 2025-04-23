@@ -107,6 +107,7 @@ export class SbAnswerRepository implements AnswerRepository {
 
     const result: AnswerView[] = (data ?? []).map((row: answerType) => {
       return new AnswerView(
+        row.question_id,
         row.email,
         row.content,
         row.created_at,

@@ -108,10 +108,7 @@ export default function QuestionListPage() {
         if (currentSort === "bookmark") {
           data.sort((a, b) => b.bookmark_count - a.bookmark_count);
         } else {
-          data.sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
+          data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         }
       }
 
@@ -297,16 +294,23 @@ export default function QuestionListPage() {
       <div className="flex flex-col gap-[16px]">
         {pagedQuestions.length > 0 ? (
           pagedQuestions.map((question) => (
-            <Link key={question.id} href={`/questions/${question.id}`}>
+            <Link
+              key={question.id}
+              href={
+                usesrEmail
+                  ? `/questions/${question.id}?userId=${usesrEmail}`
+                  : `/questions/${question.id}`
+              }
+            >
               <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
                 <div className="flex h-full items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Image
-                        src={getImageUrlByCategory(question.categoryId)}
-                        alt="문"
-                        width={32}
-                        height={32}
-                        className="rounded-md"
+                      src={getImageUrlByCategory(question.categoryId)}
+                      alt="문"
+                      width={32}
+                      height={32}
+                      className="rounded-md"
                     />
                     <span className="txt-2xl-b">{question.content}</span>
                   </div>
@@ -318,7 +322,7 @@ export default function QuestionListPage() {
               </Card>
             </Link>
           ))
-          ) : (
+        ) : (
           <div className="flex flex-col items-center justify-center mt-10">
             <Image
               src="/assets/images/QuestionsNotFound.png"
