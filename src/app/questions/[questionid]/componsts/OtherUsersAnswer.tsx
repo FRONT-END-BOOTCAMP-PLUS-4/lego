@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface PropsType {
@@ -47,29 +48,34 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
         {questionAnswers.length > 0 ? (
           <>
             {paginatedAnswers?.map((answer) => {
+              console.log(answer);
               return (
-                <Card key={answer.email}>
-                  <div className="flex flex-col justify-between h-full">
-                    <div className="flex items-center mb-6 justify-between w-full">
-                      <p className="line-clamp-2 txt-base">{answer.content}</p>
-                      <span
-                        className="w-[32px] h-[32px] ml-4 inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
-                        style={{ backgroundImage: `url(${answer.avatarUrl})` }}
-                      ></span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>
-                        <span className="txt-sm !text-[var(--gray-02)] mr-2">
-                          {formatDate(answer.createdAt)}
-                        </span>
-                        <span className="txt-sm !text-[var(--gray-02)]">{answer.username}</span>
-                      </span>
-                      <span className="txt-sm !text-[var(--gray-02)]">
-                        좋아요 {answer.likeCount}
-                      </span>
-                    </div>
-                  </div>
-                </Card>
+                <>
+                  <Link href={``}>
+                    <Card key={answer.email}>
+                      <div className="flex flex-col justify-between h-full">
+                        <div className="flex items-center mb-6 justify-between w-full">
+                          <p className="line-clamp-2 txt-base">{answer.content}</p>
+                          <span
+                            className="w-[32px] h-[32px] ml-4 inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
+                            style={{ backgroundImage: `url(${answer.avatarUrl})` }}
+                          ></span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>
+                            <span className="txt-sm !text-[var(--gray-02)] mr-2">
+                              {formatDate(answer.createdAt)}
+                            </span>
+                            <span className="txt-sm !text-[var(--gray-02)]">{answer.username}</span>
+                          </span>
+                          <span className="txt-sm !text-[var(--gray-02)]">
+                            좋아요 {answer.likeCount}
+                          </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                </>
               );
             })}
           </>
