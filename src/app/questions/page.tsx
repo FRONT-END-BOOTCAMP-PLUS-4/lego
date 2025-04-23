@@ -39,6 +39,8 @@ export default function QuestionListPage() {
   const user = useAuthStore((state) => state.user);
   const usesrEmail = user?.email;
 
+  
+
   const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
   const filterOption = (searchParams.get("filter") as "all" | "bookmarked" | "answered") ?? "all";
 
@@ -225,7 +227,10 @@ export default function QuestionListPage() {
     updateURLWithEmail();
   }, []);
 
-  const visibleQuestions = filteredQuestions.length > 0 ? filteredQuestions : questions;
+  const hasKeyword = searchParams.get("search")?.trim().toLowerCase();
+  const isSearching = !!hasKeyword;
+  const visibleQuestions = isSearching ? filteredQuestions : questions;
+
   const totalCount = visibleQuestions.length;
   const startIdx = (pageNumber - 1) * 10;
   const endIdx = startIdx + 10;
@@ -321,10 +326,9 @@ export default function QuestionListPage() {
         alt="문제 로딩 중"
         width={240}
         height={240}
-        className="animate-pulse" // 선택: 살짝 동적 효과 줄 수도 있어
       />
     </div>
-  ) : pagedQuestions.length > 0 ? (
+  ) :  visibleQuestions.length > 0 ? (
     // ✅ 문제 있음
     pagedQuestions.map((question) => (
       <Link key={question.id} href={`/questions/${question.id}`}>
