@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { UserActivity } from "@/domain/entities/UserActivity";
 import { UserAnswer } from "@/domain/entities/UserAnswer";
 import { UserBookmark } from "@/domain/entities/UserBookmark";
+import { UserLikedAnswer } from "@/domain/entities/UserLike";
 
 export class SbUserRepository implements UserRepository {
   async getUserActivity(email: string): Promise<UserActivity> {
@@ -112,6 +113,42 @@ export class SbUserRepository implements UserRepository {
         row.question.id,
         row.question.content,
         row.question.category.image_url
+      );
+    });
+  }
+
+  async getUserLikedAnswers(email: string): Promise<UserLikedAnswer[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("like")
+      .select(
+        `
+          answer:answer (
+            question_id,
+            content,
+            username,
+            email,
+            avatar_url,
+            created_at
+          )
+        `
+      )
+      .eq("like_email", email);
+
+    if (error || !data) {
+      console.error("좋아요한 답변 조회 오류:", error);
+      throw new Error("좋아요한 답변을 조회하지 못했습니다.");
+    }
+
+    return data.map((row) => {
+      return new UserLikedAnswer(
+        row.answer.question_id,
+        row.answer.content,
+        row.answer.username,
+        row.answer.email,
+        row.answer.avatar_url,
+        row.answer.created_at
       );
     });
   }

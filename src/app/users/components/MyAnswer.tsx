@@ -91,7 +91,7 @@ export default function MyAnswerPage() {
 
       <Pagination
         totalCount={totalCount}
-        itemsPerPage={5}
+        itemsPerPage={itemsPerPage}
         pageNumber={pageNumber}
         currentPageBlock={currentPageBlock}
         handleMovePage={setPageNumber}
