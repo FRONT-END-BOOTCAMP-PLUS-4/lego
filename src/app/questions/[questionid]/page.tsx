@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
+import NotFound from "@/app/not-found";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -86,7 +87,7 @@ export default function AnswerFormPage() {
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isMatchCurrentLoginUser) {
-      return router.push("/login");
+      router.replace("/404");
     }
     const method = action === "create" ? "POST" : "PUT";
     if (!content.trim()) {
