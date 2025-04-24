@@ -1,12 +1,9 @@
 "use client";
-
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { TextArea } from "@/components/ui/textArea";
-
-import AnswerContents from "./components/AnswerContents";
+import AnswerContent from "./components/AnswerContent";
 
 export default function AnswerDetailPage() {
   // Mock data for comments
@@ -33,10 +30,10 @@ export default function AnswerDetailPage() {
   );
 
   return (
-    <div className="w-[1272px] container mx-auto pt-[40px] md:px-6">
+    <div className="container mx-auto pt-[40px] md:px-6">
       <div className="pb-[var(--space-24)] txt-2xl-b">답변 상세보기</div>
 
-      <AnswerContents />
+      <AnswerContent />
 
       {/* 본문과 텍스트 사이의 패딩 */}
       <div className="mb-[150px]"></div>
