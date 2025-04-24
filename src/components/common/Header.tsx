@@ -89,9 +89,10 @@ export default function Header() {
   }, [showSubscribeAlert, router, setShowSubscribeAlert]);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[10vh] px-20 py-4 shadow-md">
-      <Link href="/">
-        <Image src="/logo.svg" alt="Logo" width={100} height={100} />
+    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-20 border-b border-[#edf2f7]">
+      <Link href="/" className="flex items-center ">
+        <Image src="/charactor.svg" alt="Logo charactor" width={50} height={50} />
+        <Image src="/logo.png" alt="Logo" width={85} height={85} className="self-center" />
       </Link>
       <nav className="flex items-center gap-3">
         <MailAlertButton />
