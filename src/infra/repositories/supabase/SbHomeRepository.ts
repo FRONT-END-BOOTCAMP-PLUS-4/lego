@@ -34,9 +34,10 @@ export class SbHomeRepository implements HomeRepository {
       {} as Record<number, any>
     );
 
-    return Object.entries(counts).map(
-      ([qid, q]: any) => new HomePopularQuestion(+qid, q.content, q.category.name, q.count)
-    );
+    return Object.entries(counts)
+      .sort((a, b) => b[1].count - a[1].count)
+      .slice(0, 4)
+      .map(([qid, q]: any) => new HomePopularQuestion(+qid, q.content, q.category.name, q.count));
   }
 
   async getPopularAnswers(): Promise<HomePopularAnswer[]> {
@@ -48,6 +49,7 @@ export class SbHomeRepository implements HomeRepository {
         answer:answer (
           content,
           username,
+          email,
           question:question (
             content
           )
@@ -68,8 +70,9 @@ export class SbHomeRepository implements HomeRepository {
       {} as Record<string, any>
     );
 
-    return Object.values(counts).map(
-      (a: any) => new HomePopularAnswer(a.content, a.question.content, a.username)
-    );
+    return Object.values(counts)
+      .sort((a: any, b: any) => b.count - a.count)
+      .slice(0, 2)
+      .map((a: any) => new HomePopularAnswer(a.content, a.question.content, a.username, a.email));
   }
 }
