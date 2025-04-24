@@ -5,7 +5,7 @@ import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface PropsType {
   questionId: number;
@@ -41,19 +41,19 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
   useEffect(() => {
     handleGetOtherAnswers();
   }, []);
-
+  console.log(paginatedAnswers);
   return (
     <>
       <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
       <div className="grid grid-cols-2 grid-rows-auto gap-x-4 gap-y-4">
         {questionAnswers.length > 0 ? (
           <>
-            {paginatedAnswers?.map((answer, idx) => {
+            {paginatedAnswers?.map((answer) => {
               const { questionId, email } = answer;
               return (
-                <>
+                <React.Fragment key={email}>
                   <Link href={`/questions/${questionId}/answers/${email}`}>
-                    <Card key={idx}>
+                    <Card>
                       <div className="flex flex-col justify-between h-[90px]">
                         <div className="flex items-center justify-between w-full">
                           <p className="line-clamp-2 txt-base">{answer?.content}</p>
@@ -73,9 +73,12 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
                           </span>
                           <span className="txt-sm !text-[var(--gray-02)] flex">
                             <Heart
-                              style={{ fill: "var(--gray-03)" }}
-                              stroke="none"
                               size={20}
+                              stroke="none"
+                              style={{
+                                fill:
+                                  (answer?.likeCount ?? 0) > 0 ? "var(--red)" : "var(--gray-03)",
+                              }}
                               className="mr-1"
                             />
                             {answer?.likeCount}
@@ -84,7 +87,7 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
                       </div>
                     </Card>
                   </Link>
-                </>
+                </React.Fragment>
               );
             })}
           </>
