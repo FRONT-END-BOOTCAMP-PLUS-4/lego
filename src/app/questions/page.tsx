@@ -331,7 +331,7 @@ export default function QuestionListPage() {
                         height={32}
                         className="rounded-md"
                       />
-                      <span className="txt-2xl-b line-clamp-1">{question.content}</span>
+                      <span className="txt-xl-b line-clamp-1">{question.content}</span>
                     </div>
                     <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
                       <span>북마크 {question.bookmark_count}</span>
