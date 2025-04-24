@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
-import NotFound from "@/app/not-found";
+import Alert from "./componsts/Alert";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -37,6 +37,7 @@ export default function AnswerFormPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
   const token: string | null = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
@@ -89,11 +90,13 @@ export default function AnswerFormPage() {
     if (!isMatchCurrentLoginUser) {
       router.replace("/404");
     }
-    const method = action === "create" ? "POST" : "PUT";
-    if (!content.trim()) {
-      alert("내용을 입력해주세요.");
+    if (userAnswer.trim().length === 0) {
+      setShowAlert(true);
+
       return;
     }
+
+    const method = action === "create" ? "POST" : "PUT";
 
     const formData = {
       userId: userEmail,
@@ -152,6 +155,9 @@ export default function AnswerFormPage() {
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <>
+      {showAlert && (
+        <Alert text="내용을 입력해주세요" showAlert={showAlert} setShowAlert={setShowAlert} />
+      )}
       <div className="container mx-auto pt-[40px]">
         <QusetionHeader
           content={content}
