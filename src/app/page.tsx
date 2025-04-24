@@ -12,9 +12,8 @@ import AnswerList from "./components/AnswerList";
 export default function Home() {
   useEffect(() => {
     AOS.init({
-      duration: 1300,
-      once: true,
-      offset: 50,
+      duration: 1000,
+      offset: 30,
     });
   }, []);
 
