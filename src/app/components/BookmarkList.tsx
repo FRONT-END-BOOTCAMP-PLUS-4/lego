@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuthStore } from "@/store/useAuthStore";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark } from "lucide-react";
 import { formatNumber } from "@/utils/handleFormat";
+import { Bookmark } from "lucide-react";
 
 type PopularQuestion = {
   questionId: number;
@@ -15,6 +16,8 @@ type PopularQuestion = {
 };
 
 export default function BookmarkList() {
+  const { user } = useAuthStore();
+
   const [popularQuestions, setPopularQuestions] = useState<PopularQuestion[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,7 +48,10 @@ export default function BookmarkList() {
           <p className="text-center col-span-2 text-gray-500">스크랩된 콘텐츠가 없습니다.</p>
         ) : (
           popularQuestions.map((item) => (
-            <Link href={`/questions/${item.questionId}`} key={`bm-${item.questionId}`}>
+            <Link
+              href={`/questions/${item.questionId}?userId=${user?.email}`}
+              key={`bm-${item.questionId}`}
+            >
               <Card variant="default" className="flex flex-col gap-[var(--space-40)]">
                 <p className="txt-2xl-b line-clamp-1">{item.title}</p>
                 <div className="flex justify-between items-center">
