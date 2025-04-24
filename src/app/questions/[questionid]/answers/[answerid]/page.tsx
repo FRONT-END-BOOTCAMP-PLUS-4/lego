@@ -1,102 +1,17 @@
 "use client";
 
-import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Pagination } from "@/components/ui/pagination";
-import { TextArea } from "@/components/ui/textArea";
-
-import AnswerContents from "./components/AnswerContents";
+import CommentSection from "./components/CommentSection";
+import AnswerContent from "./components/AnswerContent";
 
 export default function AnswerDetailPage() {
-  // Mock data for comments
-  // 실제 데이터는 API 호출 등을 통해 가져와야 합니다.
-  const comments = Array(50)
-    .fill(null)
-    .map((_, i) => ({
-      id: i + 1,
-      author: `작성자 ${i + 1}`,
-      content: `댓글 내용 ${i + 1}`,
-      date: `2025.03.${(i % 30) + 1}`,
-    }));
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const handleMovePage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const currentComments = comments.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   return (
-    <div className="w-[1272px] container mx-auto pt-[40px] md:px-6">
+    <div className="container mx-auto pt-[40px] md:px-6">
       <div className="pb-[var(--space-24)] txt-2xl-b">답변 상세보기</div>
 
-      <AnswerContents />
-
+      <AnswerContent />
       {/* 본문과 텍스트 사이의 패딩 */}
       <div className="mb-[150px]"></div>
-
-      {/* 댓글 입력 영역 */}
-      <div className="mt-[40px] mb-[16px]">
-        <label className="txt-sm-b" htmlFor="comment">
-          <span className="text-[var(--gray-02)]">댓글 수 </span>
-          <span className="text-black">{comments.length}</span>
-        </label>
-        <div className="mb-[10px]" />
-
-        <div className="flex gap-2">
-          {/* 좌측 박스: 작성자 + 입력창 */}
-          <TextArea placeholder="Type your message here" />
-          <Button className="w-[80px] h-[120px]" variant="outline">
-            등록
-          </Button>
-        </div>
-      </div>
-
-      {/* 본문과 텍스트 사이의 패딩 */}
-      <div className="mb-[58px]"></div>
-
-      {/* 댓글 리스트 */}
-      <div className="mt-[30px] space-y-8">
-        {currentComments.map((comment) => (
-          <div key={comment.id} className="border-b pb-4 flex gap-4">
-            {/* 프로필 이미지 */}
-            <span className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0"></span>
-
-            {/* 댓글 내용 */}
-            <div className="flex-1">
-              <div className="text-sm font-bold mb-1">{comment.author}</div>
-              <div className="text-base mb-1">{comment.content}</div>
-              <div className="text-xs text-[var(--gray-02)]">{comment.date}</div>
-            </div>
-
-            {/* 수정/삭제 버튼 */}
-            <div className="flex items-start gap-2">
-              <Button variant="ghost" size="default">
-                수정
-              </Button>
-              <Button variant="ghost" size="default">
-                삭제
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 페이지네이션 */}
-      <Pagination
-        totalCount={comments.length}
-        itemsPerPage={itemsPerPage}
-        pageNumber={currentPage}
-        currentPageBlock={currentPage}
-        handleMovePageBlock={() => {}}
-        handleMovePage={handleMovePage}
-      />
+      <CommentSection />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AnswerView } from "@/domain/entities/AnswerView";
@@ -33,7 +34,6 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
       throw new Error("서버 응답 실패");
     }
     const { data } = await response.json();
-    console.log("--- other user answer ", data);
     setQuestionAnswers(data);
   };
 
@@ -47,30 +47,31 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
       <div className="grid grid-cols-2 grid-rows-auto gap-x-4 gap-y-4">
         {questionAnswers.length > 0 ? (
           <>
-            {paginatedAnswers?.map((answer) => {
+            {paginatedAnswers?.map((answer, idx) => {
               const { questionId, email } = answer;
-              console.log(email);
               return (
                 <>
                   <Link href={`/questions/${questionId}/answers/${email}`}>
-                    <Card key={answer.avatarUrl}>
-                      <div className="flex flex-col justify-between h-full">
-                        <div className="flex items-center mb-6 justify-between w-full">
-                          <p className="line-clamp-2 txt-base">{answer.content}</p>
+                    <Card key={idx}>
+                      <div className="flex flex-col justify-between h-[90px]">
+                        <div className="flex items-center justify-between w-full">
+                          <p className="line-clamp-2 txt-base">{answer?.content}</p>
                           <span
                             className="w-[32px] h-[32px] ml-4 inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
-                            style={{ backgroundImage: `url(${answer.avatarUrl})` }}
+                            style={{ backgroundImage: `url(${answer?.avatarUrl})` }}
                           ></span>
                         </div>
                         <div className="flex justify-between">
                           <span>
                             <span className="txt-sm !text-[var(--gray-02)] mr-2">
-                              {formatDate(answer.createdAt)}
+                              {formatDate(answer?.createdAt)}
                             </span>
-                            <span className="txt-sm !text-[var(--gray-02)]">{answer.username}</span>
+                            <span className="txt-sm !text-[var(--gray-02)]">
+                              {answer?.username}
+                            </span>
                           </span>
                           <span className="txt-sm !text-[var(--gray-02)]">
-                            좋아요 {answer.likeCount}
+                            좋아요 {answer?.likeCount}
                           </span>
                         </div>
                       </div>

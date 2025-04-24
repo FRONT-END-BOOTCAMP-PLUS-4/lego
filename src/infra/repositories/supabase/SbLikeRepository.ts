@@ -10,7 +10,13 @@ export class SbLikeRepository implements LikeRepository {
     const { questionId, answerEmail, userId } = params;
     const { data, error } = await supabase
       .from("like")
-      .insert([{ question_id: questionId, answer_email: answerEmail, like_email: userId }])
+      .insert([
+        {
+          question_id: questionId,
+          answer_email: decodeURIComponent(answerEmail),
+          like_email: userId,
+        },
+      ])
       .select()
       .single();
 
@@ -28,7 +34,7 @@ export class SbLikeRepository implements LikeRepository {
       .from("like")
       .delete()
       .eq("question_id", questionId)
-      .eq("answer_email", answerEmail)
+      .eq("answer_email", decodeURIComponent(answerEmail))
       .eq("like_email", userId);
     if (error) {
       throw new Error(`좋아요 취소 실패: ${error.message}`);
