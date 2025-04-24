@@ -19,13 +19,13 @@ export default function EmailBanner() {
               src="/assets/images/main/email_before.png"
               alt="우는 캐릭터"
               fill
-              className="object-contain"
+              className="object-contain pointer-events-none"
             />
             <Image
               src="/assets/images/main/email_after.png"
               alt="웃는 캐릭터"
               fill
-              className="object-contain absolute top-0 left-0"
+              className="object-contain absolute top-0 left-0 pointer-events-none"
               style={{
                 clipPath: `inset(0 ${100 - offset}% 0 0)`,
               }}
