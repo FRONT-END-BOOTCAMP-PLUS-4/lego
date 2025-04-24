@@ -321,7 +321,7 @@ export default function QuestionListPage() {
                     : `/questions/${question.id}`
                 }
               >
-                <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
+                <Card className="cursor-pointer">
                   <div className="flex h-full items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Image
