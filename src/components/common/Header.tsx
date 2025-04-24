@@ -92,7 +92,13 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-3 sm:px-20 border-b border-[#edf2f7]">
       <Link href="/" className="flex items-center ">
         <Image src="/charactor.svg" alt="Logo charactor" width={50} height={50} />
-        <Image src="/logo.png" alt="Logo" width={80} height={80} className="self-center" />
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          width={80}
+          height={80}
+          className="self-center opacity-95"
+        />
       </Link>
       <nav className="flex items-center gap-4">
         <MailAlertButton />

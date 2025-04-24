@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
+import { Heart } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -66,12 +67,18 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
                             <span className="txt-sm !text-[var(--gray-02)] mr-2">
                               {formatDate(answer?.createdAt)}
                             </span>
-                            <span className="txt-sm !text-[var(--gray-02)]">
+                            <span className="txt-sm-b !text-[var(--gray-02)]">
                               {answer?.username}
                             </span>
                           </span>
-                          <span className="txt-sm !text-[var(--gray-02)]">
-                            좋아요 {answer?.likeCount}
+                          <span className="txt-sm !text-[var(--gray-02)] flex">
+                            <Heart
+                              style={{ fill: "var(--gray-03)" }}
+                              stroke="none"
+                              size={20}
+                              className="mr-1"
+                            />
+                            {answer?.likeCount}
                           </span>
                         </div>
                       </div>
