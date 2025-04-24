@@ -89,7 +89,7 @@ export default function Header() {
   }, [showSubscribeAlert, router, setShowSubscribeAlert]);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-3 sm:px-20 border-b border-[#edf2f7]">
+    <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-3 md:px-20 border-b border-[#edf2f7]">
       <Link href="/" className="flex items-center ">
         <Image src="/charactor.svg" alt="Logo charactor" width={50} height={50} />
         <Image

@@ -232,7 +232,7 @@ export default function QuestionListPage() {
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
 
   return (
-    <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
+    <div className="w-[948px] container mx-auto pt-[40px]">
       <div className="relative w-[948px] h-[115px] mb-6 overflow-hidden">
         <Image
           src="/assets/images/banner.svg"
