@@ -85,25 +85,42 @@ export default function CommentSection() {
 
   const handleCreate = async (): Promise<void> => {
     if (!newContent.trim()) return;
-
+  
     const user = getUserInfo();
     if (!user) return;
-
-    await fetch("/api/comments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        questionId,
-        answerEmail,
-        content: newContent,
-        email: user.email,
-        username: user.nickname,
-        avatarUrl: user.avatarUrl,
-      }),
-    });
-
-    setNewContent("");
-    await fetchComments();
+  
+    try {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId,
+          answerEmail,
+          content: newContent,
+          email: user.email,
+          username: user.nickname,
+          avatarUrl: user.avatarUrl,
+        }),
+      });
+  
+      if (!res.ok) {
+        throw new Error("댓글 등록 실패");
+      }
+  
+      toast.success("댓글이 등록되었습니다.", {
+        id: "comment-toast",
+        position: "bottom-right",
+      });
+  
+      setNewContent("");
+      await fetchComments();
+    } catch (error) {
+      console.error(error);
+      toast.error("댓글 등록에 실패했습니다.", {
+        id: "comment-toast",
+        position: "bottom-right",
+      });
+    }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
