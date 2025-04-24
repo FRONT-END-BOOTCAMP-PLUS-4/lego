@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { TextArea } from "@/components/ui/textArea";
-import { toast } from "sonner";
 
 interface Comment {
   id: number;
@@ -31,6 +30,7 @@ export default function CommentSection() {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [currentUserName, setCurrentUserName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const itemsPerPage = 10;
 
@@ -84,12 +84,14 @@ export default function CommentSection() {
   };
 
   const handleCreate = async (): Promise<void> => {
-    if (!newContent.trim()) return;
+    if (!newContent.trim() || isCreating) return;
   
     const user = getUserInfo();
     if (!user) return;
   
     try {
+      setIsCreating(true);
+
       const res = await fetch("/api/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -107,26 +109,19 @@ export default function CommentSection() {
         throw new Error("댓글 등록 실패");
       }
   
-      toast.success("댓글이 등록되었습니다.", {
-        id: "comment-toast",
-        position: "bottom-right",
-      });
-  
       setNewContent("");
       await fetchComments();
     } catch (error) {
       console.error(error);
-      toast.error("댓글 등록에 실패했습니다.", {
-        id: "comment-toast",
-        position: "bottom-right",
-      });
+    } finally {
+      setIsCreating(false);
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleCreate();
+      handleCreate(); // isCreating이 있으면 중복 방지됨
     }
   };
 
@@ -145,16 +140,8 @@ export default function CommentSection() {
       setEditingId(null);
       setEditingContent("");
       await fetchComments();
-      toast.success("댓글이 수정되었습니다.", {
-        id: "comment-toast",
-        position: "bottom-right",
-      });
     } catch (error) {
       console.error(error);
-      toast.error("댓글 수정에 실패했습니다.", {
-        id: "comment-toast",
-        position: "bottom-right",
-      });
     }
   };
 
@@ -166,17 +153,17 @@ export default function CommentSection() {
         throw new Error("댓글 삭제 실패");
       }
 
-      toast.success("댓글이 삭제되었습니다.", {
-        id: "comment-toast",
-        position: "bottom-right",
-      });
+      // 페이지네이션 유효성 검사
+      const updatedComments = comments.filter((c) => c.id !== id);
+      const totalPages = Math.ceil(updatedComments.length / itemsPerPage);
+
+      if (currentPage > totalPages) {
+        setCurrentPage(Math.max(1, totalPages));
+      }
+
       await fetchComments();
     } catch (error) {
       console.error(error);
-      toast.error("댓글 삭제에 실패했습니다.", {
-        id: "comment-toast",
-        position: "bottom-right",
-      });
     }
   };
 
