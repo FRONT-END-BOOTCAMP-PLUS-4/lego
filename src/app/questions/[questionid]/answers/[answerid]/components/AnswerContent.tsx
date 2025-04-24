@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
 import { useAuthStore } from "@/store/useAuthStore";
-import Image from "next/image";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
