@@ -8,6 +8,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { Heart } from "lucide-react";
 
 export default function AnswerContent() {
   const { user, token } = useAuthStore();
@@ -88,11 +89,10 @@ export default function AnswerContent() {
           className="flex items-center justify-center w-[32px] h-[32px]"
           onClick={handleToggleLike}
         >
-          <Image
-            src={`/assets/icons/like${isLike ? "_fill" : ""}.svg`}
-            alt="like icon"
-            width={24}
-            height={24}
+          <Heart
+            fill={isLike ? "var(--red)" : "none"}
+            stroke={isLike ? "var(--red)" : "var(--black)"}
+            size={32}
             className="cursor-pointer"
           />
         </div>

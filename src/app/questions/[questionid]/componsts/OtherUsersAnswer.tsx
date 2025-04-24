@@ -48,8 +48,8 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
     <>
       <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
       <div
-        className={`grid grid-rows-auto gap-x-4 gap-y-4 mb-[100px] ${
-          isContents ? "grid-cols-2" : "grid-cols-1"
+        className={`grid grid-rows-auto gap-x-4 gap-y-4 ${
+          isContents ? "grid-cols-2" : "grid-cols-1 mb-[100px]"
         }`}
       >
         {questionAnswers.length > 0 ? (
