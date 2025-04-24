@@ -6,10 +6,8 @@ import { HomePopularAnswer } from "@/domain/entities/HomePopularAnswer";
 export class SbHomeRepository implements HomeRepository {
   async getPopularQuestions(): Promise<HomePopularQuestion[]> {
     const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("bookmark")
-      .select(
-        `
+    const { data, error } = await supabase.from("bookmark").select(
+      `
         question_id,
         question:question (
           content,
@@ -18,9 +16,9 @@ export class SbHomeRepository implements HomeRepository {
           )
         )
       `
-      )
-      .limit(10)
-      .order("question_id", { ascending: false });
+    );
+    // .limit(100);
+    // .order("question_id", { ascending: false });
 
     if (error || !data) throw new Error("북마크 인기 질문 조회 실패");
 
@@ -42,10 +40,8 @@ export class SbHomeRepository implements HomeRepository {
 
   async getPopularAnswers(): Promise<HomePopularAnswer[]> {
     const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("like")
-      .select(
-        `
+    const { data, error } = await supabase.from("like").select(
+      `
         answer:answer (
           content,
           username,
@@ -56,8 +52,8 @@ export class SbHomeRepository implements HomeRepository {
           )
         )
       `
-      )
-      .limit(10);
+    );
+    // .limit(10);
 
     if (error || !data) throw new Error("좋아요 인기 답변 조회 실패");
 
