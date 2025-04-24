@@ -49,6 +49,7 @@ export class SbHomeRepository implements HomeRepository {
         answer:answer (
           content,
           username,
+          question_id,
           email,
           question:question (
             content
@@ -73,6 +74,9 @@ export class SbHomeRepository implements HomeRepository {
     return Object.values(counts)
       .sort((a: any, b: any) => b.count - a.count)
       .slice(0, 2)
-      .map((a: any) => new HomePopularAnswer(a.content, a.question.content, a.username, a.email));
+      .map(
+        (a: any) =>
+          new HomePopularAnswer(a.question_id, a.content, a.question.content, a.username, a.email)
+      );
   }
 }
