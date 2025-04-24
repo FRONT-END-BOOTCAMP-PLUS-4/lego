@@ -92,9 +92,9 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-20 border-b border-[#edf2f7]">
       <Link href="/" className="flex items-center ">
         <Image src="/charactor.svg" alt="Logo charactor" width={50} height={50} />
-        <Image src="/logo.png" alt="Logo" width={85} height={85} className="self-center" />
+        <Image src="/logo.png" alt="Logo" width={80} height={80} className="self-center" />
       </Link>
-      <nav className="flex items-center gap-3">
+      <nav className="flex items-center gap-4">
         <MailAlertButton />
 
         {isLoggedIn ? (
@@ -111,7 +111,7 @@ export default function Header() {
                 <p>{user?.nickname}님</p>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="mt-1">
               <DropdownMenuItem onClick={() => router.push("/users")}>
                 <User />
                 마이 페이지

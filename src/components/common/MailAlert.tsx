@@ -21,10 +21,10 @@ export default function MailAlertButton() {
     <>
       <button
         onClick={handleMail}
-        className="flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--blue-03)] cursor-pointer hover:-translate-y-1 transition-transform duration-300"
+        className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-sm bg-[var(--blue-03)] hover:scale-105 transition-transform duration-300 "
       >
-        <Mail fill="white" />
-        <span>메일 받기</span>
+        <Mail fill="white" className="w-6 h-6 text-[var(--gray-02)] stroke-[1.5]" />
+        <span className="txt-sm">메일 받기</span>
       </button>
 
       <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
