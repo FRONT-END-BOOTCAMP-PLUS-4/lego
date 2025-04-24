@@ -91,7 +91,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-3 md:px-20 border-b border-[#edf2f7]">
       <Link href="/" className="flex items-center ">
-        <Image src="/charactor.svg" alt="Logo charactor" width={50} height={50} />
+        <Image src="/logoImg.svg" alt="Logo charactor" width={50} height={50} />
         <Image
           src="/logo.png"
           alt="Logo"
@@ -130,7 +130,9 @@ export default function Header() {
           </DropdownMenu>
         ) : (
           <Link href="/login">
-            <Button variant="ghost">로그인/회원가입</Button>
+            <Button variant="ghost" className="!px-2">
+              로그인 / 회원가입
+            </Button>
           </Link>
         )}
       </nav>

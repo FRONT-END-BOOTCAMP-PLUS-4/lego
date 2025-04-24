@@ -39,9 +39,9 @@ export default function BookmarkList() {
 
   return (
     <section className="mb-[100px]" data-aos="fade-up">
-      <h3 className="txt-3xl-b pb-[var(--space-36)]">많이 스크랩된 콘텐츠</h3>
+      <h3 className="txt-2xl-b pb-[var(--space-36)]">많이 스크랩된 콘텐츠</h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-x-6 gap-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4">
         {loading ? (
           [...Array(4)].map((_, i) => <Card key={i} variant="default" className="h-[120px]" />)
         ) : popularQuestions.length === 0 ? (
@@ -53,10 +53,10 @@ export default function BookmarkList() {
               key={`bm-${item.questionId}`}
             >
               <Card variant="default" className="flex flex-col gap-[var(--space-40)]">
-                <p className="txt-2xl-b line-clamp-1">{item.title}</p>
+                <p className="txt-xl-b line-clamp-1">{item.title}</p>
                 <div className="flex justify-between items-center">
                   <Badge variant="outline">{item.categoryName}</Badge>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-1 items-center">
                     <Bookmark className="fill-[var(--black)] stroke-none" />
                     <p>{formatNumber(item.bookmarkCount)}</p>
                   </div>

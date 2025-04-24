@@ -10,6 +10,7 @@ export default function Loader() {
         height={200}
         className="animate-spin"
       />
+
       <p className="txt-2xl-b mt-4">Loading...</p>
     </div>
   );

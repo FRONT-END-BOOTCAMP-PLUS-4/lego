@@ -49,7 +49,7 @@ export default function MyAnswerPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-4 mb-[100px]">
+      <div className="flex flex-col gap-4">
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i} variant="default" className="space-y-12">
             <div className="flex gap-4 items-center">
@@ -65,22 +65,22 @@ export default function MyAnswerPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 mb-[100px]">
+    <div className="flex flex-col gap-3">
       {paginatedAnswers.map((answer, index) => (
         <Link href={`/questions/${answer.questionId}?userId=${user?.email}`} key={index}>
           <Card variant="default">
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-3">
               <Badge variant="default">{answer.categoryName}</Badge>
-              <p className="txt-2xl-b line-clamp-1">{answer.questionTitle}</p>
+              <p className="txt-xl-b line-clamp-1">{answer.questionTitle}</p>
             </div>
-            <div className="flex flex-col gap-[var(--space-40)]">
+            <div className="flex flex-col gap-[12px]">
               <p className="line-clamp-2">{answer.answerContent}</p>
               <div className="flex justify-between items-center">
                 <p className="txt-sm !text-[var(--gray-02)]">
                   {new Date(answer.createdAt).toLocaleDateString("ko-KR")}
                 </p>
-                <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
-                  <Heart className="w-4 h-4 fill-[var(--black)] stroke-none" />
+                <div className="flex items-center gap-1 txt-sm !text-[var(--gray-02)]">
+                  <Heart size={20} className="fill-[var(--black)] stroke-none" />
                   <p>{formatNumber(answer.likeCount)}</p>
                 </div>
               </div>

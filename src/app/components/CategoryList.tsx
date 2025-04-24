@@ -22,7 +22,7 @@ const category = [
 
 export default function CategoryList() {
   return (
-    <section className="flex justify-center gap-1.5 mt-[var(--space-40)] mb-[60px]">
+    <section className="flex justify-center gap-1.5 mt-[var(--space-40)]">
       {category.map((item) => (
         <Link key={item.id} href={item.href} className="flex flex-col items-center gap-2 w-[135px]">
           <Image

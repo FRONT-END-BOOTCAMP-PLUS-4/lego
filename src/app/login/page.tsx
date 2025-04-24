@@ -39,8 +39,8 @@ export default function LoginPage() {
       <div className="w-[448px] h-[660px] flex flex-col justify-center">
         <div className="h-[380px]">
           <div className="h-[200px] flex flex-col justify-center items-center">
-            <Image src="/assets/image/Logo.svg" width={82} height={82} alt="logo" />
-            <h2 className="txt-4xl-b mb-[8px]" style={{ color: "var(--blue-01)" }}>
+            <Image src="/logoImg.svg" width={120} height={120} alt="logo" />
+            <h2 className="txt-4xl-b" style={{ color: "var(--blue-01)" }}>
               로그인
             </h2>
             <p className="text-center">레고와 함께하세요!</p>
