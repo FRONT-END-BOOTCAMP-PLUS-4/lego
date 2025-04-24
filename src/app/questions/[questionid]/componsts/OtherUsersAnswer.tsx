@@ -1,4 +1,5 @@
 "use client";
+import Empty from "@/app/components/Empty";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { AnswerView } from "@/domain/entities/AnswerView";
@@ -42,10 +43,15 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
     handleGetOtherAnswers();
   }, []);
   console.log(paginatedAnswers);
+  const isContents = paginatedAnswers?.length > 0;
   return (
     <>
       <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
-      <div className="grid grid-cols-2 grid-rows-auto gap-x-4 gap-y-4">
+      <div
+        className={`grid grid-rows-auto gap-x-4 gap-y-4 mb-[100px] ${
+          isContents ? "grid-cols-2" : "grid-cols-1"
+        }`}
+      >
         {questionAnswers.length > 0 ? (
           <>
             {paginatedAnswers?.map((answer) => {
@@ -53,7 +59,7 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
               return (
                 <React.Fragment key={email}>
                   <Link href={`/questions/${questionId}/answers/${email}`}>
-                    <Card>
+                    <Card className="w-full">
                       <div className="flex flex-col justify-between h-[90px]">
                         <div className="flex items-center justify-between w-full">
                           <p className="line-clamp-2 txt-base">{answer?.content}</p>
@@ -92,7 +98,7 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
             })}
           </>
         ) : (
-          <p>아직 다른 사람들의 답변이 없어요!</p>
+          <Empty text="아직 다른 사람들의 답변이 없어요" />
         )}
       </div>
       <Pagination
