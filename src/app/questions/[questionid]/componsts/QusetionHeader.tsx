@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Bookmark } from "lucide-react";
 
 interface QuestionHeaderProps {
   content: string;
@@ -69,13 +70,18 @@ export default function QusetionHeader({
           className="flex items-center justify-center w-[32px] h-[32px]"
           onClick={handleToggleBookmark}
         >
-          <Image
+          <Bookmark
+            size={32}
+            fill={isBookmarked ? "[var(--black)]" : "none"}
+            className="cursor-pointer"
+          />
+          {/* <Image
             src={`/assets/icons/bookmark${isBookmarked ? "_fill" : ""}.svg`}
             alt="bookmark icon"
             width={24}
             height={24}
             className={`w-[24px] h-[24px] object-center cursor-pointer ${isBookmarked && "w-[28px] h-[28px]"}`}
-          />
+          /> */}
         </div>
       </header>
     </>
