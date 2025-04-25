@@ -6,6 +6,46 @@ import { UserBookmark } from "@/domain/entities/UserBookmark";
 import { UserLikedAnswer } from "@/domain/entities/UserLike";
 import { UserComment } from "@/domain/entities/UserComment";
 
+interface AnswerRow {
+  created_at: string;
+}
+
+interface AnswerWithQuestionRow {
+  question_id: number;
+  content: string;
+  created_at: string;
+  question: {
+    content: string;
+    category: { name: string }[];
+  };
+}
+
+interface BookmarkRow {
+  question: {
+    id: number;
+    content: string;
+    category: { image_url: string };
+  };
+}
+
+interface LikeAnswerRow {
+  answer: {
+    question_id: number;
+    content: string;
+    username: string;
+    email: string;
+    avatar_url: string;
+    created_at: string;
+  };
+}
+
+interface CommentRow {
+  content: string;
+  answer_email: string;
+  question_id: number;
+  question: { content: string }[];
+}
+
 export class SbUserRepository implements UserRepository {
   async getUserActivity(email: string): Promise<UserActivity> {
     const supabase = await createClient();
@@ -22,10 +62,12 @@ export class SbUserRepository implements UserRepository {
       .select("created_at")
       .eq("email", email);
 
-    if (dateError) throw new Error("일별 활동 조회 실패");
+    if (dateError || !data) throw new Error("일별 활동 조회 실패");
+
+    const typedData = data as AnswerRow[];
 
     const dateMap: Record<string, number> = {};
-    data.forEach((item) => {
+    typedData.forEach((item) => {
       const date = new Date(item.created_at).toISOString().split("T")[0];
       dateMap[date] = (dateMap[date] || 0) + 1;
     });
@@ -57,14 +99,15 @@ export class SbUserRepository implements UserRepository {
       .eq("email", email)
       .order("created_at", { ascending: false });
 
-    if (error || !data) {
-      console.error("Supabase 오류: ", error);
-      throw new Error("답변 조회 실패");
-    }
+    if (error || !data) throw new Error("답변 조회 실패");
+
+    const typedData = data as unknown as AnswerWithQuestionRow[];
 
     const result: UserAnswer[] = [];
 
-    for (const row of data) {
+    for (const row of typedData) {
+      const categoryName = row.question.category?.[0]?.name ?? "카테고리 없음";
+
       const { count } = await supabase
         .from("like")
         .select("*", { count: "exact", head: true })
@@ -74,7 +117,7 @@ export class SbUserRepository implements UserRepository {
       result.push(
         new UserAnswer(
           row.question_id,
-          row.question.category.name,
+          categoryName,
           row.question.content,
           row.content,
           row.created_at,
@@ -104,12 +147,11 @@ export class SbUserRepository implements UserRepository {
       )
       .eq("email", email);
 
-    if (error || !data) {
-      console.error("북마크 조회 오류: ", error);
-      throw new Error("북마크 조회 실패");
-    }
+    if (error || !data) throw new Error("북마크 조회 실패");
 
-    return data.map((row) => {
+    const typedData = data as unknown as BookmarkRow[];
+
+    return typedData.map((row) => {
       return new UserBookmark(
         row.question.id,
         row.question.content,
@@ -125,31 +167,31 @@ export class SbUserRepository implements UserRepository {
       .from("like")
       .select(
         `
-          answer:answer (
-            question_id,
-            content,
-            username,
-            email,
-            avatar_url,
-            created_at
-          )
-        `
+        answer:answer (
+          question_id,
+          content,
+          username,
+          email,
+          avatar_url,
+          created_at
+        )
+      `
       )
       .eq("like_email", email);
 
-    if (error || !data) {
-      console.error("좋아요한 답변 조회 오류:", error);
-      throw new Error("좋아요한 답변을 조회하지 못했습니다.");
-    }
+    if (error || !data) throw new Error("좋아요한 답변 조회 실패");
 
-    return data.map((row) => {
+    const typedData = data as unknown as LikeAnswerRow[];
+
+    return typedData.map((row) => {
+      const a = row.answer;
       return new UserLikedAnswer(
-        row.answer.question_id,
-        row.answer.content,
-        row.answer.username,
-        row.answer.email,
-        row.answer.avatar_url,
-        row.answer.created_at
+        a.question_id,
+        a.content,
+        a.username,
+        a.email,
+        a.avatar_url,
+        a.created_at
       );
     });
   }
@@ -161,23 +203,23 @@ export class SbUserRepository implements UserRepository {
       .from("comment")
       .select(
         `
-      content,
-      answer_email,
-      question_id,
-      question:question (
-        content
-      )
-    `
+        content,
+        answer_email,
+        question_id,
+        question:question (
+          content
+        )
+      `
       )
       .eq("email", email);
 
-    if (error || !data) {
-      console.error("댓글 조회 오류:", error);
-      throw new Error("댓글 정보를 불러오지 못했습니다.");
-    }
+    if (error || !data) throw new Error("댓글 조회 실패");
 
-    return data.map((row) => {
-      return new UserComment(row.question_id, row.question.content, row.content, row.answer_email);
+    const typedData = data as CommentRow[];
+
+    return typedData.map((row) => {
+      const questionContent = row.question?.[0]?.content ?? "질문 없음";
+      return new UserComment(row.question_id, questionContent, row.content, row.answer_email);
     });
   }
 }
