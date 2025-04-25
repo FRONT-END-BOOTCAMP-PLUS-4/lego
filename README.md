@@ -3,7 +3,9 @@
 > 지식의 블럭을 쌓아나가자!
 
 <div align="center">
-  <img width="500" src=".github/images/mail.png">
+  <a href="https://lego-mail.vercel.app" target="_blank">
+    <img width="500" src=".github/images/mail.png">
+  </a>
   <br /><br />
   <p><strong>프로젝트 기간</strong> : 2025.04.07 - 2025.04.28</p>
   <p><strong>🔗 서비스 URL</strong> : <a href="https://lego-mail.vercel.app" target="_blank">LEGo 바로가기</a></p>
@@ -20,12 +22,12 @@
 <br />
 
 ## 👨‍👨‍👧‍👧 팀원 소개
-|                             김다훈                              |                             이규원                              |                             이경주                              |
-|:---------------------------------------------------------------:|:---------------------------------------------------------------:|:---------------------------------------------------------------:|
-| <img alt="김다훈" src="https://avatars.githubusercontent.com/u/66771509?v=4" height="100" width="100"> | <img alt="이규원" src="https://avatars.githubusercontent.com/u/51187392?v=4" height="100" width="100"> | <img alt="이경주" src="https://avatars.githubusercontent.com/u/167425883?v=4" height="100" width="100"> |
-|       [@hoon95](https://github.com/hoon95)       |     [@darth12dfd](https://github.com/darth12dfd)     |     [@kyoungjooo](https://github.com/kyoungjooo)     |
-|                    **팀장**                    |                        **팀원**                        |                        **팀원**                        |
 
+|                                                 김다훈                                                 |                                                 이규원                                                 |                                                 이경주                                                  |
+| :----------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+| <img alt="김다훈" src="https://avatars.githubusercontent.com/u/66771509?v=4" height="100" width="100"> | <img alt="이규원" src="https://avatars.githubusercontent.com/u/51187392?v=4" height="100" width="100"> | <img alt="이경주" src="https://avatars.githubusercontent.com/u/167425883?v=4" height="100" width="100"> |
+|                                  [@hoon95](https://github.com/hoon95)                                  |                              [@darth12dfd](https://github.com/darth12dfd)                              |                              [@kyoungjooo](https://github.com/kyoungjooo)                               |
+|                                                **팀장**                                                |                                                **팀원**                                                |                                                **팀원**                                                 |
 
 <br /><br />
 
@@ -37,9 +39,9 @@
 <br /><br />
 
 <div align="center">
-  <img align="center" width="700" src=".github/images/1.png" />
+  <img align="center" width="700" src=".github/images/main_1.png" />
   <br /><br /><br /><br />
-  <img align="center" width="700" src=".github/images/2.png" />
+  <img align="center" width="700" src=".github/images/main_2.png" />
 </div>
 
 ### 1️⃣ 취업 준비의 어려움
@@ -63,7 +65,16 @@
 ## 📸 주요 기능
 
 <div align="center">
-  <img width="600" src=".github/images/3.png">
+  <img width="800" src=".github/images/feat_3.png">
+  <br /><br />
+  <img width="800" src=".github/images/feat_01.png">
+  <br /><br />
+  <img width="800" src=".github/images/feat_02.png">
+  <br /><br />
+  <!-- <img width="800" src=".github/images/feat_4.png">
+  <br /><br /> -->
+  <img width="800" src=".github/images/feat_5.png">
+  <br /><br />
 </div>
 
 <br /><br />
@@ -84,4 +95,8 @@
 
 <br /><br />
 
-## 📆 개발 일정
+## 📅 일정 관리
+
+<div align="center">
+  <img width="1000" src=".github/images/schedule.png" />  
+</div>
