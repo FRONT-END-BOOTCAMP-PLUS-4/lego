@@ -220,41 +220,6 @@ export default function QuestionListPage() {
     setPageNumber(1);
   };
 
-  useEffect(() => {
-    const keywordFromURL = searchParams.get("search")?.trim().toLowerCase() ?? "";
-    setSearchKeyword(keywordFromURL);
-
-    if (keywordFromURL && questions.length > 0) {
-      const matched = questions.filter((q) => q.content.toLowerCase().includes(keywordFromURL));
-      setFilteredQuestions(matched);
-      setPageNumber(1);
-    } else {
-      setFilteredQuestions([]);
-    }
-  }, [questions, searchParams]);
-
-  useEffect(() => {
-    const updateURLWithEmail = async () => {
-      const filter = searchParams.get("filter");
-      const emailFromURL = searchParams.get("email");
-
-      if ((filter === "bookmarked" || filter === "answered") && !emailFromURL) {
-        const authStorage = localStorage.getItem("auth-storage");
-        if (authStorage) {
-          const parsed = JSON.parse(authStorage);
-          const email = parsed?.state?.user?.email;
-          if (email) {
-            const params = new URLSearchParams(searchParams.toString());
-            params.set("email", email);
-            router.push(`/questions?${params.toString()}`);
-          }
-        }
-      }
-    };
-
-    updateURLWithEmail();
-  }, []);
-
   const hasKeyword = searchParams.get("search")?.trim().toLowerCase();
   const isSearching = !!hasKeyword;
   const visibleQuestions = isSearching ? filteredQuestions : questions;
