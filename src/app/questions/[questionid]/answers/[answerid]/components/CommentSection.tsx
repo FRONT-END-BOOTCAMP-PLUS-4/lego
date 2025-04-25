@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, KeyboardEvent } from "react";
+import { useEffect, useState, useCallback, KeyboardEvent } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -34,11 +34,11 @@ export default function CommentSection() {
 
   const itemsPerPage = 10;
 
-  const fetchComments = async (): Promise<void> => {
+  const fetchComments = useCallback(async (): Promise<void> => {
     const res = await fetch(`/api/comments?questionId=${questionId}&answerEmail=${answerEmail}`);
     const data = await res.json();
     setComments(data);
-  };
+  }, [questionId, answerEmail]);
 
   useEffect(() => {
     if (questionId && answerEmail) {
@@ -66,7 +66,7 @@ export default function CommentSection() {
         }
       }
     }
-  }, [questionId, answerEmail]);
+  }, [questionId, answerEmail, fetchComments]);
 
   const getUserInfo = (): { email: string; nickname: string; avatarUrl: string } | null => {
     if (typeof window === "undefined") return null;
@@ -85,10 +85,10 @@ export default function CommentSection() {
 
   const handleCreate = async (): Promise<void> => {
     if (!newContent.trim() || isCreating) return;
-  
+
     const user = getUserInfo();
     if (!user) return;
-  
+
     try {
       setIsCreating(true);
 
@@ -104,11 +104,9 @@ export default function CommentSection() {
           avatarUrl: user.avatarUrl,
         }),
       });
-  
-      if (!res.ok) {
-        throw new Error("댓글 등록 실패");
-      }
-  
+
+      if (!res.ok) throw new Error("댓글 등록 실패");
+
       setNewContent("");
       await fetchComments();
     } catch (error) {
@@ -121,7 +119,7 @@ export default function CommentSection() {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleCreate(); // isCreating이 있으면 중복 방지됨
+      handleCreate();
     }
   };
 
@@ -133,9 +131,7 @@ export default function CommentSection() {
         body: JSON.stringify({ content: editingContent }),
       });
 
-      if (!res.ok) {
-        throw new Error("댓글 수정 실패");
-      }
+      if (!res.ok) throw new Error("댓글 수정 실패");
 
       setEditingId(null);
       setEditingContent("");
@@ -149,14 +145,10 @@ export default function CommentSection() {
     try {
       const res = await fetch(`/api/comments/${id}`, { method: "DELETE" });
 
-      if (!res.ok) {
-        throw new Error("댓글 삭제 실패");
-      }
+      if (!res.ok) throw new Error("댓글 삭제 실패");
 
-      // 페이지네이션 유효성 검사
       const updatedComments = comments.filter((c) => c.id !== id);
       const totalPages = Math.ceil(updatedComments.length / itemsPerPage);
-
       if (currentPage > totalPages) {
         setCurrentPage(Math.max(1, totalPages));
       }
