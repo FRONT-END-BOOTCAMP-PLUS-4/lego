@@ -6,12 +6,12 @@ import { NextRequest, NextResponse } from "next/server";
 //이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
 //문제, 답변 조회
 
-export async function GET(request: NextRequest, context: { params: Record<string, string> }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(request: NextRequest, { params }: { params: any }) {
   try {
-    const params = await context.params;
-    const questionId = Number(params.questionId);
+    const { questionId } = params;
     const userId = request.nextUrl.searchParams.get("userId") ?? undefined;
-    const questionDto = new GetQuestionDto(questionId, userId);
+    const questionDto = new GetQuestionDto(Number(questionId), userId);
     const getQuestionRepo = new SbQuestionRepository();
     const getQuestionUsecase = new GetQuestionUsecase(getQuestionRepo);
     const respond = await getQuestionUsecase.execute(questionDto);

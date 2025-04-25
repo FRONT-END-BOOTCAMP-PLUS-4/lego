@@ -122,8 +122,8 @@ export class SbAnswerRepository implements AnswerRepository {
         row.username,
         row.like?.length ?? 0,
         row.question_id,
-        row.question?.category?.name,
-        row.question?.content,
+        row.question?.[0]?.category?.[0]?.name,
+        row.question?.[0]?.content,
         row.like?.some((l) => l.like_email === userId) ?? false
       );
     });
