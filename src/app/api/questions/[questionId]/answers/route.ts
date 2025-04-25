@@ -5,13 +5,13 @@ import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerReposi
 import { NextRequest, NextResponse } from "next/server";
 
 //특정 문제의 답변들 조회
-export async function GET(request: NextRequest, context: { params: Record<string, string> }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(request: NextRequest, { params }: { params: any }) {
   try {
-    const params = await context.params;
-    const questionId = Number(params.questionId);
+    const { questionId } = await params;
     const userId = request.nextUrl.searchParams.get("userId");
 
-    const answerDto = new GetAnswerDto(userId, questionId);
+    const answerDto = new GetAnswerDto(userId, Number(questionId));
     const answerRepo: AnswerRepository = new SbAnswerRepository();
     const getAnswerListUsecase = new GetAnswerListUsecase(answerRepo);
     const answers = await getAnswerListUsecase.execute(answerDto);
