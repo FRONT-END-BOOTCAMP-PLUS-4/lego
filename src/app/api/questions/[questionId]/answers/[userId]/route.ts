@@ -5,15 +5,13 @@ import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerReposi
 import { NextRequest, NextResponse } from "next/server";
 
 //특정 문제의 특정 유저 답변 조회
-export async function GET(
-  request: NextRequest,
-  context: { params: { questionId: string; userId: string } }
-) {
+export async function GET(request: NextRequest, context: { params: Record<string, string> }) {
   try {
-    const questionId = Number(context.params.questionId);
-    const answerAuthorId = context.params.userId; //답변한 사람의 id
-    const userId = request.nextUrl.searchParams.get("currentUser");
-    const answerDto = new GetAnswerDto(userId, questionId, answerAuthorId);
+    const params = await context.params;
+    const questionId = Number(params.questionId);
+    const answerAuthorId = params.userId;
+    const currentUser = request.nextUrl.searchParams.get("currentUser");
+    const answerDto = new GetAnswerDto(currentUser, Number(questionId), answerAuthorId);
     const answerRepo: AnswerRepository = new SbAnswerRepository();
     const getAnswerUsecase = new GetAnswerUsecase(answerRepo);
     const answers = await getAnswerUsecase.execute(answerDto);

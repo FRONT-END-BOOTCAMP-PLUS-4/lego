@@ -41,7 +41,7 @@ export default function CommentPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-4 mb-[100px]">
+      <div className="flex flex-col gap-4 ">
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i} variant="default" className="space-y-4">
             <Skeleton className="h-5 w-[90%]" />
@@ -53,7 +53,7 @@ export default function CommentPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {paginated.map((item, i) => (
         <Link key={i} href={`/questions/${item.questionId}/answers/${item.answerAuthorEmail}`}>
           <Card variant="default" className="flex flex-col gap-1">

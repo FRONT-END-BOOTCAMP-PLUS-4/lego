@@ -70,7 +70,7 @@ export default function Activity() {
     <>
       <Card
         variant="default"
-        className="flex justify-between mb-[38px] mt-[var(--space-50)] cursor-default"
+        className="flex justify-between mb-[38px] mt-[var(--space-50)] cursor-default hover:bg-[var(--blue-04)] px-[36px]"
       >
         <div className="flex">
           <div className="flex flex-col">

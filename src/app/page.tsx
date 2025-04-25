@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
 import CategoryList from "./components/CategoryList";
 import Guide from "./components/Guide";
 import BookmarkList from "./components/BookmarkList";
@@ -14,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     AOS.init({
       duration: 1000,
-      offset: 300,
+      offset: 30,
     });
   }, []);
 

@@ -46,7 +46,7 @@ export default function LikeAnswerPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-6 mb-[100px]">
+      <div className="flex flex-col gap-6">
         {Array.from({ length: 2 }).map((_, i) => (
           <Card key={i} variant="default" className="space-y-4">
             <div className="flex gap-4">
@@ -61,7 +61,7 @@ export default function LikeAnswerPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 mb-[100px]">
+    <div className="flex flex-col gap-3">
       {paginatedData.map((item, index) => (
         <Link key={index} href={`/questions/${item.questionId}/answers/${item.answerAuthorEmail}`}>
           <Card variant="default">
@@ -74,7 +74,7 @@ export default function LikeAnswerPage() {
                 <p className="line-clamp-2">{item.answerContent}</p>
               </div>
               <div className="flex items-center gap-2 txt-sm !text-[var(--gray-02)]">
-                <p>{item.answerAuthor}</p>
+                <p className="txt-sm-b !text-[var(--gray-02)]">{item.answerAuthor}</p>
                 <p>{new Date(item.createdAt).toLocaleDateString("ko-KR")}</p>
               </div>
             </div>

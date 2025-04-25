@@ -26,15 +26,15 @@ export default function PopularAnswers() {
 
   return (
     <section className="mb-[150px]" data-aos="fade-left">
-      <h3 className="txt-3xl-b pb-[var(--space-36)]">많이 좋아요 받은 답변</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
+      <h3 className="txt-2xl-b pb-[var(--space-36)]">많이 좋아요 받은 답변</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-4 items-stretch">
         {answers.map((item, i) => (
           <Link href={`/questions/${item.questionId}/answers/${item.useremail}`} key={`al-${i}`}>
             <Card
               variant="none"
               className="flex flex-col gap-[var(--space-40)] p-[var(--space-36)] h-full"
             >
-              <p className="txt-2xl-b line-clamp-2">{item.answerContent}</p>
+              <p className="txt-xl-b line-clamp-2">{item.answerContent}</p>
               <div className="flex justify-between txt-sm !text-[var(--gray-02)] mt-auto">
                 <p>{item.questionTitle}</p>
                 <p>{item.username}</p>
