@@ -35,6 +35,34 @@ type QuestionWithMeta = {
   answer: { count: number }[];
 };
 
+interface AnswerWithQuestionRow {
+  question_id: number;
+  content: string;
+  created_at: string;
+  question: {
+    id: number;
+    content: string;
+    solution: string;
+    views: number;
+    created_at: string;
+    category_id: number;
+    bookmark?: { count: number }[];
+    answer?: { count: number }[];
+  };
+}
+interface BookmarkRow {
+  question: {
+    id: number;
+    content: string;
+    solution: string;
+    views: number;
+    created_at: string;
+    category_id: number;
+    bookmark?: { count: number }[];
+    answer?: { count: number }[];
+  };
+}
+
 export class SbQuestionRepository implements QuestionRepository {
   //특정 유저의 특정 답변 조회
   //question 조회
@@ -186,83 +214,93 @@ export class SbQuestionRepository implements QuestionRepository {
   }
 
   // 북마크된 사용자별 문제 조회
-async getBookmarkedQuestionsByUser(email: string): Promise<QuestionDto[]> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("bookmark")
-    .select(
-      `question:question_id (
-        id, category_id, content, solution, views, created_at,
-        bookmark:bookmark(count),
-        answer:answer(count)
-      )`
-    )
-    .eq("email", email);
-
-  if (error) throw new Error(error.message);
-  if (!data) return [];
-
-  // 수정된 로직
-  return data
-    .map((item) => {
-      const questionList = (item as { question: QuestionWithMeta[] }).question;
-
-      // 관계형 조인 결과가 배열이라면 첫 번째 항목 사용
-      const q = questionList[0];
-      if (!q) return null;
-
-      return new QuestionDto(
-        q.id,
-        q.category_id,
-        q.content,
-        q.solution,
-        q.views,
-        q.created_at,
-        q.bookmark?.[0]?.count ?? 0,
-        q.answer?.[0]?.count ?? 0
-      );
-    })
-    .filter((q): q is QuestionDto => q !== null);
-}
+  async getBookmarkedQuestionsByUser(email: string): Promise<QuestionDto[]> {
+    const supabase = await createClient();
+  
+    const { data, error } = await supabase
+      .from("bookmark")
+      .select(`
+        question:question (
+          id,
+          content,
+          solution,
+          views,
+          created_at,
+          category_id,
+          bookmark:bookmark(count),
+          answer:answer(count)
+        )
+      `)
+      .eq("email", email);
+  
+    if (error || !data) throw new Error("북마크 문제 조회 실패");
+  
+    const typedData = data as unknown as BookmarkRow[];
+  
+    return typedData
+      .map((row) => {
+        const q = row.question;
+        if (!q) return null;
+  
+        return new QuestionDto(
+          q.id,
+          q.category_id,
+          q.content,
+          q.solution,
+          q.views,
+          q.created_at,
+          q.bookmark?.[0]?.count ?? 0,
+          q.answer?.[0]?.count ?? 0
+        );
+      })
+      .filter((q): q is QuestionDto => q !== null);
+  }
   
 
   // 사용자가 답변한 질문 목록 조회
-  // 사용자가 답변한 질문 목록 조회
-async getAnsweredQuestionsByUser(email: string): Promise<QuestionDto[]> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("answer")
-    .select(`
-      question:question_id (
-        id, category_id, content, solution, views, created_at,
-        bookmark:bookmark(count),
-        answer:answer(count)
-      )
-    `)
-    .eq("email", email);
-
-  if (error) throw new Error(error.message);
-  if (!data) return [];
-
-  return data
-    .map((item) => {
-      const questions = (item as { question: QuestionWithMeta[] }).question;
-      const q = questions?.[0];
-      if (!q) return null;
-
-      return new QuestionDto(
-        q.id,
-        q.category_id,
-        q.content,
-        q.solution,
-        q.views,
-        q.created_at,
-        q.bookmark?.[0]?.count ?? 0,
-        q.answer?.[0]?.count ?? 0
-      );
-    })
-    .filter((q): q is QuestionDto => q !== null);
+  async getAnsweredQuestionsByUser(email: string): Promise<QuestionDto[]> {
+    const supabase = await createClient();
+  
+    const { data, error } = await supabase
+      .from("answer")
+      .select(`
+        question_id,
+        content,
+        created_at,
+        question:question (
+          id,
+          content,
+          solution,
+          views,
+          created_at,
+          category_id,
+          bookmark:bookmark(count),
+          answer:answer(count)
+        )
+      `)
+      .eq("email", email);
+  
+    if (error || !data) throw new Error("답변한 문제 조회 실패");
+  
+    const typedData = data as unknown as AnswerWithQuestionRow[];
+  
+    return typedData
+      .map((row) => {
+        const q = row.question;
+        if (!q) return null;
+  
+        return new QuestionDto(
+          q.id,
+          q.category_id,
+          q.content,
+          q.solution,
+          q.views,
+          q.created_at,
+          q.bookmark?.[0]?.count ?? 0,
+          q.answer?.[0]?.count ?? 0
+        );
+      })
+      .filter((q): q is QuestionDto => q !== null);
   }
+  
 }
