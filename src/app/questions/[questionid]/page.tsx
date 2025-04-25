@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
+import Alert from "./componsts/Alert";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -36,6 +37,8 @@ export default function AnswerFormPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const answerRef = useRef<HTMLTextAreaElement>(null);
   const token: string | null = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
@@ -46,7 +49,7 @@ export default function AnswerFormPage() {
 
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
-  const handleGetQuestion = async () => {
+  const handleGetQuestion = useCallback(async () => {
     try {
       const response = await fetch(
         isMatchCurrentLoginUser
@@ -68,11 +71,11 @@ export default function AnswerFormPage() {
     } catch (error) {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);
     }
-  };
+  }, [questionId, userEmail, isMatchCurrentLoginUser, token]);
 
   useEffect(() => {
     handleGetQuestion();
-  }, []);
+  }, [handleGetQuestion]);
 
   useEffect(() => {
     if (!questionData) return;
@@ -83,16 +86,21 @@ export default function AnswerFormPage() {
     }
   }, [questionData]);
 
+  if (isEditing) {
+    answerRef.current?.focus();
+  }
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isMatchCurrentLoginUser) {
-      return router.push("/login");
+      router.replace("/404");
     }
-    const method = action === "create" ? "POST" : "PUT";
-    if (!content.trim()) {
-      alert("내용을 입력해주세요.");
+    if (userAnswer.trim().length === 0) {
+      setShowAlert(true);
+
       return;
     }
+
+    const method = action === "create" ? "POST" : "PUT";
 
     const formData = {
       userId: userEmail,
@@ -151,6 +159,9 @@ export default function AnswerFormPage() {
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <>
+      {showAlert && (
+        <Alert text="내용을 입력해주세요" showAlert={showAlert} setShowAlert={setShowAlert} />
+      )}
       <div className="container mx-auto pt-[40px]">
         <QusetionHeader
           content={content}
@@ -172,6 +183,7 @@ export default function AnswerFormPage() {
                 onChange={(e) => setUserAnswer(e.target.value)}
                 value={userAnswer}
                 disabled={!isEditing}
+                ref={answerRef}
               ></textarea>
             </TabsContent>
             <TabsContent value="tab2">

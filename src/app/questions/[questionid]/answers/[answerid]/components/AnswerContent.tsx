@@ -1,13 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
 import { useAuthStore } from "@/store/useAuthStore";
-import Image from "next/image";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { Heart } from "lucide-react";
 
 export default function AnswerContent() {
   const { user, token } = useAuthStore();
@@ -19,7 +19,7 @@ export default function AnswerContent() {
   const [isLike, setIsLike] = useState<boolean | undefined>(answerData?.isLike); // likeState 서버에서 받아온 값
   const currentUserId = user?.email; //현재 로그인한 유저 아이디
 
-  const handleGetAnswerDetail = async () => {
+  const handleGetAnswerDetail = useCallback(async () => {
     const response = await fetch(
       `/api/questions/${questionId}/answers/${answerId}?currentUser=${currentUserId}`,
       {
@@ -35,10 +35,10 @@ export default function AnswerContent() {
     }
     const { data } = await response.json();
     setAnswerDate(data);
-  };
+  }, [questionId, answerId, currentUserId, token]);
   useEffect(() => {
     handleGetAnswerDetail();
-  }, []);
+  }, [handleGetAnswerDetail]);
 
   useEffect(() => {
     if (answerData?.isLike !== undefined) {
@@ -88,11 +88,10 @@ export default function AnswerContent() {
           className="flex items-center justify-center w-[32px] h-[32px]"
           onClick={handleToggleLike}
         >
-          <Image
-            src={`/assets/icons/like${isLike ? "_fill" : ""}.svg`}
-            alt="like icon"
-            width={24}
-            height={24}
+          <Heart
+            fill={isLike ? "var(--red)" : "none"}
+            stroke={isLike ? "var(--red)" : "var(--black)"}
+            size={32}
             className="cursor-pointer"
           />
         </div>

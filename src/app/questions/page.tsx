@@ -18,6 +18,8 @@ import { Pagination } from "@/components/ui/pagination";
 import { CategoryDto } from "@/application/usecase/category/dto/CategoryDto";
 import { QuestionDto } from "@/application/usecase/question/dto/QuestionDto";
 import { useAuthStore } from "@/store/useAuthStore";
+import Empty from "../components/Empty";
+import NotFound from "../loading";
 
 export default function QuestionListPage() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
@@ -47,8 +49,7 @@ export default function QuestionListPage() {
       ? "전체"
       : (categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체");
 
-  const getImageUrlByCategory = (categoryId: number) =>
-    `/assets/images/category/${categoryId}.svg`;
+  const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -191,9 +192,7 @@ export default function QuestionListPage() {
     setSearchKeyword(keywordFromURL);
 
     if (keywordFromURL && questions.length > 0) {
-      const matched = questions.filter((q) =>
-        q.content.toLowerCase().includes(keywordFromURL)
-      );
+      const matched = questions.filter((q) => q.content.toLowerCase().includes(keywordFromURL));
       setFilteredQuestions(matched);
       setPageNumber(1);
     } else {
@@ -233,7 +232,7 @@ export default function QuestionListPage() {
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
 
   return (
-    <div className="w-[948px] container mx-auto pt-[40px] md:px-6">
+    <div className="w-[948px] container mx-auto pt-[40px]">
       <div className="relative w-[948px] h-[115px] mb-6 overflow-hidden">
         <Image
           src="/assets/images/banner.svg"
@@ -310,25 +309,19 @@ export default function QuestionListPage() {
 
       <div className="flex justify-center min-h-[300px]">
         {isLoading ? (
-          <div className="flex flex-col items-center">
-            <Image
-              src="/assets/images/QuestionsLoading.png"
-              alt="문제 로딩 중"
-              width={240}
-              height={240}
-            />
-            <p className="mt-4 text-sm text-gray-500">문제를 불러오는 중입니다...</p>
-          </div>
+          <NotFound />
         ) : visibleQuestions.length > 0 ? (
           <div className="flex flex-col gap-[16px] w-full">
             {pagedQuestions.map((question) => (
-              <Link 
-              key={question.id}  href={
-                userEmail
-                  ? `/questions/${question.id}?userId=${userEmail}`
-                  : `/questions/${question.id}`
-              }>
-                <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200">
+              <Link
+                key={question.id}
+                href={
+                  userEmail
+                    ? `/questions/${question.id}?userId=${userEmail}`
+                    : `/questions/${question.id}`
+                }
+              >
+                <Card className="cursor-pointer">
                   <div className="flex h-full items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Image
@@ -338,7 +331,7 @@ export default function QuestionListPage() {
                         height={32}
                         className="rounded-md"
                       />
-                      <span className="txt-2xl-b line-clamp-1">{question.content}</span>
+                      <span className="txt-xl-b line-clamp-1">{question.content}</span>
                     </div>
                     <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
                       <span>북마크 {question.bookmark_count}</span>
@@ -350,15 +343,7 @@ export default function QuestionListPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center">
-            <Image
-              src="/assets/images/QuestionsNotFound.png"
-              alt="결과 없음"
-              width={240}
-              height={240}
-            />
-            <p className="mt-4 text-sm text-gray-500">조건에 해당하는 문제가 없습니다.</p>
-          </div>
+          <Empty text="조건에 해당하는 문제가 없습니다 👻" />
         )}
       </div>
 

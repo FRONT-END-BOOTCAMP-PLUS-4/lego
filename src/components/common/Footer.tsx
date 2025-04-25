@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
-  const handleBlockLink = (e) => {
+  const handleBlockLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
   };
   return (

@@ -54,11 +54,11 @@ export default function BookmarkPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {currentItems.map((item) => (
         <Link href={`/questions/${item.questionId}?userId=${user?.email}`} key={item.questionId}>
           <Card variant="tight" className="flex items-center justify-between">
-            <div className="txt-2xl-b flex items-center gap-6 cursor-pointer w-[90%]">
+            <div className="txt-xl-b flex items-center gap-6 cursor-pointer w-[90%]">
               <Image
                 src={item.categoryImageUrl}
                 width={32}
