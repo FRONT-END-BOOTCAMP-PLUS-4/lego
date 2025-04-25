@@ -1,4 +1,5 @@
 "use client";
+
 import throttle from "lodash.throttle";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,6 +33,13 @@ export default function QuestionListPage() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const paramsString = searchParams.toString();
+
+  const filter = searchParams.get("filter");
+  const emailFromURL = searchParams.get("email");
+  const sortBy = searchParams.get("sortBy") ?? "recent";
+  const keywordFromURL = searchParams.get("search")?.trim().toLowerCase() ?? "";
+  const currentCategoryId = searchParams.get("categoryId");
 
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
@@ -41,13 +49,12 @@ export default function QuestionListPage() {
   const user = useAuthStore((state) => state.user);
   const userEmail = user?.email;
 
-  //const sortOption = (searchParams.get("sortBy") as "recent" | "bookmark") ?? "recent";
-  const filterOption = (searchParams.get("filter") as "all" | "bookmarked" | "answered") ?? "all";
+  const filterOption = (filter as "all" | "bookmarked" | "answered") ?? "all";
 
   const selectedCategoryName =
     selectedCategoryId === null
       ? "전체"
-      : (categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체");
+      : categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체";
 
   const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
 
@@ -83,13 +90,9 @@ export default function QuestionListPage() {
         setIsLoggedIn(false);
       }
 
-      const currentSort = searchParams.get("sortBy") ?? "recent";
-      const currentFilter = searchParams.get("filter") ?? "all";
-      const currentCategoryId = searchParams.get("categoryId");
+      const params = new URLSearchParams(paramsString);
 
-      const params = new URLSearchParams(searchParams.toString());
-
-      if ((currentFilter === "bookmarked" || currentFilter === "answered") && email) {
+      if ((filter === "bookmarked" || filter === "answered") && email) {
         params.set("email", email);
       } else {
         params.delete("email");
@@ -103,12 +106,12 @@ export default function QuestionListPage() {
 
       if (!isCurrent) return;
 
-      if (currentFilter === "bookmarked" || currentFilter === "answered") {
+      if (filter === "bookmarked" || filter === "answered") {
         if (currentCategoryId) {
           data = data.filter((q) => q.categoryId === Number(currentCategoryId));
         }
 
-        if (currentSort === "bookmark") {
+        if (sortBy === "bookmark") {
           data.sort((a, b) => b.bookmark_count - a.bookmark_count);
         } else {
           data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -127,11 +130,41 @@ export default function QuestionListPage() {
     return () => {
       isCurrent = false;
     };
-  }, [searchParams.toString()]);
+  }, [paramsString, router, filter, sortBy, currentCategoryId]);
+
+  useEffect(() => {
+    setSearchKeyword(keywordFromURL);
+
+    if (keywordFromURL && questions.length > 0) {
+      const matched = questions.filter((q) =>
+        q.content.toLowerCase().includes(keywordFromURL)
+      );
+      setFilteredQuestions(matched);
+      setPageNumber(1);
+    } else {
+      setFilteredQuestions([]);
+    }
+  }, [questions, keywordFromURL]);
+
+  useEffect(() => {
+    if ((filter === "bookmarked" || filter === "answered") && !emailFromURL) {
+      const authStorage = localStorage.getItem("auth-storage");
+      if (authStorage) {
+        const parsed = JSON.parse(authStorage);
+        const email = parsed?.state?.user?.email;
+        if (email) {
+          const params = new URLSearchParams(paramsString);
+          params.set("email", email);
+          router.push(`/questions?${params.toString()}`);
+        }
+      }
+    }
+  }, [filter, emailFromURL, paramsString, router]);
+
 
   const throttledHandleCategoryChange = throttle((name: string) => {
     const category = categories.find((c) => c.name === name);
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(paramsString);
 
     if (category) {
       params.set("categoryId", category.id.toString());
@@ -146,7 +179,7 @@ export default function QuestionListPage() {
   }, 500);
 
   const throttledHandleFilterChange = throttle((filter: "all" | "bookmarked" | "answered") => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(paramsString);
     params.set("filter", filter);
 
     const authStorage = localStorage.getItem("auth-storage");
@@ -167,7 +200,7 @@ export default function QuestionListPage() {
   }, 500);
 
   const handleSortClick = (sortBy: "recent" | "bookmark") => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(paramsString);
     params.set("sortBy", sortBy);
     router.push(`/questions?${params.toString()}`);
     setPageNumber(1);
@@ -175,7 +208,7 @@ export default function QuestionListPage() {
 
   const handleSearch = () => {
     const keyword = searchKeyword.trim().toLowerCase();
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(paramsString);
 
     if (keyword) {
       params.set("search", keyword);
@@ -230,7 +263,6 @@ export default function QuestionListPage() {
   const startIdx = (pageNumber - 1) * 10;
   const endIdx = startIdx + 10;
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
-
   return (
     <div className="w-[948px] container mx-auto pt-[40px]">
       <div className="relative w-[948px] h-[115px] mb-6 overflow-hidden">
