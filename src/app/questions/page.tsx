@@ -294,7 +294,7 @@ export default function QuestionListPage() {
 
       <div className="flex items-center justify-between mb-[12px]">
         <h2 className="txt-lg-b">문제</h2>
-        <div className="flex gap-[12px]">
+        <div className="flex">
           <Button variant="ghost" size="sm" onClick={() => handleSortClick("bookmark")}>
             인기순
           </Button>
@@ -308,7 +308,7 @@ export default function QuestionListPage() {
         {isLoading ? (
           <NotFound />
         ) : visibleQuestions.length > 0 ? (
-          <div className="flex flex-col gap-[16px] w-full">
+          <div className="flex flex-col gap-3 w-full">
             {pagedQuestions.map((question) => (
               <Link
                 key={question.id}
