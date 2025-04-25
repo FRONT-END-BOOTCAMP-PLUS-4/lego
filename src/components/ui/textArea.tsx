@@ -19,7 +19,7 @@ function TextArea(
       )}
     >
       {/* 👇 여기에 mt-1 추가 */}
-      <div className="text-sm font-bold mt-1 mb-[10px]">{label}</div>
+      <div className="text-sm font-bold mt-1 mb-[4px]">{label}</div>
 
       <input
         className="w-full border-none text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
