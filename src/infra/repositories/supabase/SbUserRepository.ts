@@ -16,7 +16,7 @@ interface AnswerWithQuestionRow {
   created_at: string;
   question: {
     content: string;
-    category: { name: string }[];
+    category: { name: string };
   };
 }
 
@@ -43,7 +43,7 @@ interface CommentRow {
   content: string;
   answer_email: string;
   question_id: number;
-  question: { content: string }[];
+  question: { content: string };
 }
 
 export class SbUserRepository implements UserRepository {
@@ -106,7 +106,7 @@ export class SbUserRepository implements UserRepository {
     const result: UserAnswer[] = [];
 
     for (const row of typedData) {
-      const categoryName = row.question.category?.[0]?.name ?? "카테고리 없음";
+      const categoryName = row.question.category?.name ?? "카테고리 없음";
 
       const { count } = await supabase
         .from("like")
@@ -215,10 +215,10 @@ export class SbUserRepository implements UserRepository {
 
     if (error || !data) throw new Error("댓글 조회 실패");
 
-    const typedData = data as CommentRow[];
+    const typedData = data as unknown as CommentRow[];
 
     return typedData.map((row) => {
-      const questionContent = row.question?.[0]?.content ?? "질문 없음";
+      const questionContent = row.question?.content ?? "질문 없음";
       return new UserComment(row.question_id, questionContent, row.content, row.answer_email);
     });
   }
