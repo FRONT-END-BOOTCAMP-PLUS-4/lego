@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -38,6 +38,7 @@ export default function AnswerFormPage() {
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
   const [showAlert, setShowAlert] = useState(false);
+  const answerRef = useRef<HTMLTextAreaElement>(null);
   const token: string | null = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
@@ -85,6 +86,9 @@ export default function AnswerFormPage() {
     }
   }, [questionData]);
 
+  if (isEditing) {
+    answerRef.current?.focus();
+  }
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isMatchCurrentLoginUser) {
@@ -179,6 +183,7 @@ export default function AnswerFormPage() {
                 onChange={(e) => setUserAnswer(e.target.value)}
                 value={userAnswer}
                 disabled={!isEditing}
+                ref={answerRef}
               ></textarea>
             </TabsContent>
             <TabsContent value="tab2">
