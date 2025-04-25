@@ -5,7 +5,7 @@ import { LoginWithGitHubUsecase } from "@/application/usecase/user/LoginWithGith
 import { LoginWithGoogleUsecase } from "@/application/usecase/user/LoginWithGoogle";
 
 export async function POST(req: NextRequest, context: any) {
-  const { provider } = context.params; // 바로 꺼내기
+  const { provider } = await context.params;
   const { code } = await req.json();
 
   if (!code || !provider) {

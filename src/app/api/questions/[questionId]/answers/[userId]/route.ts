@@ -5,7 +5,8 @@ import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerReposi
 import { NextRequest, NextResponse } from "next/server";
 
 //특정 문제의 특정 유저 답변 조회
-export async function GET(request: NextRequest, { params }: { params: any }) {
+export async function GET(request: NextRequest, props: { params: Promise<any> }) {
+  const params = await props.params;
   try {
     const { questionId, userId: answerAuthorId } = params;
     const currentUser = request.nextUrl.searchParams.get("currentUser");
