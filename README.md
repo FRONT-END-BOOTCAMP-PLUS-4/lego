@@ -1,12 +1,17 @@
-# 🧱 레고(LEGo)
+# 🧱 레고(LEGo) - 기술면접 준비 플랫폼
 
 > 지식의 블럭을 쌓아나가자!
 
-<img src=".github/images/mail.png">
+<div align="center">
+  <img width="500" src=".github/images/mail.png">
+  <br /><br />
+  <p><strong>프로젝트 기간</strong> : 2025.04.07 - 2025.04.28</p>
+  <p><strong>🔗 서비스 URL</strong> : <a href="https://lego-mail.vercel.app" target="_blank">LEGo 바로가기</a></p>
+</div>
 
-## 🔗 배포주소 : [LEGo](https://lego-mail.vercel.app)
+<br />
 
-### 💻 개발자를 위한 **기술면접 준비** 플랫폼
+### 💻 개발자를 위한 기술면접 준비 플랫폼
 
 > ✉️ 하루 한 문제, 메일로 기술 면접 질문을 받아보세요! <br/>
 > 💬 답변을 작성하고, 다른 사람의 답변을 보며 함께 성장하세요! <br />
@@ -14,7 +19,13 @@
 
 <br />
 
-## 👨‍👨‍👧‍👧 팀 구성
+## 👨‍👨‍👧‍👧 팀원 소개
+|                             김다훈                              |                             이규원                              |                             이경주                              |
+|:---------------------------------------------------------------:|:---------------------------------------------------------------:|:---------------------------------------------------------------:|
+| <img alt="김다훈" src="https://avatars.githubusercontent.com/u/66771509?v=4" height="100" width="100"> | <img alt="이규원" src="https://avatars.githubusercontent.com/u/51187392?v=4" height="100" width="100"> | <img alt="이경주" src="https://avatars.githubusercontent.com/u/167425883?v=4" height="100" width="100"> |
+|       [@hoon95](https://github.com/hoon95)       |     [@darth12dfd](https://github.com/darth12dfd)     |     [@kyoungjooo](https://github.com/kyoungjooo)     |
+|                    **팀장**                    |                        **팀원**                        |                        **팀원**                        |
+
 
 <br /><br />
 
@@ -23,9 +34,13 @@
 > 혼자 준비하는 면접은 어렵고 외롭습니다. <br />
 > LEGo는 프론트엔드 면접을 함께 준비할 수 있는 커뮤니티 기반 서비스를 목표로 합니다.
 
-<img align="center" width="500" src=".github/images/1.png" />
-<br />
-<img align="center" width="500" src=".github/images/2.png" />
+<br /><br />
+
+<div align="center">
+  <img align="center" width="700" src=".github/images/1.png" />
+  <br /><br /><br /><br />
+  <img align="center" width="700" src=".github/images/2.png" />
+</div>
 
 ### 1️⃣ 취업 준비의 어려움
 
@@ -45,26 +60,28 @@
 
 <br /><br />
 
-## 주요 기능
+## 📸 주요 기능
+
+<div align="center">
+  <img width="600" src=".github/images/3.png">
+</div>
 
 <br /><br />
 
 ## 📝 ERD
 
-<img src=".github/images/erd.png">
+<div align="center">
+  <img width="600" src=".github/images/erd.png">
+</div>
 
 <br /><br />
 
-## 💻 서비스 아키텍처
+## ⚙️ 기술 스택
 
-<img src=".github/images/architecture.png" />
+<div align="center">
+  <img width="600" src=".github/images/architecture.png" />  
+</div>
 
 <br /><br />
-
-## 📝 요구사항 명세서
-
-### 🔗 [Notion 링크]
-
-<br/><br/>
 
 ## 📆 개발 일정
