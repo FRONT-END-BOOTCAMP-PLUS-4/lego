@@ -27,7 +27,7 @@ export default function EmailBanner() {
   };
 
   return (
-    <section className="mb-[100px]">
+    <section>
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] flex justify-center items-center px-4 py-[100px]">
         <div className="relative w-1/2 max-w-screen-sm rounded-[var(--space-24)] bg-[var(--white)] overflow-hidden">
           <div

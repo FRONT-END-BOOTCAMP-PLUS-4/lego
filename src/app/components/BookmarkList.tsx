@@ -38,10 +38,10 @@ export default function BookmarkList() {
   }, []);
 
   return (
-    <section className="mb-[100px]" data-aos="fade-up">
-      <h3 className="txt-2xl-b pb-[var(--space-36)]">많이 스크랩된 콘텐츠</h3>
+    <section data-aos="fade-up">
+      <h3 className="txt-2xl-b pb-[var(--space-24)]">많이 스크랩된 콘텐츠</h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-3">
         {loading ? (
           [...Array(4)].map((_, i) => <Card key={i} variant="default" className="h-[120px]" />)
         ) : popularQuestions.length === 0 ? (
