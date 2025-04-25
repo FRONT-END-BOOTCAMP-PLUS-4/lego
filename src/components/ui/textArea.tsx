@@ -14,7 +14,7 @@ function TextArea(
     <div
       data-slot="textarea"
       className={cn(
-        "w-full h-[120px] rounded-md border border-[var(--gray-01)] bg-white px-4 py-4",
+        "w-full h-[120px] rounded-md border border-[var(--gray-01)] bg-white px-4 py-3",
         className
       )}
     >

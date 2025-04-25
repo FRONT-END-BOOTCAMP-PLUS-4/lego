@@ -195,9 +195,7 @@ export default function CommentSection() {
       </div>
 
       {comments.length === 0 ? (
-        <div className="text-sm text-[var(--gray-02)] text-center py-4">
-          아직 작성된 댓글이 없습니다.
-        </div>
+        ""
       ) : (
         <div className="space-y-5 mt-[var(--space-50)]">
           {currentComments.map((comment) => (
@@ -221,8 +219,9 @@ export default function CommentSection() {
                       value={editingContent}
                       onChange={(e) => setEditingContent(e.target.value)}
                       label={currentUserName}
+                      className="!h-[100px]"
                     />
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1.5">
                       <Button variant="gray" size="sm" onClick={() => handleEdit(comment.id)}>
                         저장
                       </Button>
@@ -233,7 +232,7 @@ export default function CommentSection() {
                   </div>
                 ) : (
                   <>
-                    <div className="text-base mb-1">{comment.content}</div>
+                    <div className="text-base mb-2 ">{comment.content}</div>
                     <div className="text-xs text-[var(--gray-02)]">
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </div>
@@ -241,7 +240,7 @@ export default function CommentSection() {
                 )}
               </div>
               {editingId !== comment.id && comment.email === currentUserEmail && (
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-end gap-1.5">
                   <Button
                     variant="gray"
                     size="sm"
