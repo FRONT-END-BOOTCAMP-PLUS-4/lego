@@ -4,11 +4,7 @@ import { GoogleAuthRepository } from "@/infra/repositories/auth/GoogleAuthReposi
 import { LoginWithGitHubUsecase } from "@/application/usecase/user/LoginWithGithub";
 import { LoginWithGoogleUsecase } from "@/application/usecase/user/LoginWithGoogle";
 
-export async function POST(
-  req: NextRequest,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  context: any
-) {
+export async function POST(req: NextRequest, context: any) {
   const { provider } = context.params; // 바로 꺼내기
   const { code } = await req.json();
 
