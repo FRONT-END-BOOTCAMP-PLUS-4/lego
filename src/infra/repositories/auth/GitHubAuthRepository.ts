@@ -11,6 +11,7 @@ export class GitHubAuthRepository implements AuthRepository {
         client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID!,
         client_secret: process.env.GITHUB_CLIENT_SECRET!,
         code,
+        redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       }),
     });
 

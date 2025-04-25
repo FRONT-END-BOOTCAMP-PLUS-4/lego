@@ -12,7 +12,7 @@ export default function OAuthCallback() {
 
   useEffect(() => {
     const code = searchParams.get("code");
-    const provider = searchParams.get("provider");
+    const provider = searchParams.get("state"); // ✅ provider → state
 
     if (!code || !provider) return;
 
