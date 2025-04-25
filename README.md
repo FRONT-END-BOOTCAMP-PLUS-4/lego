@@ -1,19 +1,57 @@
-# 👷 레고(LEGO) - 지식의 블럭을 쌓아 나가자!
+# 🧱 레고(LEGo)
 
-💻 **개발자 취업**을 위한 **기술면접 준비** 플랫폼
+> 지식의 블럭을 쌓아나가자!
 
-🔗 [Figma 바로가기](https://www.figma.com/slides/9dxeauvkdPTft2Gu6bMdNA/LE-go-%EA%B8%B0%ED%9A%8D%EC%9E%90%EB%A3%8C?node-id=1-791&t=5SOrXiOApubJsaVB-1)
+<img src=".github/images/mail.png">
 
-## **🔎 기획 의도**
+## 🔗 배포주소 : [LEGo](https://lego-mail.vercel.app)
 
-<img src=".github/images/1.png"  />
-<img src=".github/images/2.png" />
+### 💻 개발자를 위한 **기술면접 준비** 플랫폼
+
+> ✉️ 하루 한 문제, 메일로 기술 면접 질문을 받아보세요! <br/>
+> 💬 답변을 작성하고, 다른 사람의 답변을 보며 함께 성장하세요! <br />
+> 🏆 나만의 히스토리와 활동 내역을 한눈에 파악할 수 있습니다.
+
+<br />
+
+## 👨‍👨‍👧‍👧 팀 구성
+
+<br /><br />
+
+## 🔎 프로젝트 개요
+
+> 혼자 준비하는 면접은 어렵고 외롭습니다. <br />
+> LEGo는 프론트엔드 면접을 함께 준비할 수 있는 커뮤니티 기반 서비스를 목표로 합니다.
+
+<img align="center" width="500" src=".github/images/1.png" />
+<br />
+<img align="center" width="500" src=".github/images/2.png" />
+
+### 1️⃣ 취업 준비의 어려움
+
+- 무엇을 준비해야 할지 모르는 불안, 반복되는 실패로 인한 자신감 하락
+- 채용 시장이 어려워지며 조급해지는 나 자신에 대한 두려움
+
+### 2️⃣ 채용 과정에서 중요한 요소
+
+- 기업이 신입에게 기대하는 역량은 문제 해결, 커뮤니케이션 능력
+- 하지만 이러한 역량을 쌓을 수 있는 환경과 루트는 부족한 상황
+
+### 3️⃣ 학습 플랫폼의 필요성
+
+- 기술면접 질문을 한눈에 확인하고,
+- 개발자 간 지식 공유를 통해 답변을 함께 만들어가며
+- 메일로 간편하게 질문을 받아보며 학습 루틴을 형성할 수 있는 서비스가 필요
+
+<br /><br />
+
+## 주요 기능
 
 <br /><br />
 
 ## 📝 ERD
 
-<img src=".github/images/erd.png" />
+<img src=".github/images/erd.png">
 
 <br /><br />
 
@@ -29,4 +67,4 @@
 
 <br/><br/>
 
-## 💡주요 기능
+## 📆 개발 일정
