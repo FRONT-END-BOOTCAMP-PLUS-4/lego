@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import CSRHead from "@/components/common/Head";
+// import CSRHead from "@/components/common/Head";
 import { Toaster } from "@/components/ui/sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { useHasHydrated } from "@/hooks/useHasHydrated";
@@ -28,7 +28,7 @@ export default function RootLayout({
   if (!hasHydrated) {
     return (
       <html lang="ko">
-        <CSRHead />
+        {/* <CSRHead /> */}
         <body className="min-h-screen w-full flex justify-center items-center">
           <Spinner />
         </body>
@@ -38,7 +38,7 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
-      <CSRHead />
+      {/* <CSRHead /> */}
       <body className="min-h-screen w-full flex flex-col">
         {isMounted && !isAuthCallback && <Header />}
         <div className="flex flex-col min-h-[calc(100vh-200px-80px)]">
