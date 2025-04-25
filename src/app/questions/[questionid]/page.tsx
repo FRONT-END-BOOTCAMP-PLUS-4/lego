@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -49,7 +49,7 @@ export default function AnswerFormPage() {
 
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
-  const handleGetQuestion = async () => {
+  const handleGetQuestion = useCallback(async () => {
     try {
       const response = await fetch(
         isMatchCurrentLoginUser
@@ -71,11 +71,11 @@ export default function AnswerFormPage() {
     } catch (error) {
       alert("문제, 답변 불러오기 실패: " + (error as Error).message);
     }
-  };
+  }, [questionId, userEmail, isMatchCurrentLoginUser, token]);
 
   useEffect(() => {
     handleGetQuestion();
-  }, []);
+  }, [handleGetQuestion]);
 
   useEffect(() => {
     if (!questionData) return;

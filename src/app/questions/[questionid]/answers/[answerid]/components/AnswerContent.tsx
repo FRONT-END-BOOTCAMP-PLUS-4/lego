@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
@@ -19,7 +19,7 @@ export default function AnswerContent() {
   const [isLike, setIsLike] = useState<boolean | undefined>(answerData?.isLike); // likeState 서버에서 받아온 값
   const currentUserId = user?.email; //현재 로그인한 유저 아이디
 
-  const handleGetAnswerDetail = async () => {
+  const handleGetAnswerDetail = useCallback(async () => {
     const response = await fetch(
       `/api/questions/${questionId}/answers/${answerId}?currentUser=${currentUserId}`,
       {
@@ -35,10 +35,10 @@ export default function AnswerContent() {
     }
     const { data } = await response.json();
     setAnswerDate(data);
-  };
+  }, [questionId, answerId, currentUserId, token]);
   useEffect(() => {
     handleGetAnswerDetail();
-  }, []);
+  }, [handleGetAnswerDetail]);
 
   useEffect(() => {
     if (answerData?.isLike !== undefined) {

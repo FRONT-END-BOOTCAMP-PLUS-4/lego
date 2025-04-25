@@ -6,7 +6,7 @@ import { AnswerView } from "@/domain/entities/AnswerView";
 import { formatDate } from "@/utils/handleFormatDate";
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface PropsType {
   questionId: number;
@@ -24,7 +24,7 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
     (pageNumber - 1) * itemsPerPage,
     pageNumber * itemsPerPage
   );
-  const handleGetOtherAnswers = async () => {
+  const handleGetOtherAnswers = useCallback(async () => {
     const response = await fetch(`/api/questions/${questionId}/answers?userId=${userEmail}`, {
       method: "GET",
       headers: {
@@ -37,12 +37,12 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
     }
     const { data } = await response.json();
     setQuestionAnswers(data);
-  };
+  }, [questionId, userEmail, token]);
 
   useEffect(() => {
     handleGetOtherAnswers();
-  }, []);
-  console.log(paginatedAnswers);
+  }, [handleGetOtherAnswers]);
+
   const isContents = paginatedAnswers?.length > 0;
   return (
     <>

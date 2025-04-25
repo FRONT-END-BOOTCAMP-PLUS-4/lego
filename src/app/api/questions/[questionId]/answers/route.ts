@@ -5,9 +5,10 @@ import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerReposi
 import { NextRequest, NextResponse } from "next/server";
 
 //특정 문제의 답변들 조회
-export async function GET(request: NextRequest, context: { params: { questionId: string } }) {
+export async function GET(request: NextRequest, context: { params: Record<string, string> }) {
   try {
-    const questionId = Number(context.params.questionId);
+    const params = await context.params;
+    const questionId = Number(params.questionId);
     const userId = request.nextUrl.searchParams.get("userId");
 
     const answerDto = new GetAnswerDto(userId, questionId);
