@@ -5,7 +5,6 @@ import { SbAnswerRepository } from "@/infra/repositories/supabase/SbAnswerReposi
 import { NextRequest, NextResponse } from "next/server";
 
 //특정 문제의 특정 유저 답변 조회
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(request: NextRequest, { params }: { params: any }) {
   try {
     const { questionId, userId: answerAuthorId } = params;

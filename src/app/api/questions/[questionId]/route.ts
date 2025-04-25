@@ -6,7 +6,6 @@ import { NextRequest, NextResponse } from "next/server";
 //이전에 해당 문제에 등록한 답변이 있으면 초기화면에 불러오기
 //문제, 답변 조회
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(request: NextRequest, { params }: { params: any }) {
   try {
     const { questionId } = params;
