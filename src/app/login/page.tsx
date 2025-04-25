@@ -20,15 +20,15 @@ export default function LoginPage() {
         ? process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID
         : process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-    const redirectUri = `${window.location.origin}/auth/callback?provider=${provider}`;
+    const redirectUri = `${window.location.origin}/auth/callback`;
 
     let url = "";
 
     if (provider === "github") {
-      url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}`;
+      url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=github`;
     } else if (provider === "google") {
       const scope = "openid profile email";
-      url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+      url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=google`;
     }
 
     window.open(url, "_blank", "width=500px,height=600px");
@@ -52,7 +52,7 @@ export default function LoginPage() {
                 className="flex items-center justify-center w-[345px] h-[54px] border-2 border-solid mb-[8px] py-[15px] cursor-pointer rounded-md"
               >
                 <Image
-                  src="/assets/image/github.svg"
+                  src="/assets/image/Github.svg"
                   width={24}
                   height={24}
                   className="mr-[8px]"
@@ -65,7 +65,7 @@ export default function LoginPage() {
                 className="flex items-center justify-center w-[345px] h-[54px] border-2 border-solid mb-[8px] py-[15px] cursor-pointer rounded-md"
               >
                 <Image
-                  src="/assets/image/google.svg"
+                  src="/assets/image/Google.svg"
                   width={24}
                   height={24}
                   className="mr-[8px]"
