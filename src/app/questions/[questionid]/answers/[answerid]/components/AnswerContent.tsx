@@ -80,7 +80,7 @@ export default function AnswerContent() {
   return (
     <>
       <header className="flex justify-between w-full items-start sm:items-center">
-        <div className="gap-4 items-end sm:items-center sm:flex">
+        <div className="gap-3 items-end sm:items-center sm:flex">
           <Badge className="mb-2 sm:mb-0">{answerData?.category}</Badge>
           <p className="txt-3xl-b">{answerData?.question}</p>
         </div>

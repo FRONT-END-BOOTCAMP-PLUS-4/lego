@@ -81,11 +81,11 @@ export default function EmailBanner() {
             </div>
           </div>
 
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 flex justify-center">
             <Button
-              variant="default"
+              variant="round"
               onClick={handleMail}
-              className="w-full bg-[var(--blue-03)] border-none text-[var(--black)]"
+              className="bg-[var(--blue-01)] border border-transparent hover:border-[var(--blue-02)]"
             >
               매일 기술면접 질문 받기
             </Button>
