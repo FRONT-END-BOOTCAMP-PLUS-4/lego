@@ -76,7 +76,7 @@ export default function EmailBanner() {
               <p className="txt-lg ">
                 바쁜 일상 속, <strong>하루 3분</strong>으로 면접 대비 끝!
                 <br />
-                <strong>핵심만 쏙쏙</strong> 골라담은 질문만 전달해드려요
+                <strong>핵심만 쏙쏙</strong> 골라담은 질문만 전달해드려요 🔥
               </p>
             </div>
           </div>
