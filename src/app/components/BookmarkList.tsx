@@ -8,12 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { formatNumber } from "@/utils/handleFormat";
 import { Bookmark } from "lucide-react";
 
-type PopularQuestion = {
+interface PopularQuestion {
   questionId: number;
   title: string;
   categoryName: string;
   bookmarkCount: number;
-};
+}
 
 export default function BookmarkList() {
   const { user } = useAuthStore();

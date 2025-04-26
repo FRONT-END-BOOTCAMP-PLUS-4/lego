@@ -7,19 +7,18 @@ import { Pagination } from "@/components/ui/pagination";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 
-type UserComment = {
+interface UserComment {
   questionId: number;
   questionTitle: string;
   commentContent: string;
   answerAuthorEmail: string;
-};
+}
 
 export default function CommentPage() {
   const { user } = useAuthStore();
   const [comments, setComments] = useState<UserComment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 페이지네이션
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
   const itemsPerPage = 5;

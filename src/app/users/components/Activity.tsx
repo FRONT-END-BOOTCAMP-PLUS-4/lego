@@ -6,65 +6,63 @@ import { useProfileStore } from "@/store/useProfileStore";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { formatNumber } from "@/utils/handleFormat";
-import CalendarHeatmap from "react-calendar-heatmap";
+import dynamic from "next/dynamic";
 import { Tooltip } from "react-tooltip";
-import "react-calendar-heatmap/dist/styles.css";
 import "react-tooltip/dist/react-tooltip.css";
 
+const CalendarHeatmap = dynamic(() => import("react-calendar-heatmap"), { ssr: false });
+import "react-calendar-heatmap/dist/styles.css";
+
 export default function Activity() {
-  // 구독 관련 상태
   const { user } = useAuthStore();
   const { selectedYear, setShowModal, mailAutoToggle, setMailAutoToggle } = useProfileStore();
 
-  // UI 관련 상태
   const [totalAnswers, setTotalAnswers] = useState(0);
   const [activeDays, setActiveDays] = useState(0);
   const [dailyActivity, setDailyActivity] = useState<{ date: string; count: number }[]>([]);
 
-  // 실제 구독여부를 토글에 반영
   useEffect(() => {
-    const fetchSubscriptionStatus = async () => {
-      const res = await fetch(`/api/users?email=${user?.email}`);
-      const data = await res.json();
-      setMailAutoToggle(data.subscribed);
-    };
-    fetchSubscriptionStatus();
-  }, [setMailAutoToggle, user?.email]);
+    const fetchData = async () => {
+      if (!user?.email) return;
 
-  // 토글 상태 반영 - DB
+      try {
+        const [subRes, activityRes] = await Promise.all([
+          fetch(`/api/users?email=${user.email}`),
+          fetch(`/api/users/activity?email=${user.email}`),
+        ]);
+
+        const subData = await subRes.json();
+        const activityData = await activityRes.json();
+
+        setMailAutoToggle(subData.subscribed);
+        setTotalAnswers(activityData.totalAnswers);
+        setActiveDays(activityData.activeDays);
+        setDailyActivity(activityData.dailyActivity);
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+      }
+    };
+
+    fetchData();
+  }, [user?.email, setMailAutoToggle]);
+
   const handleToggle = async (checked: boolean) => {
     setMailAutoToggle(checked);
 
     if (!checked) {
       try {
-        // 토글 off - 구독 해지
         await fetch("/api/users", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: user?.email }),
         });
       } catch (error) {
-        console.error(error);
+        console.error("구독 해지 실패:", error);
       }
     } else {
       setShowModal(true);
     }
   };
-
-  // UI 관련 로직
-  useEffect(() => {
-    const fetchUserActivity = async () => {
-      if (!user?.email) return;
-      const res = await fetch(`/api/users/activity?email=${user.email}`);
-      const data = await res.json();
-
-      setTotalAnswers(data.totalAnswers);
-      setActiveDays(data.activeDays);
-      setDailyActivity(data.dailyActivity);
-    };
-
-    fetchUserActivity();
-  }, [user?.email]);
 
   return (
     <>
@@ -85,6 +83,7 @@ export default function Activity() {
             <p className="txt-4xl-b">{formatNumber(activeDays)}</p>
           </div>
         </div>
+
         <div className="flex gap-3 items-center">
           <Switch checked={mailAutoToggle} onCheckedChange={handleToggle} />
           <p>메일 구독하기</p>

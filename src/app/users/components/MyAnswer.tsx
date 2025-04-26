@@ -24,7 +24,6 @@ export default function MyAnswerPage() {
   const [myAnswers, setMyAnswers] = useState<UserAnswer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Pagination
   const [pageNumber, setPageNumber] = useState(1);
   const [currentPageBlock, setCurrentPageBlock] = useState(1);
   const totalCount = myAnswers.length;
@@ -50,8 +49,8 @@ export default function MyAnswerPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} variant="default" className="space-y-12">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Card key={i} variant="default" className="space-y-5">
             <div className="flex gap-4 items-center">
               <Skeleton className="h-6 w-20" />
               <Skeleton className="h-6 flex-1" />
