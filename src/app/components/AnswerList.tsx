@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import Empty from "./Empty";
 
 interface PopularAnswer {
   questionId: number;
@@ -51,11 +52,9 @@ export default function PopularAnswers() {
             <Card key={i} className="h-[150px] animate-pulse" />
           ))
         ) : error ? (
-          <p className="text-center col-span-2 text-red-500">
-            답변 데이터를 불러오는 데 실패했습니다.
-          </p>
+          <Empty text={"답변을 불러오는 데 실패했어요"} />
         ) : answers.length === 0 ? (
-          <p className="text-center col-span-2 text-gray-500">좋아요를 받은 답변이 없습니다.</p>
+          <Empty text={"아직 좋아요 받은 답변이 없어요"} />
         ) : (
           answers.map((item, i) => (
             <Link href={`/questions/${item.questionId}/answers/${item.useremail}`} key={`al-${i}`}>

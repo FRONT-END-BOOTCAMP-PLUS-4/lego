@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatNumber } from "@/utils/handleFormat";
 import { Bookmark } from "lucide-react";
+import Empty from "./Empty";
 
 interface PopularQuestion {
   questionId: number;
@@ -57,9 +58,9 @@ export default function BookmarkList() {
             <Card key={i} variant="default" className="h-[120px] animate-pulse" />
           ))
         ) : error ? (
-          <p className="text-center col-span-2 text-red-500">데이터를 불러오는 데 실패했습니다.</p>
+          <Empty text={"질문을 불러오는 데 실패했어요"} />
         ) : popularQuestions.length === 0 ? (
-          <p className="text-center col-span-2 text-gray-500">스크랩된 콘텐츠가 없습니다.</p>
+          <Empty text={"아직 스크랩 된 질문이 없어요"} />
         ) : (
           popularQuestions.map((item) => (
             <Link
