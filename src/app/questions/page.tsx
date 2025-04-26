@@ -57,6 +57,7 @@ export default function QuestionListPage() {
       : (categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체");
 
   const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
+  
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -221,6 +222,10 @@ export default function QuestionListPage() {
   const isSearching = !!hasKeyword;
   const visibleQuestions = isSearching ? filteredQuestions : questions;
 
+  // 디버깅용 코드
+  console.log("[디버그] 현재 로그인된 userEmail:", userEmail);
+  console.log("[디버그] 현재 필터링된 질문 수:", visibleQuestions.length);
+
   const totalCount = visibleQuestions.length;
   const startIdx = (pageNumber - 1) * 10;
   const endIdx = startIdx + 10;
@@ -302,41 +307,41 @@ export default function QuestionListPage() {
       </div>
 
       <div className="flex justify-center min-h-[300px]">
-        {isLoading ? (
+        {isLoading ? (//로딩중일 때
           <NotFound />
-        ) : visibleQuestions.length > 0 ? (
-          <div className="flex flex-col gap-3 w-full">
-            {pagedQuestions.map((question) => (
-              <Link
-                key={question.id}
-                href={
-                  userEmail
-                    ? `/questions/${question.id}?userId=${userEmail}`
-                    : `/questions/${question.id}`
-                }
-              >
-                <Card className="cursor-pointer">
-                  <div className="sm:flex h-full items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Image
-                        src={getImageUrlByCategory(question.categoryId)}
-                        alt="문제 카테고리"
-                        width={32}
-                        height={32}
-                        className="rounded-md"
-                      />
-                      <span className="txt-xl-b line-clamp-1">{question.content}</span>
-                    </div>
-                    <div className="mt-2 sm:mt-0 flex items-center justify-start sm:justify-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
-                      <span>북마크 {question.bookmark_count}</span>
-                      <span>답변 {question.answer_count}</span>
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        ) : (
+          ) : visibleQuestions.length > 0 ? (
+            userEmail === undefined ? (
+              <NotFound />  // userEmail 로딩 중일 때 임시로 보여줄 컴포넌트
+            ) : (
+              <div className="flex flex-col gap-3 w-full">
+                {pagedQuestions.map((question) => (
+                  <Link
+                    key={question.id}
+                    href={`/questions/${question.id}?userId=${userEmail}`}
+                  >
+                    <Card className="cursor-pointer">
+                      <div className="flex h-full items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <Image
+                            src={getImageUrlByCategory(question.categoryId)}
+                            alt="문제 카테고리"
+                            width={32}
+                            height={32}
+                            className="rounded-md"
+                          />
+                          <span className="txt-xl-b line-clamp-1">{question.content}</span>
+                        </div>
+                        <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+                          <span>북마크 {question.bookmark_count}</span>
+                          <span>답변 {question.answer_count}</span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            )
+          ) : (
           <Empty text="조건에 해당하는 문제가 없습니다 👻" />
         )}
       </div>
