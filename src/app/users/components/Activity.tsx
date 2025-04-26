@@ -17,9 +17,12 @@ export default function Activity() {
   const { user } = useAuthStore();
   const { selectedYear, setShowModal, mailAutoToggle, setMailAutoToggle } = useProfileStore();
 
-  const [totalAnswers, setTotalAnswers] = useState(0);
-  const [activeDays, setActiveDays] = useState(0);
+  const [totalAnswers, setTotalAnswers] = useState<number | null>(null);
+  const [activeDays, setActiveDays] = useState<number | null>(null);
   const [dailyActivity, setDailyActivity] = useState<{ date: string; count: number }[]>([]);
+
+  const [displayedAnswers, setDisplayedAnswers] = useState(0);
+  const [displayedActiveDays, setDisplayedActiveDays] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +48,38 @@ export default function Activity() {
 
     fetchData();
   }, [user?.email, setMailAutoToggle]);
+
+  useEffect(() => {
+    if (totalAnswers !== null) {
+      let current = 0;
+      const step = Math.max(1, Math.ceil(totalAnswers / 50)); // 가속도 비중 로직
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= totalAnswers) {
+          setDisplayedAnswers(totalAnswers);
+          clearInterval(interval);
+        } else {
+          setDisplayedAnswers(current);
+        }
+      }, 20);
+    }
+  }, [totalAnswers]);
+
+  useEffect(() => {
+    if (activeDays !== null) {
+      let current = 0;
+      const step = Math.max(1, Math.ceil(activeDays / 50));
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= activeDays) {
+          setDisplayedActiveDays(activeDays);
+          clearInterval(interval);
+        } else {
+          setDisplayedActiveDays(current);
+        }
+      }, 20);
+    }
+  }, [activeDays]);
 
   const handleToggle = async (checked: boolean) => {
     setMailAutoToggle(checked);
@@ -73,14 +108,14 @@ export default function Activity() {
         <div className="flex">
           <div className="flex flex-col">
             <p className="txt-sm">내가 답변한 문제수</p>
-            <p className="txt-4xl-b">{formatNumber(totalAnswers)}</p>
+            <p className="txt-4xl-b">{formatNumber(displayedAnswers)}</p>
           </div>
 
           <div className="w-px h-full bg-[var(--gray-01)] mx-4 sm:mx-9" />
 
           <div className="flex flex-col">
             <p className="txt-sm">나의 활동 일</p>
-            <p className="txt-4xl-b">{formatNumber(activeDays)}</p>
+            <p className="txt-4xl-b">{formatNumber(displayedActiveDays)}</p>
           </div>
         </div>
 
