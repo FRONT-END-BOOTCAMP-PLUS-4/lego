@@ -62,7 +62,7 @@ export default function Mypage() {
   const tabList = ["나의 활동", "히스토리"];
 
   return (
-    <section className="w-full max-w-[946px] mx-auto px-4 sm:px-6 lg:px-0 mt-[var(--space-40)]">
+    <section className="w-full max-w-[946px] mx-auto mt-[var(--space-40)]">
       <MailModal
         open={showModal}
         onClose={() => {

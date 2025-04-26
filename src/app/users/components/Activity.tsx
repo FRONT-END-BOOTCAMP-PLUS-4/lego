@@ -70,7 +70,7 @@ export default function Activity() {
     <>
       <Card
         variant="default"
-        className="flex justify-between mb-[38px] mt-[var(--space-50)] cursor-default hover:bg-[var(--blue-04)] px-[36px]"
+        className="flex justify-between mb-[38px] mt-[var(--space-50)] cursor-default hover:bg-[var(--blue-04)] px-4 sm:px-[36px]"
       >
         <div className="flex">
           <div className="flex flex-col">
@@ -78,7 +78,7 @@ export default function Activity() {
             <p className="txt-4xl-b">{formatNumber(totalAnswers)}</p>
           </div>
 
-          <div className="w-px h-full bg-[var(--gray-01)] mx-[var(--space-36)]" />
+          <div className="w-px h-full bg-[var(--gray-01)] mx-4 sm:mx-9" />
 
           <div className="flex flex-col">
             <p className="txt-sm">나의 활동 일</p>
@@ -91,32 +91,34 @@ export default function Activity() {
         </div>
       </Card>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-x-auto">
         <h3 className="txt-lg-b mb-[18px]">일일 활동 기록</h3>
-        <CalendarHeatmap
-          startDate={new Date(`${selectedYear}-01-01`)}
-          endDate={new Date(`${selectedYear}-12-31`)}
-          values={dailyActivity}
-          classForValue={(value) => {
-            if (!value) {
-              return "color-empty";
-            }
-            return `color-scale-${value.count}`;
-          }}
-          transformDayElement={(element, value) => {
-            const tooltip =
-              value?.date && value.count !== undefined
-                ? `${value.date} - ${value.count}개`
-                : "활동 없음";
+        <div className="min-w-[600px]">
+          <CalendarHeatmap
+            startDate={new Date(`${selectedYear}-01-01`)}
+            endDate={new Date(`${selectedYear}-12-31`)}
+            values={dailyActivity}
+            classForValue={(value) => {
+              if (!value) {
+                return "color-empty";
+              }
+              return `color-scale-${value.count}`;
+            }}
+            transformDayElement={(element, value) => {
+              const tooltip =
+                value?.date && value.count !== undefined
+                  ? `${value.date} - ${value.count}개`
+                  : "활동 없음";
 
-            return React.cloneElement(element as React.ReactElement, {
-              ...({
-                "data-tooltip-id": "heatmap-tooltip",
-                "data-tooltip-content": tooltip,
-              } as Record<string, unknown>),
-            });
-          }}
-        />
+              return React.cloneElement(element as React.ReactElement, {
+                ...({
+                  "data-tooltip-id": "heatmap-tooltip",
+                  "data-tooltip-content": tooltip,
+                } as Record<string, unknown>),
+              });
+            }}
+          />
+        </div>
         <Tooltip id="heatmap-tooltip" />
       </div>
     </>

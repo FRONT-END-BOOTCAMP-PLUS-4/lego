@@ -239,3 +239,8 @@
     overflow-x: hidden;
   }
 }
+@media (max-width: 500px) {
+  .hidden500 {
+    display: none;
+  }
+}

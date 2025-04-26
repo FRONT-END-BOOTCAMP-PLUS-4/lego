@@ -29,7 +29,7 @@ export default function EmailBanner() {
   return (
     <section>
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] flex justify-center items-center px-4 py-[100px]">
-        <div className="relative w-1/2 max-w-screen-sm rounded-[var(--space-24)] bg-[var(--white)] overflow-hidden">
+        <div className="relative max-w-screen-sm rounded-[var(--space-24)] bg-[var(--white)] overflow-hidden">
           <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
@@ -73,20 +73,19 @@ export default function EmailBanner() {
 
           <div className="flex flex-col items-center gap-3 px-[var(--space-24)] py-6">
             <div className="txt-lg text-center">
-              <p>
+              <p className="txt-lg ">
                 바쁜 일상 속, <strong>하루 3분</strong>으로 면접 대비 끝!
-              </p>
-              <p>
+                <br />
                 <strong>핵심만 쏙쏙</strong> 골라담은 질문만 전달해드려요 🔥
               </p>
             </div>
           </div>
 
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 flex justify-center">
             <Button
-              variant="default"
+              variant="round"
               onClick={handleMail}
-              className="w-full bg-[var(--gray-01)] border-none text-[var(--black)]"
+              className="bg-[var(--blue-01)] border border-transparent hover:border-[var(--blue-02)]"
             >
               매일 기술면접 질문 받기
             </Button>

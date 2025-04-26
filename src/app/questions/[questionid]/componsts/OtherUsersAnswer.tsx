@@ -46,10 +46,10 @@ export default function OtherUsersAnswer({ questionId, userEmail, token }: Props
   const isContents = paginatedAnswers?.length > 0;
   return (
     <>
-      <h3 className="txt-2xl-b pb-6">다른 사람 답변 확인하기</h3>
+      <h3 className="txt-2xl-b pb-5">다른 사람 답변 확인하기</h3>
       <div
-        className={`grid grid-rows-auto gap-3 ${
-          isContents ? "grid-cols-2" : "grid-cols-1 mb-[100px]"
+        className={`grid grid-rows-auto gap-3 grid-cols-1 sm:grid-cols-2 ${
+          isContents ? "" : "grid-cols-1 mb-[100px]"
         }`}
       >
         {questionAnswers.length > 0 ? (

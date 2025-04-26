@@ -60,10 +60,10 @@ export default function QusetionHeader({
 
   return (
     <>
-      <header className="flex justify-between items-center pb-[18px]">
-        <div className="flex items-center pb-[18px]">
-          <Badge className="mr-[16px]">{categoryName}</Badge>
-          <h3 className="txt-3xl-b">{content}</h3>
+      <header className="flex justify-between pb-[18px] items-start sm:items-center">
+        <div className="items-center pb-[18px] sm:items-center sm:flex gap-3">
+          <Badge className="mb-2 sm:mb-0">{categoryName}</Badge>
+          <h3 className="font-bold txt-3xl-b">{content}</h3>
         </div>
         <div
           className="flex items-center justify-center w-[32px] h-[32px]"
