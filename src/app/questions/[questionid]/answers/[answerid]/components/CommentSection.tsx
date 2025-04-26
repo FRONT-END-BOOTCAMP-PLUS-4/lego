@@ -239,7 +239,7 @@ export default function CommentSection() {
                   </>
                 )}
               </div>
-              {editingId !== comment.id && comment.email === currentUserEmail && (
+              {editingId !== comment.id && isLoggedIn && currentUserEmail && comment.email === currentUserEmail && (
                 <div className="flex flex-col items-end gap-1.5">
                   <Button
                     variant="gray"
