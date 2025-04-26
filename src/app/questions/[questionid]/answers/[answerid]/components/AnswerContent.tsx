@@ -79,10 +79,10 @@ export default function AnswerContent() {
   };
   return (
     <>
-      <header className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-4">
-          <Badge>{answerData?.category}</Badge>
-          <p className="txt-3xl-b text-[var(--gray-02)]">{answerData?.question}</p>
+      <header className="flex justify-between w-full items-start sm:items-center">
+        <div className="gap-4 items-end sm:items-center sm:flex">
+          <Badge className="mb-2 sm:mb-0">{answerData?.category}</Badge>
+          <p className="txt-3xl-b">{answerData?.question}</p>
         </div>
         <div
           className="flex items-center justify-center w-[32px] h-[32px]"
@@ -96,7 +96,7 @@ export default function AnswerContent() {
           />
         </div>
       </header>
-      <div className="flex items-center gap-4 mt-6">
+      <div className="flex items-center gap-4 mt-4">
         <span
           className="w-[36px] h-[36px] inline-block bg-[var(--gray-01)] rounded-full shrink-0 bg-center bg-contain bg-no-repeat"
           style={{ backgroundImage: `url(${answerData?.avatarUrl})` }}

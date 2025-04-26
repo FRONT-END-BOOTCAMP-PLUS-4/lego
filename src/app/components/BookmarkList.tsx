@@ -39,7 +39,7 @@ export default function BookmarkList() {
 
   return (
     <section data-aos="fade-up">
-      <h3 className="txt-2xl-b pb-[var(--space-24)]">많이 스크랩된 콘텐츠</h3>
+      <h3 className="txt-2xl-b pb-5">많이 스크랩된 콘텐츠</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-3">
         {loading ? (
