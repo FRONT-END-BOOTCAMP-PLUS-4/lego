@@ -54,7 +54,7 @@ export default function QuestionListPage() {
   const selectedCategoryName =
     selectedCategoryId === null
       ? "전체"
-      : categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체";
+      : (categories.find((c) => c.id === selectedCategoryId)?.name ?? "전체");
 
   const getImageUrlByCategory = (categoryId: number) => `/assets/images/category/${categoryId}.svg`;
 
@@ -136,9 +136,7 @@ export default function QuestionListPage() {
     setSearchKeyword(keywordFromURL);
 
     if (keywordFromURL && questions.length > 0) {
-      const matched = questions.filter((q) =>
-        q.content.toLowerCase().includes(keywordFromURL)
-      );
+      const matched = questions.filter((q) => q.content.toLowerCase().includes(keywordFromURL));
       setFilteredQuestions(matched);
       setPageNumber(1);
     } else {
@@ -160,7 +158,6 @@ export default function QuestionListPage() {
       }
     }
   }, [filter, emailFromURL, paramsString, router]);
-
 
   const throttledHandleCategoryChange = throttle((name: string) => {
     const category = categories.find((c) => c.name === name);
@@ -229,7 +226,7 @@ export default function QuestionListPage() {
   const endIdx = startIdx + 10;
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
   return (
-    <div className="w-[948px] container mx-auto pt-[40px]">
+    <div className="w-full container mx-auto pt-[40px]">
       <div className="relative w-[948px] h-[115px] mb-6 overflow-hidden">
         <Image
           src="/assets/images/banner.svg"
@@ -241,10 +238,10 @@ export default function QuestionListPage() {
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <Input
           placeholder="면접 문제 검색"
-          className="w-[824px] h-[54px] px-4 text-sm flex-1"
+          className="w-full h-[54px] px-4 text-sm flex-1"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
           onKeyDown={(e) => {
@@ -319,7 +316,7 @@ export default function QuestionListPage() {
                 }
               >
                 <Card className="cursor-pointer">
-                  <div className="flex h-full items-center justify-between">
+                  <div className="sm:flex h-full items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Image
                         src={getImageUrlByCategory(question.categoryId)}
@@ -330,7 +327,7 @@ export default function QuestionListPage() {
                       />
                       <span className="txt-xl-b line-clamp-1">{question.content}</span>
                     </div>
-                    <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+                    <div className="mt-2 sm:mt-0 flex items-center justify-start sm:justify-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
                       <span>북마크 {question.bookmark_count}</span>
                       <span>답변 {question.answer_count}</span>
                     </div>

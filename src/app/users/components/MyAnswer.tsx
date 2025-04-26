@@ -69,11 +69,11 @@ export default function MyAnswerPage() {
       {paginatedAnswers.map((answer, index) => (
         <Link href={`/questions/${answer.questionId}?userId=${user?.email}`} key={index}>
           <Card variant="default">
-            <div className="flex items-center gap-4 mb-3">
+            <div className="flex items-center gap-2 mb-3">
               <Badge variant="default">{answer.categoryName}</Badge>
               <p className="txt-xl-b line-clamp-1">{answer.questionTitle}</p>
             </div>
-            <div className="flex flex-col gap-[12px]">
+            <div className="flex flex-col gap-3">
               <p className="line-clamp-2">{answer.answerContent}</p>
               <div className="flex justify-between items-center">
                 <p className="txt-sm !text-[var(--gray-02)]">
