@@ -42,6 +42,33 @@ export default function Header() {
     return () => window.removeEventListener("message", handleMessage);
   }, [router]);
 
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      const timeout = setTimeout(() => {
+        if (!user.email) {
+          toast(<p className="txt-lg-b">이메일을 공개해주세요!</p>, {
+            description: (
+              <div className="txt-md !text-[var(--gray-02)]">
+                <p>&#40;Public Profile &#45;&gt; Public email 설정&#41;</p>
+                <br />
+                <p>⚠️ 변경 후 다시 로그인해주세요.</p>
+              </div>
+            ),
+            action: {
+              label: "이동하기",
+              onClick: () => {
+                window.open("https://github.com/settings/profile", "_blank");
+              },
+            },
+            duration: Infinity,
+          });
+        }
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoggedIn, user]);
+
   // 이미 구독 중이면 toast UI
   useEffect(() => {
     if (showSubscribeAlert) {
