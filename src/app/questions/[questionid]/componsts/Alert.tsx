@@ -37,10 +37,10 @@ export default function Alert({ showAlert, setShowAlert }: AlertProps) {
           <AlertDialogTitle>{showAlert.text}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter className="mx-auto flex">
-          <AlertDialogAction onClick={handleMoveToLogin}>
+          <AlertDialogAction onClick={handleMoveToLogin} className="w-[100px]">
             {isLogin ? "이동하기" : "확인"}
           </AlertDialogAction>
-          <AlertDialogCancel>닫기</AlertDialogCancel>
+          <AlertDialogCancel className="w-[100px]">닫기</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

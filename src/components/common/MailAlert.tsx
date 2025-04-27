@@ -8,11 +8,9 @@ import {
   AlertDialogTitle,
   AlertDialogAction,
   AlertDialogDescription,
-  AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
 import { useProfileStore } from "@/store/useProfileStore";
 import { Mail } from "lucide-react";
-import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
 
 export default function MailAlertButton() {
   const { showLoginAlert, setShowLoginAlert } = useProfileStore();
@@ -40,6 +38,7 @@ export default function MailAlertButton() {
               setShowLoginAlert(false);
               router.push("/login");
             }}
+            className="w-2/6 bg-[var(--blue-02)] border-none"
           >
             이동하기
           </AlertDialogAction>

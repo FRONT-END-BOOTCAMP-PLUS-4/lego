@@ -7,7 +7,7 @@ import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
 import { useParams, useSearchParams } from "next/navigation";
 import { handleCheckUser } from "@/utils/handleCheckUser";
-import { useRouter } from "next/navigation";
+
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
