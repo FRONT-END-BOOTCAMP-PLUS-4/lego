@@ -240,15 +240,15 @@ export default function QuestionListPage() {
   return (
     <div className="w-full container mx-auto pt-[40px]">
       <div className="relative w-full max-w-[948px] h-[115px] mb-6 overflow-hidden md:h-[115px] sm:h-[80px]">
-  <Image
-    src="/assets/images/banner.svg"
-    alt="배너 이미지"
-    fill
-    priority
-    sizes="(max-width: 768px) 100vw, 948px"
-    className="object-cover rounded-md"
-  />
-</div>
+        <Image
+          src="/assets/images/banner.svg"
+          alt="배너 이미지"
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 948px"
+          className="object-cover rounded-md"
+        />
+      </div>
 
       <div className="flex items-center gap-2">
         <Input
@@ -272,24 +272,24 @@ export default function QuestionListPage() {
 
       <div className="mb-[12px]" />
 
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex flex-row items-center gap-2 mb-6 justify-center sm:justify-start">
         <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
-          <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
+          <SelectTrigger className="w-[45vw] h-[40px] text-[var(--black)] sm:w-[204px]">
             <SelectValue placeholder="전체" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="전체">전체</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.name}>
-                {category.name}
-              </SelectItem>
-            ))}
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.name}>
+                  {category.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
 
         {isLoggedIn && (
-          <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
-            <SelectTrigger className="w-[204px] h-[40px] text-[var(--black)]">
+        <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
+            <SelectTrigger className="w-[45vw] h-[40px] text-[var(--black)] sm:w-[204px]">
               <SelectValue placeholder="필터" />
             </SelectTrigger>
             <SelectContent>
@@ -297,9 +297,10 @@ export default function QuestionListPage() {
               <SelectItem value="bookmarked">북마크한 문제</SelectItem>
               <SelectItem value="answered">답변한 문제</SelectItem>
             </SelectContent>
-          </Select>
+        </Select>
         )}
       </div>
+
 
       <div className="flex items-center justify-between mb-[12px]">
         <h2 className="txt-lg-b">문제</h2>
