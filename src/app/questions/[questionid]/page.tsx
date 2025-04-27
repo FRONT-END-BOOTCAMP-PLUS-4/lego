@@ -44,7 +44,9 @@ export default function AnswerFormPage() {
   const userEmail = searchParams.get("userId");
   const { localEmail, isLogin } = handleCheckUser();
   const isMatchCurrentLoginUser = token !== null && localEmail === userEmail;
-
+  if (isEditing) {
+    answerRef.current?.focus();
+  }
   //깃허브 유저 확인
   const checkGithubUser = token !== null && userEmail == null;
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
@@ -85,11 +87,19 @@ export default function AnswerFormPage() {
     }
   }, [questionData]);
 
-  if (isEditing) {
-    answerRef.current?.focus();
-  }
+  useEffect(() => {
+    if (isEditing) {
+      answerRef.current?.focus();
+    }
+  }, [isEditing]);
 
-  //답변 저장, 수정
+  useEffect(() => {
+    if (!showAlert.action) {
+      setIsEditing(true);
+    }
+  }, [showAlert.action]);
+
+  console.log(isEditing, "isEditing");
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isLogin) {
       return setShowAlert((prev) => ({
