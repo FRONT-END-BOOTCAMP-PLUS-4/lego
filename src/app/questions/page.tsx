@@ -239,16 +239,16 @@ export default function QuestionListPage() {
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
   return (
     <div className="w-full container mx-auto pt-[40px]">
-      <div className="relative w-[948px] h-[115px] mb-6 overflow-hidden">
-        <Image
-          src="/assets/images/banner.svg"
-          alt="배너 이미지"
-          fill
-          priority
-          sizes="948px"
-          className="object-cover rounded-md"
-        />
-      </div>
+      <div className="relative w-full max-w-[948px] h-[115px] mb-6 overflow-hidden md:h-[115px] sm:h-[80px]">
+  <Image
+    src="/assets/images/banner.svg"
+    alt="배너 이미지"
+    fill
+    priority
+    sizes="(max-width: 768px) 100vw, 948px"
+    className="object-cover rounded-md"
+  />
+</div>
 
       <div className="flex items-center gap-2">
         <Input
@@ -342,17 +342,22 @@ export default function QuestionListPage() {
                   >
                     <Card className="cursor-pointer">
                       <div className="flex h-full items-center justify-between">
-                        <div className="flex items-center gap-4">
+                      {/* 왼쪽 (이미지 + 문제 제목) */}
+                        <div className="flex items-center gap-4 min-w-0 flex-1">
                           <Image
                             src={getImageUrlByCategory(question.categoryId)}
                             alt="문제 카테고리"
                             width={32}
                             height={32}
-                            className="rounded-md"
+                            className="rounded-md flex-shrink-0"
                           />
-                          <span className="txt-xl-b line-clamp-1">{question.content}</span>
+                          <span className="txt-xl-b line-clamp-1">
+                            {question.content}
+                          </span>
                         </div>
-                        <div className="flex items-center gap-4 text-[14px] font-bold leading-[150%] text-[var(--gray-02)]">
+
+                      {/* 오른쪽 (북마크/답변 수) */}
+                        <div className="flex flex-shrink-0 flex-col items-end gap-1 font-bold leading-[150%] text-[14px] text-[var(--gray-02)] sm:flex-row sm:items-center sm:gap-4">
                           <span>북마크 {question.bookmark_count}</span>
                           <span>답변 {question.answer_count}</span>
                         </div>
