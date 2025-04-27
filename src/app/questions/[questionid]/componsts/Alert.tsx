@@ -5,7 +5,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogAction,
+  AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+
 import { useRouter } from "next/navigation";
 
 interface AlertType {
@@ -34,10 +36,11 @@ export default function Alert({ showAlert, setShowAlert }: AlertProps) {
         <AlertDialogHeader className="mx-auto mb-4">
           <AlertDialogTitle>{showAlert.text}</AlertDialogTitle>
         </AlertDialogHeader>
-        <AlertDialogFooter className="mx-auto">
+        <AlertDialogFooter className="mx-auto flex">
           <AlertDialogAction onClick={handleMoveToLogin}>
             {isLogin ? "이동하기" : "확인"}
           </AlertDialogAction>
+          <AlertDialogCancel>닫기</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
