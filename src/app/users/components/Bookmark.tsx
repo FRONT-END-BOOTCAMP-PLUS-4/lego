@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Bookmark } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
+import Empty from "@/app/components/Empty";
 
 interface UserBookmark {
   questionId: number;
@@ -30,10 +31,15 @@ export default function BookmarkPage() {
     const fetchBookmarks = async () => {
       if (!user?.email) return;
       setIsLoading(true);
-      const res = await fetch(`/api/users/history/bookmarks?email=${user.email}`);
-      const data = await res.json();
-      setBookmarks(data);
-      setIsLoading(false);
+      try {
+        const res = await fetch(`/api/users/history/bookmarks?email=${user.email}`);
+        const data = await res.json();
+        setBookmarks(data || []);
+      } catch (error) {
+        console.error("북마크 데이터 가져오기 실패:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchBookmarks();
   }, [user?.email]);
@@ -41,7 +47,7 @@ export default function BookmarkPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4">
-        {Array.from({ length: 3 }).map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <Card key={i} variant="tight" className="flex items-center justify-between p-6">
             <div className="flex items-center gap-6 w-[90%]">
               <Skeleton className="w-8 h-8 rounded-full" />
@@ -51,6 +57,10 @@ export default function BookmarkPage() {
         ))}
       </div>
     );
+  }
+
+  if (currentItems.length === 0) {
+    return <Empty text={"아직 북마크한 콘텐츠가 없어요"} />;
   }
 
   return (
@@ -73,14 +83,16 @@ export default function BookmarkPage() {
         </Link>
       ))}
 
-      <Pagination
-        totalCount={totalCount}
-        itemsPerPage={itemsPerPage}
-        pageNumber={pageNumber}
-        currentPageBlock={currentPageBlock}
-        handleMovePage={setPageNumber}
-        handleMovePageBlock={setCurrentPageBlock}
-      />
+      {totalCount !== 0 && (
+        <Pagination
+          totalCount={totalCount}
+          itemsPerPage={itemsPerPage}
+          pageNumber={pageNumber}
+          currentPageBlock={currentPageBlock}
+          handleMovePage={setPageNumber}
+          handleMovePageBlock={setCurrentPageBlock}
+        />
+      )}
     </div>
   );
 }

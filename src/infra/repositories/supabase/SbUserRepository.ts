@@ -10,16 +10,6 @@ interface AnswerRow {
   created_at: string;
 }
 
-interface AnswerWithQuestionRow {
-  question_id: number;
-  content: string;
-  created_at: string;
-  question: {
-    content: string;
-    category: { name: string };
-  };
-}
-
 interface BookmarkRow {
   question: {
     id: number;
@@ -81,52 +71,31 @@ export class SbUserRepository implements UserRepository {
   async getUserAnswers(email: string): Promise<UserAnswer[]> {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
-      .from("answer")
-      .select(
-        `
-        question_id,
-        content,
-        created_at,
-        question:question (
-          content,
-          category:category (
-            name
-          )
-        )
-      `
-      )
-      .eq("email", email)
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.rpc("get_user_answers_with_like_count", {
+      user_email: email,
+    });
 
     if (error || !data) throw new Error("답변 조회 실패");
 
-    const typedData = data as unknown as AnswerWithQuestionRow[];
-
-    const result: UserAnswer[] = [];
-
-    for (const row of typedData) {
-      const categoryName = row.question.category?.name ?? "카테고리 없음";
-
-      const { count } = await supabase
-        .from("like")
-        .select("*", { count: "exact", head: true })
-        .eq("question_id", row.question_id)
-        .eq("answer_email", email);
-
-      result.push(
-        new UserAnswer(
+    return data.map(
+      (row: {
+        question_id: number;
+        category_name: string;
+        question_content: string;
+        answer_content: string;
+        created_at: string;
+        like_count: number;
+      }) => {
+        return new UserAnswer(
           row.question_id,
-          categoryName,
-          row.question.content,
-          row.content,
+          row.category_name ?? "카테고리 없음",
+          row.question_content,
+          row.answer_content,
           row.created_at,
-          count ?? 0
-        )
-      );
-    }
-
-    return result;
+          row.like_count ?? 0
+        );
+      }
+    );
   }
 
   async getUserBookmarks(email: string): Promise<UserBookmark[]> {

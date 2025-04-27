@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import CategoryList from "./components/CategoryList";
 import Guide from "./components/Guide";
-import BookmarkList from "./components/BookmarkList";
-import EmailBanner from "./components/EmailBanner";
-import AnswerList from "./components/AnswerList";
+
+const BookmarkList = dynamic(() => import("./components/BookmarkList"));
+const EmailBanner = dynamic(() => import("./components/EmailBanner"));
+const AnswerList = dynamic(() => import("./components/AnswerList"));
 
 export default function Home() {
   useEffect(() => {
