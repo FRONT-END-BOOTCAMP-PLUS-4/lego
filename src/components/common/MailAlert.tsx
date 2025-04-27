@@ -38,7 +38,6 @@ export default function MailAlertButton() {
               setShowLoginAlert(false);
               router.push("/login");
             }}
-            className="w-2/6 bg-[var(--blue-02)] border-none"
           >
             이동하기
           </AlertDialogAction>

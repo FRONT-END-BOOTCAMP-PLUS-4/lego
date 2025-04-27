@@ -6,15 +6,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
 interface AlertProps {
+  type: string;
   text: string;
   showAlert: boolean;
   setShowAlert: (value: boolean) => void;
 }
-export default function Alert({ text, showAlert, setShowAlert }: AlertProps) {
+export default function Alert({ type, text, showAlert, setShowAlert }: AlertProps) {
   return (
     <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
-      <AlertDialogContent className="w-[300px]">
+      <AlertDialogContent>
         <AlertDialogHeader className="mx-auto mb-4">
           <AlertDialogTitle>{text}</AlertDialogTitle>
         </AlertDialogHeader>

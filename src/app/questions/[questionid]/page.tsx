@@ -92,12 +92,10 @@ export default function AnswerFormPage() {
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isMatchCurrentLoginUser) {
-      router.replace("/404");
+      return setShowAlert(true);
     }
     if (userAnswer.trim().length === 0) {
-      setShowAlert(true);
-
-      return;
+      return setShowAlert(true);
     }
 
     const method = action === "create" ? "POST" : "PUT";
@@ -160,7 +158,12 @@ export default function AnswerFormPage() {
   return (
     <>
       {showAlert && (
-        <Alert text="내용을 입력해주세요" showAlert={showAlert} setShowAlert={setShowAlert} />
+        <Alert
+          type="content"
+          text="내용을 입력해주세요"
+          showAlert={showAlert}
+          setShowAlert={setShowAlert}
+        />
       )}
       <div className="container mx-auto pt-[40px]">
         <QusetionHeader
