@@ -195,7 +195,7 @@ export default function CommentSection() {
       </div>
 
       {comments.length === 0 ? (
-        ""
+        <div className="mb-[150px]" />   
       ) : (
         <div className="space-y-5 mt-[var(--space-50)]">
           {currentComments.map((comment) => (
