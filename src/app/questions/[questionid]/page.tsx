@@ -1,19 +1,19 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
-import { useParams, useSearchParams } from "next/navigation";
 import { handleCheckUser } from "@/utils/handleCheckUser";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
 import Alert from "./componsts/Alert";
 
 type AnswerAction = "create" | "update";
+
 interface QuestionResponse {
   id: number;
   categoryId: number;
@@ -28,27 +28,28 @@ interface QuestionResponse {
 
 export default function AnswerFormPage() {
   const searchParams = useSearchParams();
+  const user = useAuthStore((state) => state.user);
   const params = useParams();
-  const router = useRouter();
   const questionId = Number(params.questionid);
-  const userEmail: string | null = searchParams.get("userId");
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState({ type: "", action: false, text: "" });
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const token: string | null = useAuthStore((state) => state.token);
-  const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
-  const { localToken, localEmail } = handleCheckUser();
-  const isMatchCurrentLoginUser =
-    token !== null && token === localToken && localEmail === userEmail;
-
+  const userEmail = searchParams.get("userId");
+  const { localEmail, isLogin } = handleCheckUser();
+  const isMatchCurrentLoginUser = token !== null && localEmail === userEmail;
+  if (isEditing) {
+    answerRef.current?.focus();
+  }
+  //깃허브 유저 확인
+  const checkGithubUser = token !== null && userEmail == null;
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
-  //userId 없을 수 있음, questionId 필수
   const handleGetQuestion = useCallback(async () => {
     try {
       const response = await fetch(
@@ -86,18 +87,43 @@ export default function AnswerFormPage() {
     }
   }, [questionData]);
 
-  if (isEditing) {
-    answerRef.current?.focus();
-  }
-  //답변 저장, 수정
-  const handleSaveAnswer = async (action: AnswerAction) => {
-    if (!isMatchCurrentLoginUser) {
-      router.replace("/404");
+  useEffect(() => {
+    if (isEditing) {
+      answerRef.current?.focus();
     }
-    if (userAnswer.trim().length === 0) {
-      setShowAlert(true);
+  }, [isEditing]);
 
-      return;
+  useEffect(() => {
+    if (!showAlert.action) {
+      setIsEditing(true);
+    }
+  }, [showAlert.action]);
+
+  const handleSaveAnswer = async (action: AnswerAction) => {
+    if (!isLogin) {
+      return setShowAlert((prev) => ({
+        ...prev,
+        type: "login",
+        action: true,
+        text: "로그인이 필요합니다",
+      }));
+    }
+    if (checkGithubUser) {
+      return setShowAlert((prev) => ({
+        ...prev,
+        type: "github",
+        action: true,
+        text: "깃허브 이메일 공개가 필요합니다",
+      }));
+    }
+
+    if (userAnswer.trim().length === 0) {
+      return setShowAlert((prev) => ({
+        ...prev,
+        type: "content",
+        action: true,
+        text: "내용을 입력해주세요",
+      }));
     }
 
     const method = action === "create" ? "POST" : "PUT";
@@ -159,9 +185,7 @@ export default function AnswerFormPage() {
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <>
-      {showAlert && (
-        <Alert text="내용을 입력해주세요" showAlert={showAlert} setShowAlert={setShowAlert} />
-      )}
+      {showAlert && <Alert showAlert={showAlert} setShowAlert={setShowAlert} />}
       <div className="container mx-auto pt-[40px]">
         <QusetionHeader
           content={content}
