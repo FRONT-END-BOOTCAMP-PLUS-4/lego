@@ -277,7 +277,7 @@ export default function QuestionListPage() {
         } 
         sm:justify-start`}>
         <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
-          <SelectTrigger className="w-[45vw] h-[40px] text-[var(--black)] sm:w-[204px]">
+          <SelectTrigger className="w-[50vw] h-[40px] text-[var(--black)] sm:w-[204px]">
             <SelectValue placeholder="전체" />
           </SelectTrigger>
           <SelectContent>
@@ -292,7 +292,7 @@ export default function QuestionListPage() {
 
         {isLoggedIn && (
         <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
-            <SelectTrigger className="w-[45vw] h-[40px] text-[var(--black)] sm:w-[204px]">
+            <SelectTrigger className="w-[50vw] h-[40px] text-[var(--black)] sm:w-[204px]">
               <SelectValue placeholder="필터" />
             </SelectTrigger>
             <SelectContent>
