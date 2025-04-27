@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
 import Alert from "./componsts/Alert";
+import GithubLoginNotice from "@/app/components/GithubLoginNotice";
 
 type AnswerAction = "create" | "update";
 interface QuestionResponse {
@@ -45,7 +46,7 @@ export default function AnswerFormPage() {
   const { localToken, localEmail } = handleCheckUser();
   const isMatchCurrentLoginUser =
     token !== null && token === localToken && localEmail === userEmail;
-
+  const checkGithubUser = token !== null && userEmail == null;
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
   //userId 없을 수 있음, questionId 필수
   const handleGetQuestion = useCallback(async () => {
@@ -75,7 +76,8 @@ export default function AnswerFormPage() {
   useEffect(() => {
     handleGetQuestion();
   }, [handleGetQuestion]);
-
+  console.log(userEmail, "userEmailuserEmail");
+  console.log(token, "token");
   useEffect(() => {
     if (!questionData) return;
     if (questionData?.answer !== "") {
@@ -98,6 +100,16 @@ export default function AnswerFormPage() {
         text: "로그인이 필요합니다",
       }));
     }
+
+    if (checkGithubUser) {
+      return setShowAlert((prev) => ({
+        ...prev,
+        type: "github",
+        action: true,
+        text: "깃허브 이메일 공개가 필요합니다",
+      }));
+    }
+
     if (userAnswer.trim().length === 0) {
       return setShowAlert((prev) => ({
         ...prev,

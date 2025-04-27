@@ -32,7 +32,7 @@ export default function Alert({ showAlert, setShowAlert }: AlertProps) {
       open={showAlert.action}
       onOpenChange={(open) => setShowAlert({ ...showAlert, action: open })}
     >
-      <AlertDialogContent>
+      <AlertDialogContent className="w-[300px]">
         <AlertDialogHeader className="mx-auto mb-4">
           <AlertDialogTitle>{showAlert.text}</AlertDialogTitle>
         </AlertDialogHeader>
