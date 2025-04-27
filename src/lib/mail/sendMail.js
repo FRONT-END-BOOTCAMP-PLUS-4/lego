@@ -74,7 +74,7 @@ async function sendDailyQuestionMail() {
   const recipients = await getSubscribedEmails();
 
   const questionId = (category - 1) * 10 + questionNum;
-  const linkUrl = `http://localhost:3000/questions/${questionId}`;
+  const linkUrl = `https://lego-mail.vercel.app/questions/${questionId}`;
 
   const html = createTemplate(marked.parse(body), linkUrl);
 
