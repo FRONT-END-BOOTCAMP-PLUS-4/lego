@@ -99,7 +99,6 @@ export default function AnswerFormPage() {
     }
   }, [showAlert.action]);
 
-  console.log(isEditing, "isEditing");
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isLogin) {
       return setShowAlert((prev) => ({
