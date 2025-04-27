@@ -312,7 +312,7 @@ export default function QuestionListPage() {
           variant="ghost"
           size="sm"
           onClick={() => handleSortClick("bookmark")}
-          className={selectedSort === "bookmark" ? "!text-[var(--black)]" : ""}
+          className={selectedSort === "bookmark" ? "!text-[var(--blue-02)]" : ""}
         >
           인기순
         </Button>
@@ -320,7 +320,7 @@ export default function QuestionListPage() {
           variant="ghost"
           size="sm"
           onClick={() => handleSortClick("recent")}
-          className={selectedSort === "recent" ? "!text-[var(--black)]" : ""}
+          className={selectedSort === "recent" ? "!text-[var(--blue-02)]" : ""}
         >
           최신순
         </Button>
