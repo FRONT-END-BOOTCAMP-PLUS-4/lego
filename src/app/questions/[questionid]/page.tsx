@@ -31,9 +31,7 @@ export default function AnswerFormPage() {
   const searchParams = useSearchParams();
   const user = useAuthStore((state) => state.user);
   const params = useParams();
-  const router = useRouter();
   const questionId = Number(params.questionid);
-  const [userEmail, setUserEmail] = useState<string | null>(user?.email);
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -44,14 +42,13 @@ export default function AnswerFormPage() {
   const token: string | null = useAuthStore((state) => state.token);
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
-  const { localToken, localEmail, isLogin } = handleCheckUser();
-
+  const userEmail = searchParams.get("userId");
+  const { localEmail, isLogin } = handleCheckUser();
   const isMatchCurrentLoginUser = token !== null && localEmail === userEmail;
 
   //깃허브 유저 확인
   const checkGithubUser = token !== null && userEmail == null;
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
-
   const handleGetQuestion = useCallback(async () => {
     try {
       const response = await fetch(
