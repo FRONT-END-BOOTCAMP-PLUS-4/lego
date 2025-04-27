@@ -49,6 +49,8 @@ export default function QuestionListPage() {
   const user = useAuthStore((state) => state.user);
   const userEmail = user?.email;
 
+  const [selectedSort, setSelectedSort] = useState<"bookmark" | "recent">("recent");
+
   const filterOption = (filter as "all" | "bookmarked" | "answered") ?? "all";
 
   // ✅ 추가
@@ -206,6 +208,7 @@ export default function QuestionListPage() {
   }, 500);
 
   const handleSortClick = (sortBy: "recent" | "bookmark") => {
+    setSelectedSort(sortBy);
     const params = new URLSearchParams(paramsString);
     params.set("sortBy", sortBy);
     router.push(`/questions?${params.toString()}`);
@@ -301,13 +304,23 @@ export default function QuestionListPage() {
       <div className="flex items-center justify-between mb-[12px]">
         <h2 className="txt-lg-b">문제</h2>
         <div className="flex">
-          <Button variant="ghost" size="sm" onClick={() => handleSortClick("bookmark")}>
-            인기순
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => handleSortClick("recent")}>
-            최신순
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => handleSortClick("bookmark")}
+          className={selectedSort === "bookmark" ? "!text-[var(--black)]" : ""}
+        >
+          인기순
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => handleSortClick("recent")}
+          className={selectedSort === "recent" ? "!text-[var(--black)]" : ""}
+        >
+          최신순
+        </Button>
+      </div>
       </div>
 
       <div className="flex justify-center min-h-[300px]">
