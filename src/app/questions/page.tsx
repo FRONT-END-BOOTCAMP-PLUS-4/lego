@@ -272,7 +272,10 @@ export default function QuestionListPage() {
 
       <div className="mb-[12px]" />
 
-      <div className="flex flex-row items-center gap-2 mb-6 justify-center sm:justify-start">
+      <div className={`flex flex-row items-center gap-2 mb-6 ${
+        isLoggedIn ? "justify-center" : "justify-start"
+        } 
+        sm:justify-start`}>
         <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
           <SelectTrigger className="w-[45vw] h-[40px] text-[var(--black)] sm:w-[204px]">
             <SelectValue placeholder="전체" />
