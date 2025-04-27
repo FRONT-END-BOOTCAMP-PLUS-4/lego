@@ -29,7 +29,6 @@ interface QuestionResponse {
 export default function AnswerFormPage() {
   const searchParams = useSearchParams();
   const params = useParams();
-  const router = useRouter();
   const questionId = Number(params.questionid);
   const userEmail: string | null = searchParams.get("userId");
   const [tab, setTab] = useState<string>("tab1");
@@ -37,7 +36,7 @@ export default function AnswerFormPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState({ type: "", action: false, text: "" });
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const token: string | null = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
@@ -92,10 +91,20 @@ export default function AnswerFormPage() {
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
     if (!isMatchCurrentLoginUser) {
-      return setShowAlert(true);
+      return setShowAlert((prev) => ({
+        ...prev,
+        type: "login",
+        action: true,
+        text: "로그인이 필요합니다",
+      }));
     }
     if (userAnswer.trim().length === 0) {
-      return setShowAlert(true);
+      return setShowAlert((prev) => ({
+        ...prev,
+        type: "content",
+        action: true,
+        text: "내용을 입력해주세요",
+      }));
     }
 
     const method = action === "create" ? "POST" : "PUT";
@@ -157,14 +166,7 @@ export default function AnswerFormPage() {
   const { content, solution, isBookmarked, categoryName } = questionData;
   return (
     <>
-      {showAlert && (
-        <Alert
-          type="content"
-          text="내용을 입력해주세요"
-          showAlert={showAlert}
-          setShowAlert={setShowAlert}
-        />
-      )}
+      {showAlert && <Alert showAlert={showAlert} setShowAlert={setShowAlert} />}
       <div className="container mx-auto pt-[40px]">
         <QusetionHeader
           content={content}

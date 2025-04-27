@@ -1,27 +1,43 @@
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
-interface AlertProps {
+interface AlertType {
   type: string;
+  action: boolean;
   text: string;
-  showAlert: boolean;
-  setShowAlert: (value: boolean) => void;
 }
-export default function Alert({ type, text, showAlert, setShowAlert }: AlertProps) {
+interface AlertProps {
+  showAlert: AlertType;
+  setShowAlert: (value: AlertType) => void;
+}
+export default function Alert({ showAlert, setShowAlert }: AlertProps) {
+  const router = useRouter();
+  const handleMoveToLogin = () => {
+    if (showAlert.type === "login") {
+      router.push("/login");
+    }
+  };
+  const isLogin = showAlert.type === "login";
   return (
-    <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+    <AlertDialog
+      open={showAlert.action}
+      onOpenChange={(open) => setShowAlert({ ...showAlert, action: open })}
+    >
       <AlertDialogContent>
         <AlertDialogHeader className="mx-auto mb-4">
-          <AlertDialogTitle>{text}</AlertDialogTitle>
+          <AlertDialogTitle>{showAlert.text}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter className="mx-auto">
-          <AlertDialogCancel>확인</AlertDialogCancel>
+          <AlertDialogAction onClick={handleMoveToLogin}>
+            {isLogin ? "이동하기" : "확인"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
