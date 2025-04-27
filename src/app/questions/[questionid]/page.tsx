@@ -1,20 +1,20 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import QusetionHeader from "./componsts/QusetionHeader";
 import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
-import { useParams, useSearchParams } from "next/navigation";
 import { handleCheckUser } from "@/utils/handleCheckUser";
-
 import { toast } from "sonner";
 import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
 import Alert from "./componsts/Alert";
-import GithubLoginNotice from "@/app/components/GithubLoginNotice";
 
 type AnswerAction = "create" | "update";
+
 interface QuestionResponse {
   id: number;
   categoryId: number;
@@ -29,9 +29,11 @@ interface QuestionResponse {
 
 export default function AnswerFormPage() {
   const searchParams = useSearchParams();
+  const user = useAuthStore((state) => state.user);
   const params = useParams();
+  const router = useRouter();
   const questionId = Number(params.questionid);
-  const userEmail: string | null = searchParams.get("userId");
+  const [userEmail, setUserEmail] = useState<string | null>(user?.email);
   const [tab, setTab] = useState<string>("tab1");
   const [userAnswer, setUserAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,15 +42,16 @@ export default function AnswerFormPage() {
   const [showAlert, setShowAlert] = useState({ type: "", action: false, text: "" });
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const token: string | null = useAuthStore((state) => state.token);
-  const user = useAuthStore((state) => state.user);
   const avatar = user?.avatarUrl;
   const nickName = user?.nickname;
-  const { localToken, localEmail } = handleCheckUser();
-  const isMatchCurrentLoginUser =
-    token !== null && token === localToken && localEmail === userEmail;
+  const { localToken, localEmail, isLogin } = handleCheckUser();
+
+  const isMatchCurrentLoginUser = token !== null && localEmail === userEmail;
+
+  //깃허브 유저 확인
   const checkGithubUser = token !== null && userEmail == null;
   // 초기 들어왔을 때 이전에 작성한 답변이 있으면 불러오기
-  //userId 없을 수 있음, questionId 필수
+
   const handleGetQuestion = useCallback(async () => {
     try {
       const response = await fetch(
@@ -76,8 +79,7 @@ export default function AnswerFormPage() {
   useEffect(() => {
     handleGetQuestion();
   }, [handleGetQuestion]);
-  console.log(userEmail, "userEmailuserEmail");
-  console.log(token, "token");
+
   useEffect(() => {
     if (!questionData) return;
     if (questionData?.answer !== "") {
@@ -90,9 +92,10 @@ export default function AnswerFormPage() {
   if (isEditing) {
     answerRef.current?.focus();
   }
+
   //답변 저장, 수정
   const handleSaveAnswer = async (action: AnswerAction) => {
-    if (!isMatchCurrentLoginUser) {
+    if (!isLogin) {
       return setShowAlert((prev) => ({
         ...prev,
         type: "login",
@@ -100,7 +103,6 @@ export default function AnswerFormPage() {
         text: "로그인이 필요합니다",
       }));
     }
-
     if (checkGithubUser) {
       return setShowAlert((prev) => ({
         ...prev,
