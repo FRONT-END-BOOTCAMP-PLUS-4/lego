@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
+import Loader from "@/components/common/Loader";
 
 export default function AnswerContent() {
   const { user, token } = useAuthStore();
@@ -17,6 +18,7 @@ export default function AnswerContent() {
   const answerId = params.answerid;
   const [answerData, setAnswerDate] = useState<AnswerView | null>(null);
   const [isLike, setIsLike] = useState<boolean | undefined>(answerData?.isLike); // likeState 서버에서 받아온 값
+
   const currentUserId = user?.email; //현재 로그인한 유저 아이디
 
   const handleGetAnswerDetail = useCallback(async () => {
@@ -77,6 +79,9 @@ export default function AnswerContent() {
       toast.error(`${(error as Error).message}`);
     }
   };
+  if (!answerData) {
+    return <Loader />;
+  }
   return (
     <>
       <header className="flex justify-between w-full items-start sm:items-center">
