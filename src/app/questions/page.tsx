@@ -239,10 +239,13 @@ export default function QuestionListPage() {
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
   return (
     <>
-      <div className="relative left-1/2 right-1/2 ml-[-50vw] mr-[-50vw] w-screen bg-[#E5E7EB] h-[200px] mb-6 flex flex-col justify-center items-center text-white px-4">
-        <h2 className="text-2xl font-bold mb-2 text-[var(--black)]">지식의 블럭을 쌓아 나가자</h2>
-        <p className="text-base \ text-[var(--black)] opacity-80">함께 지식의 블럭을 쌓아가요!</p>
+      <div className="relative left-1/2 right-1/2 ml-[-50vw] mr-[-50vw] w-screen h-[200px] mb-6 px-4 bg-[url('/assets/images/banner-bg.png')] bg-cover bg-bottom">
+        <div className="absolute inset-0 bg-[var(--blue-03)]/75 z-0 flex flex-col justify-center items-center">
+          <h2 className="text-2xl font-bold mb-2 text-[var(--black)]">지식의 블럭을 쌓아 나가자</h2>
+          <p className="text-base \ text-[var(--black)] opacity-80">함께 지식의 블럭을 쌓아가요!</p>
+        </div>
       </div>
+
       <div className="w-full container mx-auto">
         <div className="flex items-center gap-2">
           <Input
