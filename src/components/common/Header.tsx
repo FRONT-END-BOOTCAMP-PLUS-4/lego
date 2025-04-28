@@ -89,8 +89,10 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-3 md:px-20 border-b border-[#edf2f7]">
-      <Link href="/" className="flex items-center ">
-        <Image src="/logoImg.svg" alt="Logo charactor" width={50} height={50} />
+      <Link href="/" className="flex items-center">
+        <div className="overflow-hidden h-[65px] w-[50px] opacity-95 relative">
+          <div className="bg-[url('/logoImg.svg')] bg-no-repeat bg-cover bg-center h-full w-full absolute top-0.5"></div>
+        </div>
         <Image
           src="/logo.png"
           alt="Logo"
