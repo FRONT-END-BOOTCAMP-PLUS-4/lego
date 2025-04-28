@@ -238,114 +238,105 @@ export default function QuestionListPage() {
   const endIdx = startIdx + 10;
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
   return (
-    <div className="w-full container mx-auto pt-[40px]">
-      <div className="relative w-full max-w-[948px] h-[115px] mb-6 overflow-hidden md:h-[115px] sm:h-[80px]">
-        <Image
-          src="/assets/images/banner.svg"
-          alt="배너 이미지"
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, 948px"
-          className="object-cover rounded-md"
-        />
+    <>
+      <div className="relative left-1/2 right-1/2 ml-[-50vw] mr-[-50vw] w-screen bg-[#E5E7EB] h-[200px] mb-6 flex flex-col justify-center items-center text-white px-4">
+        <h2 className="text-2xl font-bold mb-2 text-[var(--black)]">지식의 블럭을 쌓아 나가자</h2>
+        <p className="text-base \ text-[var(--black)] opacity-80">함께 지식의 블럭을 쌓아가요!</p>
       </div>
+      <div className="w-full container mx-auto">
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="면접 문제 검색"
+            className="w-full h-[54px] px-4 text-sm flex-1"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+          />
+          <Button
+            variant="outline"
+            size="default"
+            className="w-[115px] h-[54px] px-6 text-lg"
+            onClick={handleSearch}
+          >
+            문제 검색
+          </Button>
+        </div>
 
-      <div className="flex items-center gap-2">
-        <Input
-          placeholder="면접 문제 검색"
-          className="w-full h-[54px] px-4 text-sm flex-1"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSearch();
-          }}
-        />
-        <Button
-          variant="outline"
-          size="default"
-          className="w-[115px] h-[54px] px-6 text-lg"
-          onClick={handleSearch}
+        <div className="mb-[12px]" />
+
+        <div
+          className={`flex flex-row flex-wrap items-center gap-2 mb-6 
+  justify-start`}
         >
-          문제 검색
-        </Button>
-      </div>
+          <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
+            <SelectTrigger className="w-[160px] sm:w-[204px] h-[40px] text-[var(--black)]">
+              <SelectValue placeholder="전체" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="전체">전체</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.name}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-      <div className="mb-[12px]" />
+          {isLoggedIn && (
+            <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
+              <SelectTrigger className="w-[160px] sm:w-[204px] h-[40px] text-[var(--black)]">
+                <SelectValue placeholder="필터" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">전체</SelectItem>
+                <SelectItem value="bookmarked">북마크한 문제</SelectItem>
+                <SelectItem value="answered">답변한 문제</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </div>
 
-      <div className={`flex flex-row flex-wrap items-center gap-2 mb-6 
-  justify-start`}>
-  
-  <Select onValueChange={throttledHandleCategoryChange} value={selectedCategoryName}>
-    <SelectTrigger className="w-[160px] sm:w-[204px] h-[40px] text-[var(--black)]">
-      <SelectValue placeholder="전체" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="전체">전체</SelectItem>
-      {categories.map((category) => (
-        <SelectItem key={category.id} value={category.name}>
-          {category.name}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
+        <div className="flex items-center justify-between mb-[12px]">
+          <h2 className="txt-lg-b">문제</h2>
+          <div className="flex">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleSortClick("bookmark")}
+              className={selectedSort === "bookmark" ? "!text-[var(--blue-02)]" : ""}
+            >
+              인기순
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleSortClick("recent")}
+              className={selectedSort === "recent" ? "!text-[var(--blue-02)]" : ""}
+            >
+              최신순
+            </Button>
+          </div>
+        </div>
 
-  {isLoggedIn && (
-    <Select onValueChange={throttledHandleFilterChange} value={filterOption}>
-      <SelectTrigger className="w-[160px] sm:w-[204px] h-[40px] text-[var(--black)]">
-        <SelectValue placeholder="필터" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">전체</SelectItem>
-        <SelectItem value="bookmarked">북마크한 문제</SelectItem>
-        <SelectItem value="answered">답변한 문제</SelectItem>
-      </SelectContent>
-    </Select>
-  )}
-</div>
-
-
-      <div className="flex items-center justify-between mb-[12px]">
-        <h2 className="txt-lg-b">문제</h2>
-        <div className="flex">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => handleSortClick("bookmark")}
-          className={selectedSort === "bookmark" ? "!text-[var(--blue-02)]" : ""}
-        >
-          인기순
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => handleSortClick("recent")}
-          className={selectedSort === "recent" ? "!text-[var(--blue-02)]" : ""}
-        >
-          최신순
-        </Button>
-      </div>
-      </div>
-
-      <div className="flex justify-center min-h-[300px]">
-        {isLoading || !userChecked ? ( // ✅ isLoading이거나 userChecked가 false면 대기
-          <NotFound />
-        ) : visibleQuestions.length > 0 ? (
-          <div className="flex flex-col gap-3 w-full">
-            {pagedQuestions.map((question) => {
-              const questionLink = userEmail
-                ? `/questions/${question.id}?userId=${userEmail}`
-                : `/questions/${question.id}`;
+        <div className="flex justify-center min-h-[300px]">
+          {isLoading || !userChecked ? ( // ✅ isLoading이거나 userChecked가 false면 대기
+            <NotFound />
+          ) : visibleQuestions.length > 0 ? (
+            <div className="flex flex-col gap-3 w-full">
+              {pagedQuestions.map((question) => {
+                const questionLink = userEmail
+                  ? `/questions/${question.id}?userId=${userEmail}`
+                  : `/questions/${question.id}`;
 
                 console.log("[디버그] 이동할 링크:", questionLink);
 
                 return (
-                  <Link
-                    key={question.id}
-                    href={questionLink}
-                  >
+                  <Link key={question.id} href={questionLink}>
                     <Card className="cursor-pointer">
                       <div className="flex h-full items-center justify-between">
-                      {/* 왼쪽 (이미지 + 문제 제목) */}
+                        {/* 왼쪽 (이미지 + 문제 제목) */}
                         <div className="flex items-center gap-4 min-w-0 flex-1">
                           <Image
                             src={getImageUrlByCategory(question.categoryId)}
@@ -354,12 +345,10 @@ export default function QuestionListPage() {
                             height={32}
                             className="rounded-md flex-shrink-0"
                           />
-                          <span className="txt-xl-b line-clamp-1">
-                            {question.content}
-                          </span>
+                          <span className="txt-xl-b line-clamp-1">{question.content}</span>
                         </div>
 
-                      {/* 오른쪽 (북마크/답변 수) */}
+                        {/* 오른쪽 (북마크/답변 수) */}
                         <div className="flex flex-shrink-0 flex-col items-end gap-1 font-bold leading-[150%] text-[14px] text-[var(--gray-02)] sm:flex-row sm:items-center sm:gap-4">
                           <span>북마크 {question.bookmark_count}</span>
                           <span>답변 {question.answer_count}</span>
@@ -368,21 +357,22 @@ export default function QuestionListPage() {
                     </Card>
                   </Link>
                 );
-            })}
-          </div>
-        ) : (
-          <Empty text="조건에 해당하는 문제가 없습니다 👻" />
-        )}
-      </div>
+              })}
+            </div>
+          ) : (
+            <Empty text="조건에 해당하는 문제가 없습니다 👻" />
+          )}
+        </div>
 
-      <Pagination
-        totalCount={totalCount}
-        itemsPerPage={10}
-        pageNumber={pageNumber}
-        currentPageBlock={currentPageBlock}
-        handleMovePage={setPageNumber}
-        handleMovePageBlock={setCurrentPageBlock}
-      />
-    </div>
+        <Pagination
+          totalCount={totalCount}
+          itemsPerPage={10}
+          pageNumber={pageNumber}
+          currentPageBlock={currentPageBlock}
+          handleMovePage={setPageNumber}
+          handleMovePageBlock={setCurrentPageBlock}
+        />
+      </div>
+    </>
   );
 }
