@@ -239,13 +239,13 @@ export default function QuestionListPage() {
   const pagedQuestions = visibleQuestions.slice(startIdx, endIdx);
   return (
     <div className="w-full container mx-auto pt-[40px]">
-      <div className="relative w-full max-w-[948px] h-[115px] mb-6 overflow-hidden md:h-[115px] sm:h-[80px]">
+      <div className="relative w-full h-[115px] mb-6 overflow-hidden md:h-[115px] sm:h-[80px]">
         <Image
           src="/assets/images/banner.svg"
           alt="배너 이미지"
           fill
           priority
-          sizes="(max-width: 768px) 100vw, 948px"
+          sizes="(max-width: 768px) 100vw, 1080px"
           className="object-cover rounded-md"
         />
       </div>
