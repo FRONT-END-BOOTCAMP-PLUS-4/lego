@@ -39,13 +39,15 @@ export default function LoginPage() {
       <div className="w-[448px] h-[660px] flex flex-col justify-center">
         <div className="h-[380px]">
           <div className="h-[200px] flex flex-col justify-center items-center">
-            <Image src="/logoImg.svg" width={120} height={120} alt="logo" />
+            <div className="overflow-hidden h-[80px] w-[120px] opacity-85">
+              <div className="bg-[url('/logoImg.svg')] bg-no-repeat bg-cover bg-center h-full w-full"></div>
+            </div>
             <h2 className="txt-4xl-b" style={{ color: "var(--blue-01)" }}>
               로그인
             </h2>
-            <p className="text-center">레고와 함께하세요!</p>
+            <p className="text-center txt-base">레고와 함께하세요!</p>
           </div>
-          <div className="h-[180px] mt-[24px] flex flex-col items-center justify-center">
+          <div className="h-[180px] flex flex-col items-center justify-center">
             <div className="mb-[24px]">
               <button
                 onClick={() => handleSocialLogin("github")}

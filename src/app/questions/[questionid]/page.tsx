@@ -4,13 +4,13 @@ import { useParams, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
-import QusetionHeader from "./componsts/QusetionHeader";
-import QuestionSolution from "@/app/questions/[questionid]/componsts/QuestionSolution";
+import QusetionHeader from "./components/QusetionHeader";
+import QuestionSolution from "./components/QuestionSolution";
 import { handleCheckUser } from "@/utils/handleCheckUser";
 import { toast } from "sonner";
-import OtherUsersAnswer from "./componsts/OtherUsersAnswer";
+import OtherUsersAnswer from "./components/OtherUsersAnswer";
 import Loader from "@/components/common/Loader";
-import Alert from "./componsts/Alert";
+import Alert from "./components/Alert";
 
 type AnswerAction = "create" | "update";
 
