@@ -89,17 +89,14 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--blue-04)] flex justify-between items-center h-[80px] px-3 md:px-20 border-b border-[#edf2f7]">
-      <Link href="/" className="flex items-center cursor-pointer">
+      <Link href="/" className="flex items-center cursor-pointer ">
         <div className="overflow-hidden h-[65px] w-[50px] opacity-95 relative">
           <div className="bg-[url('/logoImg.svg')] bg-no-repeat bg-cover bg-center h-full w-full absolute top-0.5"></div>
         </div>
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          width={80}
-          height={80}
-          className="self-center opacity-95"
-        />
+        <div
+          className="bg-[url('/logo.png')] bg-no-repeat bg-contain bg-center h-[80px] w-[80px] opacity-95 flex-shrink-0"
+          aria-label="Logo"
+        ></div>
       </Link>
       <nav className="flex items-center gap-4">
         <MailAlertButton />
