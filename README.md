@@ -38,14 +38,14 @@
 
 > # 🔎 프로젝트 목적 및 필요성
 
-<table align="center" bgcolor="white" width="80%" height="300" >
+<table align="center" bgcolor="white" width="80%"  >
   <tr>
     <td align="center" valign="middle" width="50%">
       <img src=".github/images/main_1.png" width="100%" />
     </td>
   </tr>
 </table>
-<table align="center" bgcolor="white" width="80%" height="300">
+<table align="center" bgcolor="white" width="80%" >
   <tr>
     <td align="center" width="50%">
       <img src=".github/images/main_2.png" width="70%" />
@@ -167,7 +167,7 @@
 
 ## 📝 ERD
 
-<table align="center"width="100%" bgcolor="white" height="350">
+<table align="center"width="100%" bgcolor="white">
   <tr>
   <td align="center" valign="middle" width="100%">
   <img width="85%" src=".github/images/erd.png">
@@ -177,7 +177,7 @@
 
 ## ⚙️ 기술 스택
 
-<table align="center"width="100%" bgcolor="white" height="300">
+<table align="center"width="100%" bgcolor="white">
   <tr>
   <td align="center" valign="middle" width="100%">
   <img width="80%" src=".github/images/architecture.png">
