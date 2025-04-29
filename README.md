@@ -38,16 +38,16 @@
 
 > # 🔎 프로젝트 목적 및 필요성
 
-<table align="center" bgcolor="white" width="80%" height="300" >
+<table align="center" bgcolor="white" width="100%" height="400" >
   <tr>
-    <td align="center" valign="middle" width="50%">
+    <td align="center" valign="middle" width="100%">
       <img src=".github/images/main_1.png" width="100%" />
     </td>
   </tr>
 </table>
-<table align="center" bgcolor="white" width="80%" height="300">
+<table align="center" bgcolor="white" width="100%" height="400" >
   <tr>
-    <td align="center" width="50%">
+    <td align="center" width="100%">
       <img src=".github/images/main_2.png" width="70%" />
     </td>
   </tr>
@@ -126,19 +126,13 @@
 
 각 질문에 대해 답변을 작성하고 모범답안과 비교할 수 있으며, 작성한 답변은 저장해 히스토리로 관리할 수 있어요.
 
-<table align="center"width="100%">
-  <tr>
-  <td align="center" valign="middle" width="100%">
   <img width="100%" src=".github/images/answer.png">
-    </td>
-  </tr>
-</table>
 
 ## 👯 다른 사람 답변 확인
 
 다른 사람들의 답변을 확인하고 좋아요 할 수 있어요
 
-<table align="center"width="100%"  >
+<table align="center"width="100%">
   <tr>
   <td align="center" valign="middle" width="50%">
   <img width="100%" src=".github/images/answerDetail.png">
@@ -167,7 +161,7 @@
 
 ## 📝 ERD
 
-<table align="center"width="100%" bgcolor="white" height="350">
+<table align="center"width="100%" bgcolor="white">
   <tr>
   <td align="center" valign="middle" width="100%">
   <img width="85%" src=".github/images/erd.png">
@@ -177,13 +171,7 @@
 
 ## ⚙️ 기술 스택
 
-<table align="center"width="100%" bgcolor="white" height="300">
-  <tr>
-  <td align="center" valign="middle" width="100%">
-  <img width="80%" src=".github/images/architecture.png">
-    </td>
-  </tr>
-</table>
+  <img width="100%" src=".github/images/architecture.png">
 
 ## 📅 일정 관리
 
