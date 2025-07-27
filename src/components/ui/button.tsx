@@ -16,10 +16,11 @@ const buttonVariants = cva(
         round:
           "border border-[var(--blue-02)] bg-[var(--blue-02)] text-[var(--white)] rounded-full hover:bg-[var(--white)] hover:border-[var(--blue-02)] hover:text-[var(--blue-02)] cursor-pointer",
         ghost: "!text-[var(--gray-02)] hover:text-[var(--black)] text-bold cursor-pointer",
+        gray: "!text-[var(--gray-02)] border border-[var(--gray-01)] text-[var(--gray-01)] rounded-md  cursor-pointer",
       },
       size: {
         default: "text-base py-2 px-[24px] ",
-        // sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        sm: "text-sm py-1.5 px-4 font-bold ",
         lg: "text-md py-3 px-12 font-bold ",
         // icon: "size-9",
       },

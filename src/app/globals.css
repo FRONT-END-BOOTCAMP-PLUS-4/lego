@@ -80,27 +80,106 @@
   --blue-02: #1356fc;
   --blue-03: #cee2ff;
   --blue-04: #f7f8fc;
+  --blue-05: #e8edf9;
   --gray-01: #d7e2eb;
   --gray-02: #666666;
+  --gray-03: #9ca3af;
+  --yellow: #fee500;
+  --red: #dc2626;
   --black: #111;
   --white: #fff;
   --space-4: 4px;
   --space-10: 10px;
   --space-24: 24px;
   --space-36: 36px;
+  --space-40: 40px;
   --space-50: 50px;
   --text-12: 12px;
   --text-14: 14px;
+  --text-16: 16px;
   --text-18: 18px;
+  --text-22: 22px;
   --text-24: 24px;
   --text-30: 30px;
   --text-36: 36px;
   --text-48: 48px;
   --font-regular: 400;
   --font-medium: 500;
-  --font-bold: 700;
-  --line-height: 150%;
+  --font-bold: 600;
+  --line-hei: 150%;
+  --line-hei-s: 130%;
   --radius-md: 16px;
+}
+.txt-5xl-b {
+  font-size: var(--text-48);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+.txt-4xl-b {
+  font-size: var(--text-36);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+.txt-3xl-b {
+  font-size: var(--text-30);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+.txt-2xl-b {
+  font-size: var(--text-24);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+.txt-xl-b {
+  font-size: var(--text-22);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+
+.txt-lg-b {
+  font-size: var(--text-18);
+  font-weight: var(--font-bold);
+  line-height: var(--line-hei);
+  color: var(--black);
+}
+.txt-sm-b {
+  font-size: var(--text-14);
+  line-height: var(--line-hei);
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+.txt-lg {
+  font-size: var(--text-18);
+  line-height: var(--line-hei);
+  color: var(--black);
+  font-weight: var(--font-regular);
+}
+.txt-base {
+  font-size: var(--text-16);
+  line-height: var(--line-hei);
+  color: var(--black);
+  font-weight: var(--font-regular);
+}
+.txt-sm {
+  font-size: var(--text-14);
+  line-height: var(--line-hei);
+  color: var(--black);
+  font-weight: var(--font-regular);
+}
+.txt-xs {
+  font-size: var(--text-12);
+  line-height: var(--line-hei);
+  color: var(--black);
+  font-weight: var(--font-regular);
+}
+.radius {
+  border-radius: var(--radius-md);
+  color: var(--black);
 }
 
 .dark {
@@ -137,6 +216,19 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+.react-calendar-heatmap .color-scale-1 {
+  fill: #a6e685;
+}
+.react-calendar-heatmap .color-scale-2 {
+  fill: #8cc665;
+}
+.react-calendar-heatmap .color-scale-3 {
+  fill: #44a340;
+}
+.react-calendar-heatmap .color-scale-4 {
+  fill: #1e6823;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -144,5 +236,11 @@
   body {
     @apply bg-background text-foreground;
     font-family: "Pretendard", sans-serif;
+    overflow-x: hidden;
+  }
+}
+@media (max-width: 500px) {
+  .hidden500 {
+    display: none;
   }
 }

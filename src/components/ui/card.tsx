@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 type Variant = "default" | "tight" | "none";
 
 const variantMap: Record<Variant, string> = {
-  default: "p-9",
-  tight: "px-9 py-[12px]",
+  default: "px-6 py-5",
+  tight: "px-6 py-5",
   none: "p-0",
 };
 
@@ -19,7 +19,7 @@ function Card({ className, children, variant = "default", ...props }: CardProps)
     <div
       className={cn(
         variantMap[variant],
-        "bg-[var(--blue-04)] border border-[var(--gray-01)] rounded-[var(--radius-md)]",
+        "bg-[var(--blue-04)] border border-[var(--gray-01)] rounded-[var(--radius-md)] cursor-pointer hover:bg-[var(--blue-05)] transition-colors duration-200",
         className
       )}
       {...props}
